@@ -1,0 +1,387 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6E6AED0315615FF200BC3823 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E6AED0215615FF200BC3823 /* UIKit.framework */; };
+		6E6AED0515615FF200BC3823 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E6AED0415615FF200BC3823 /* Foundation.framework */; };
+		6E6AED0715615FF200BC3823 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E6AED0615615FF200BC3823 /* CoreGraphics.framework */; };
+		6E6AED0D15615FF200BC3823 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6E6AED0B15615FF200BC3823 /* InfoPlist.strings */; };
+		6E6AED0F15615FF200BC3823 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6AED0E15615FF200BC3823 /* main.m */; };
+		6E6AED1315615FF200BC3823 /* CodeBeamerAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6AED1215615FF200BC3823 /* CodeBeamerAppDelegate.m */; };
+		6E6AED1615615FF200BC3823 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6E6AED1415615FF200BC3823 /* MainStoryboard.storyboard */; };
+		6E6AED1915615FF200BC3823 /* CodeBeamerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6AED1815615FF200BC3823 /* CodeBeamerViewController.m */; };
+		6E6AED291561603200BC3823 /* DetailUIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6AED241561603200BC3823 /* DetailUIViewController.m */; };
+		6E6AED2A1561603200BC3823 /* MasterUITableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6AED261561603200BC3823 /* MasterUITableViewController.m */; };
+		6E6AED301561637500BC3823 /* RootUITableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6AED2F1561637500BC3823 /* RootUITableViewController.m */; };
+		6E6AED4B1561663F00BC3823 /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6AED331561663F00BC3823 /* NSObject+SBJson.m */; };
+		6E6AED4C1561663F00BC3823 /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6AED361561663F00BC3823 /* SBJsonParser.m */; };
+		6E6AED4D1561663F00BC3823 /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6AED381561663F00BC3823 /* SBJsonStreamParser.m */; };
+		6E6AED4E1561663F00BC3823 /* SBJsonStreamParserAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6AED3A1561663F00BC3823 /* SBJsonStreamParserAccumulator.m */; };
+		6E6AED4F1561663F00BC3823 /* SBJsonStreamParserAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6AED3C1561663F00BC3823 /* SBJsonStreamParserAdapter.m */; };
+		6E6AED501561663F00BC3823 /* SBJsonStreamParserState.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6AED3E1561663F00BC3823 /* SBJsonStreamParserState.m */; };
+		6E6AED511561663F00BC3823 /* SBJsonStreamWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6AED401561663F00BC3823 /* SBJsonStreamWriter.m */; };
+		6E6AED521561663F00BC3823 /* SBJsonStreamWriterAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6AED421561663F00BC3823 /* SBJsonStreamWriterAccumulator.m */; };
+		6E6AED531561663F00BC3823 /* SBJsonStreamWriterState.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6AED441561663F00BC3823 /* SBJsonStreamWriterState.m */; };
+		6E6AED541561663F00BC3823 /* SBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6AED461561663F00BC3823 /* SBJsonTokeniser.m */; };
+		6E6AED551561663F00BC3823 /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6AED481561663F00BC3823 /* SBJsonUTF8Stream.m */; };
+		6E6AED561561663F00BC3823 /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6AED4A1561663F00BC3823 /* SBJsonWriter.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		6E6AECFE15615FF200BC3823 /* CodeBeamer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CodeBeamer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6E6AED0215615FF200BC3823 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		6E6AED0415615FF200BC3823 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		6E6AED0615615FF200BC3823 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		6E6AED0A15615FF200BC3823 /* CodeBeamer-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "CodeBeamer-Info.plist"; sourceTree = "<group>"; };
+		6E6AED0C15615FF200BC3823 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6E6AED0E15615FF200BC3823 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		6E6AED1015615FF200BC3823 /* CodeBeamer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CodeBeamer-Prefix.pch"; sourceTree = "<group>"; };
+		6E6AED1115615FF200BC3823 /* CodeBeamerAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CodeBeamerAppDelegate.h; sourceTree = "<group>"; };
+		6E6AED1215615FF200BC3823 /* CodeBeamerAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CodeBeamerAppDelegate.m; sourceTree = "<group>"; };
+		6E6AED1515615FF200BC3823 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		6E6AED1715615FF200BC3823 /* CodeBeamerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CodeBeamerViewController.h; sourceTree = "<group>"; };
+		6E6AED1815615FF200BC3823 /* CodeBeamerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CodeBeamerViewController.m; sourceTree = "<group>"; };
+		6E6AED231561603200BC3823 /* DetailUIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailUIViewController.h; sourceTree = "<group>"; };
+		6E6AED241561603200BC3823 /* DetailUIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailUIViewController.m; sourceTree = "<group>"; };
+		6E6AED251561603200BC3823 /* MasterUITableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MasterUITableViewController.h; sourceTree = "<group>"; };
+		6E6AED261561603200BC3823 /* MasterUITableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MasterUITableViewController.m; sourceTree = "<group>"; };
+		6E6AED2D156161A100BC3823 /* SplitViewBarButtonItemPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplitViewBarButtonItemPresenter.h; sourceTree = "<group>"; };
+		6E6AED2E1561637500BC3823 /* RootUITableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RootUITableViewController.h; sourceTree = "<group>"; };
+		6E6AED2F1561637500BC3823 /* RootUITableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RootUITableViewController.m; sourceTree = "<group>"; };
+		6E6AED321561663F00BC3823 /* NSObject+SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJson.h"; sourceTree = "<group>"; };
+		6E6AED331561663F00BC3823 /* NSObject+SBJson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJson.m"; sourceTree = "<group>"; };
+		6E6AED341561663F00BC3823 /* SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson.h; sourceTree = "<group>"; };
+		6E6AED351561663F00BC3823 /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonParser.h; sourceTree = "<group>"; };
+		6E6AED361561663F00BC3823 /* SBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonParser.m; sourceTree = "<group>"; };
+		6E6AED371561663F00BC3823 /* SBJsonStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamParser.h; sourceTree = "<group>"; };
+		6E6AED381561663F00BC3823 /* SBJsonStreamParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamParser.m; sourceTree = "<group>"; };
+		6E6AED391561663F00BC3823 /* SBJsonStreamParserAccumulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamParserAccumulator.h; sourceTree = "<group>"; };
+		6E6AED3A1561663F00BC3823 /* SBJsonStreamParserAccumulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamParserAccumulator.m; sourceTree = "<group>"; };
+		6E6AED3B1561663F00BC3823 /* SBJsonStreamParserAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamParserAdapter.h; sourceTree = "<group>"; };
+		6E6AED3C1561663F00BC3823 /* SBJsonStreamParserAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamParserAdapter.m; sourceTree = "<group>"; };
+		6E6AED3D1561663F00BC3823 /* SBJsonStreamParserState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamParserState.h; sourceTree = "<group>"; };
+		6E6AED3E1561663F00BC3823 /* SBJsonStreamParserState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamParserState.m; sourceTree = "<group>"; };
+		6E6AED3F1561663F00BC3823 /* SBJsonStreamWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamWriter.h; sourceTree = "<group>"; };
+		6E6AED401561663F00BC3823 /* SBJsonStreamWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamWriter.m; sourceTree = "<group>"; };
+		6E6AED411561663F00BC3823 /* SBJsonStreamWriterAccumulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamWriterAccumulator.h; sourceTree = "<group>"; };
+		6E6AED421561663F00BC3823 /* SBJsonStreamWriterAccumulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamWriterAccumulator.m; sourceTree = "<group>"; };
+		6E6AED431561663F00BC3823 /* SBJsonStreamWriterState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamWriterState.h; sourceTree = "<group>"; };
+		6E6AED441561663F00BC3823 /* SBJsonStreamWriterState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamWriterState.m; sourceTree = "<group>"; };
+		6E6AED451561663F00BC3823 /* SBJsonTokeniser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonTokeniser.h; sourceTree = "<group>"; };
+		6E6AED461561663F00BC3823 /* SBJsonTokeniser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonTokeniser.m; sourceTree = "<group>"; };
+		6E6AED471561663F00BC3823 /* SBJsonUTF8Stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonUTF8Stream.h; sourceTree = "<group>"; };
+		6E6AED481561663F00BC3823 /* SBJsonUTF8Stream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonUTF8Stream.m; sourceTree = "<group>"; };
+		6E6AED491561663F00BC3823 /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
+		6E6AED4A1561663F00BC3823 /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6E6AECFB15615FF200BC3823 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6E6AED0315615FF200BC3823 /* UIKit.framework in Frameworks */,
+				6E6AED0515615FF200BC3823 /* Foundation.framework in Frameworks */,
+				6E6AED0715615FF200BC3823 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6E6AECF315615FF100BC3823 = {
+			isa = PBXGroup;
+			children = (
+				6E6AED0815615FF200BC3823 /* CodeBeamer */,
+				6E6AED0115615FF200BC3823 /* Frameworks */,
+				6E6AECFF15615FF200BC3823 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6E6AECFF15615FF200BC3823 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6E6AECFE15615FF200BC3823 /* CodeBeamer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6E6AED0115615FF200BC3823 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6E6AED0215615FF200BC3823 /* UIKit.framework */,
+				6E6AED0415615FF200BC3823 /* Foundation.framework */,
+				6E6AED0615615FF200BC3823 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6E6AED0815615FF200BC3823 /* CodeBeamer */ = {
+			isa = PBXGroup;
+			children = (
+				6E6AED1115615FF200BC3823 /* CodeBeamerAppDelegate.h */,
+				6E6AED1215615FF200BC3823 /* CodeBeamerAppDelegate.m */,
+				6E6AED1415615FF200BC3823 /* MainStoryboard.storyboard */,
+				6E6AED2D156161A100BC3823 /* SplitViewBarButtonItemPresenter.h */,
+				6E6AED231561603200BC3823 /* DetailUIViewController.h */,
+				6E6AED241561603200BC3823 /* DetailUIViewController.m */,
+				6E6AED2E1561637500BC3823 /* RootUITableViewController.h */,
+				6E6AED2F1561637500BC3823 /* RootUITableViewController.m */,
+				6E6AED251561603200BC3823 /* MasterUITableViewController.h */,
+				6E6AED261561603200BC3823 /* MasterUITableViewController.m */,
+				6E6AED1715615FF200BC3823 /* CodeBeamerViewController.h */,
+				6E6AED1815615FF200BC3823 /* CodeBeamerViewController.m */,
+				6E6AED311561662800BC3823 /* JSON */,
+				6E6AED0915615FF200BC3823 /* Supporting Files */,
+			);
+			path = CodeBeamer;
+			sourceTree = "<group>";
+		};
+		6E6AED0915615FF200BC3823 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				6E6AED0A15615FF200BC3823 /* CodeBeamer-Info.plist */,
+				6E6AED0B15615FF200BC3823 /* InfoPlist.strings */,
+				6E6AED0E15615FF200BC3823 /* main.m */,
+				6E6AED1015615FF200BC3823 /* CodeBeamer-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		6E6AED311561662800BC3823 /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				6E6AED321561663F00BC3823 /* NSObject+SBJson.h */,
+				6E6AED331561663F00BC3823 /* NSObject+SBJson.m */,
+				6E6AED341561663F00BC3823 /* SBJson.h */,
+				6E6AED351561663F00BC3823 /* SBJsonParser.h */,
+				6E6AED361561663F00BC3823 /* SBJsonParser.m */,
+				6E6AED371561663F00BC3823 /* SBJsonStreamParser.h */,
+				6E6AED381561663F00BC3823 /* SBJsonStreamParser.m */,
+				6E6AED391561663F00BC3823 /* SBJsonStreamParserAccumulator.h */,
+				6E6AED3A1561663F00BC3823 /* SBJsonStreamParserAccumulator.m */,
+				6E6AED3B1561663F00BC3823 /* SBJsonStreamParserAdapter.h */,
+				6E6AED3C1561663F00BC3823 /* SBJsonStreamParserAdapter.m */,
+				6E6AED3D1561663F00BC3823 /* SBJsonStreamParserState.h */,
+				6E6AED3E1561663F00BC3823 /* SBJsonStreamParserState.m */,
+				6E6AED3F1561663F00BC3823 /* SBJsonStreamWriter.h */,
+				6E6AED401561663F00BC3823 /* SBJsonStreamWriter.m */,
+				6E6AED411561663F00BC3823 /* SBJsonStreamWriterAccumulator.h */,
+				6E6AED421561663F00BC3823 /* SBJsonStreamWriterAccumulator.m */,
+				6E6AED431561663F00BC3823 /* SBJsonStreamWriterState.h */,
+				6E6AED441561663F00BC3823 /* SBJsonStreamWriterState.m */,
+				6E6AED451561663F00BC3823 /* SBJsonTokeniser.h */,
+				6E6AED461561663F00BC3823 /* SBJsonTokeniser.m */,
+				6E6AED471561663F00BC3823 /* SBJsonUTF8Stream.h */,
+				6E6AED481561663F00BC3823 /* SBJsonUTF8Stream.m */,
+				6E6AED491561663F00BC3823 /* SBJsonWriter.h */,
+				6E6AED4A1561663F00BC3823 /* SBJsonWriter.m */,
+			);
+			name = JSON;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6E6AECFD15615FF200BC3823 /* CodeBeamer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6E6AED1C15615FF200BC3823 /* Build configuration list for PBXNativeTarget "CodeBeamer" */;
+			buildPhases = (
+				6E6AECFA15615FF200BC3823 /* Sources */,
+				6E6AECFB15615FF200BC3823 /* Frameworks */,
+				6E6AECFC15615FF200BC3823 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = CodeBeamer;
+			productName = CodeBeamer;
+			productReference = 6E6AECFE15615FF200BC3823 /* CodeBeamer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6E6AECF515615FF100BC3823 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = CodeBeamer;
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 6E6AECF815615FF100BC3823 /* Build configuration list for PBXProject "CodeBeamer" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 6E6AECF315615FF100BC3823;
+			productRefGroup = 6E6AECFF15615FF200BC3823 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6E6AECFD15615FF200BC3823 /* CodeBeamer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6E6AECFC15615FF200BC3823 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6E6AED0D15615FF200BC3823 /* InfoPlist.strings in Resources */,
+				6E6AED1615615FF200BC3823 /* MainStoryboard.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6E6AECFA15615FF200BC3823 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6E6AED0F15615FF200BC3823 /* main.m in Sources */,
+				6E6AED1315615FF200BC3823 /* CodeBeamerAppDelegate.m in Sources */,
+				6E6AED1915615FF200BC3823 /* CodeBeamerViewController.m in Sources */,
+				6E6AED291561603200BC3823 /* DetailUIViewController.m in Sources */,
+				6E6AED2A1561603200BC3823 /* MasterUITableViewController.m in Sources */,
+				6E6AED301561637500BC3823 /* RootUITableViewController.m in Sources */,
+				6E6AED4B1561663F00BC3823 /* NSObject+SBJson.m in Sources */,
+				6E6AED4C1561663F00BC3823 /* SBJsonParser.m in Sources */,
+				6E6AED4D1561663F00BC3823 /* SBJsonStreamParser.m in Sources */,
+				6E6AED4E1561663F00BC3823 /* SBJsonStreamParserAccumulator.m in Sources */,
+				6E6AED4F1561663F00BC3823 /* SBJsonStreamParserAdapter.m in Sources */,
+				6E6AED501561663F00BC3823 /* SBJsonStreamParserState.m in Sources */,
+				6E6AED511561663F00BC3823 /* SBJsonStreamWriter.m in Sources */,
+				6E6AED521561663F00BC3823 /* SBJsonStreamWriterAccumulator.m in Sources */,
+				6E6AED531561663F00BC3823 /* SBJsonStreamWriterState.m in Sources */,
+				6E6AED541561663F00BC3823 /* SBJsonTokeniser.m in Sources */,
+				6E6AED551561663F00BC3823 /* SBJsonUTF8Stream.m in Sources */,
+				6E6AED561561663F00BC3823 /* SBJsonWriter.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		6E6AED0B15615FF200BC3823 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6E6AED0C15615FF200BC3823 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		6E6AED1415615FF200BC3823 /* MainStoryboard.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6E6AED1515615FF200BC3823 /* en */,
+			);
+			name = MainStoryboard.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		6E6AED1A15615FF200BC3823 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		6E6AED1B15615FF200BC3823 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		6E6AED1D15615FF200BC3823 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CodeBeamer/CodeBeamer-Prefix.pch";
+				INFOPLIST_FILE = "CodeBeamer/CodeBeamer-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		6E6AED1E15615FF200BC3823 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "CodeBeamer/CodeBeamer-Prefix.pch";
+				INFOPLIST_FILE = "CodeBeamer/CodeBeamer-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6E6AECF815615FF100BC3823 /* Build configuration list for PBXProject "CodeBeamer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6E6AED1A15615FF200BC3823 /* Debug */,
+				6E6AED1B15615FF200BC3823 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6E6AED1C15615FF200BC3823 /* Build configuration list for PBXNativeTarget "CodeBeamer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6E6AED1D15615FF200BC3823 /* Debug */,
+				6E6AED1E15615FF200BC3823 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6E6AECF515615FF100BC3823 /* Project object */;
+}
