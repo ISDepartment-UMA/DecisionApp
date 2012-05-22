@@ -1,0 +1,462 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		6E949DE11566B5C8007D039D /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E949DE01566B5C8007D039D /* UIKit.framework */; };
+		6E949DE31566B5C8007D039D /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E949DE21566B5C8007D039D /* Foundation.framework */; };
+		6E949DE51566B5C8007D039D /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E949DE41566B5C8007D039D /* CoreGraphics.framework */; };
+		6E949DEB1566B5C8007D039D /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6E949DE91566B5C8007D039D /* InfoPlist.strings */; };
+		6E949DED1566B5C8007D039D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E949DEC1566B5C8007D039D /* main.m */; };
+		6E949DF11566B5C8007D039D /* SmartSourcerAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E949DF01566B5C8007D039D /* SmartSourcerAppDelegate.m */; };
+		6E949DF41566B5C9007D039D /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6E949DF21566B5C9007D039D /* MainStoryboard.storyboard */; };
+		6E949DF71566B5C9007D039D /* SmartSourcerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E949DF61566B5C9007D039D /* SmartSourcerViewController.m */; };
+		6E949E081566BA0B007D039D /* ProjectTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E949E071566BA0B007D039D /* ProjectTableViewController.m */; };
+		6E949E0E1566BF21007D039D /* anderes3.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6E949E091566BF21007D039D /* anderes3.jpg */; };
+		6E949E0F1566BF21007D039D /* anderes4.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6E949E0A1566BF21007D039D /* anderes4.jpg */; };
+		6E949E101566BF21007D039D /* background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6E949E0B1566BF21007D039D /* background.jpg */; };
+		6E949E111566BF21007D039D /* Einstellungen.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6E949E0C1566BF21007D039D /* Einstellungen.jpg */; };
+		6E949E121566BF21007D039D /* projektAuswaehlen.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6E949E0D1566BF21007D039D /* projektAuswaehlen.jpg */; };
+		6E949E2D1566C342007D039D /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E949E151566C342007D039D /* NSObject+SBJson.m */; };
+		6E949E2E1566C342007D039D /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E949E181566C342007D039D /* SBJsonParser.m */; };
+		6E949E2F1566C342007D039D /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E949E1A1566C342007D039D /* SBJsonStreamParser.m */; };
+		6E949E301566C342007D039D /* SBJsonStreamParserAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E949E1C1566C342007D039D /* SBJsonStreamParserAccumulator.m */; };
+		6E949E311566C342007D039D /* SBJsonStreamParserAdapter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E949E1E1566C342007D039D /* SBJsonStreamParserAdapter.m */; };
+		6E949E321566C342007D039D /* SBJsonStreamParserState.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E949E201566C342007D039D /* SBJsonStreamParserState.m */; };
+		6E949E331566C342007D039D /* SBJsonStreamWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E949E221566C342007D039D /* SBJsonStreamWriter.m */; };
+		6E949E341566C342007D039D /* SBJsonStreamWriterAccumulator.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E949E241566C342007D039D /* SBJsonStreamWriterAccumulator.m */; };
+		6E949E351566C342007D039D /* SBJsonStreamWriterState.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E949E261566C342007D039D /* SBJsonStreamWriterState.m */; };
+		6E949E361566C342007D039D /* SBJsonTokeniser.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E949E281566C342007D039D /* SBJsonTokeniser.m */; };
+		6E949E371566C342007D039D /* SBJsonUTF8Stream.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E949E2A1566C342007D039D /* SBJsonUTF8Stream.m */; };
+		6E949E381566C342007D039D /* SBJsonWriter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E949E2C1566C342007D039D /* SBJsonWriter.m */; };
+		6E949E3B1566CA64007D039D /* RatedProjectTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E949E3A1566CA64007D039D /* RatedProjectTableViewController.m */; };
+		6E949E4E1566D308007D039D /* ComponentsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E949E4D1566D308007D039D /* ComponentsTableViewController.m */; };
+		6E949E531566D5C1007D039D /* DetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E949E521566D5C1007D039D /* DetailViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		6E8886101566DF0A00EBC90E /* SplitViewBarButtonItemPresenter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SplitViewBarButtonItemPresenter.h; sourceTree = "<group>"; };
+		6E949DDC1566B5C8007D039D /* SmartSourcer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SmartSourcer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6E949DE01566B5C8007D039D /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		6E949DE21566B5C8007D039D /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		6E949DE41566B5C8007D039D /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		6E949DE81566B5C8007D039D /* SmartSourcer-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "SmartSourcer-Info.plist"; sourceTree = "<group>"; };
+		6E949DEA1566B5C8007D039D /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		6E949DEC1566B5C8007D039D /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		6E949DEE1566B5C8007D039D /* SmartSourcer-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "SmartSourcer-Prefix.pch"; sourceTree = "<group>"; };
+		6E949DEF1566B5C8007D039D /* SmartSourcerAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SmartSourcerAppDelegate.h; sourceTree = "<group>"; };
+		6E949DF01566B5C8007D039D /* SmartSourcerAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SmartSourcerAppDelegate.m; sourceTree = "<group>"; };
+		6E949DF31566B5C9007D039D /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		6E949DF51566B5C9007D039D /* SmartSourcerViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SmartSourcerViewController.h; sourceTree = "<group>"; };
+		6E949DF61566B5C9007D039D /* SmartSourcerViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = SmartSourcerViewController.m; sourceTree = "<group>"; };
+		6E949E061566BA0B007D039D /* ProjectTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectTableViewController.h; sourceTree = "<group>"; };
+		6E949E071566BA0B007D039D /* ProjectTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectTableViewController.m; sourceTree = "<group>"; };
+		6E949E091566BF21007D039D /* anderes3.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = anderes3.jpg; path = media/anderes3.jpg; sourceTree = "<group>"; };
+		6E949E0A1566BF21007D039D /* anderes4.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = anderes4.jpg; path = media/anderes4.jpg; sourceTree = "<group>"; };
+		6E949E0B1566BF21007D039D /* background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = background.jpg; path = media/background.jpg; sourceTree = "<group>"; };
+		6E949E0C1566BF21007D039D /* Einstellungen.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = Einstellungen.jpg; path = media/Einstellungen.jpg; sourceTree = "<group>"; };
+		6E949E0D1566BF21007D039D /* projektAuswaehlen.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = projektAuswaehlen.jpg; path = media/projektAuswaehlen.jpg; sourceTree = "<group>"; };
+		6E949E141566C342007D039D /* NSObject+SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJson.h"; sourceTree = "<group>"; };
+		6E949E151566C342007D039D /* NSObject+SBJson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJson.m"; sourceTree = "<group>"; };
+		6E949E161566C342007D039D /* SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson.h; sourceTree = "<group>"; };
+		6E949E171566C342007D039D /* SBJsonParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonParser.h; sourceTree = "<group>"; };
+		6E949E181566C342007D039D /* SBJsonParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonParser.m; sourceTree = "<group>"; };
+		6E949E191566C342007D039D /* SBJsonStreamParser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamParser.h; sourceTree = "<group>"; };
+		6E949E1A1566C342007D039D /* SBJsonStreamParser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamParser.m; sourceTree = "<group>"; };
+		6E949E1B1566C342007D039D /* SBJsonStreamParserAccumulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamParserAccumulator.h; sourceTree = "<group>"; };
+		6E949E1C1566C342007D039D /* SBJsonStreamParserAccumulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamParserAccumulator.m; sourceTree = "<group>"; };
+		6E949E1D1566C342007D039D /* SBJsonStreamParserAdapter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamParserAdapter.h; sourceTree = "<group>"; };
+		6E949E1E1566C342007D039D /* SBJsonStreamParserAdapter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamParserAdapter.m; sourceTree = "<group>"; };
+		6E949E1F1566C342007D039D /* SBJsonStreamParserState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamParserState.h; sourceTree = "<group>"; };
+		6E949E201566C342007D039D /* SBJsonStreamParserState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamParserState.m; sourceTree = "<group>"; };
+		6E949E211566C342007D039D /* SBJsonStreamWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamWriter.h; sourceTree = "<group>"; };
+		6E949E221566C342007D039D /* SBJsonStreamWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamWriter.m; sourceTree = "<group>"; };
+		6E949E231566C342007D039D /* SBJsonStreamWriterAccumulator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamWriterAccumulator.h; sourceTree = "<group>"; };
+		6E949E241566C342007D039D /* SBJsonStreamWriterAccumulator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamWriterAccumulator.m; sourceTree = "<group>"; };
+		6E949E251566C342007D039D /* SBJsonStreamWriterState.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonStreamWriterState.h; sourceTree = "<group>"; };
+		6E949E261566C342007D039D /* SBJsonStreamWriterState.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonStreamWriterState.m; sourceTree = "<group>"; };
+		6E949E271566C342007D039D /* SBJsonTokeniser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonTokeniser.h; sourceTree = "<group>"; };
+		6E949E281566C342007D039D /* SBJsonTokeniser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonTokeniser.m; sourceTree = "<group>"; };
+		6E949E291566C342007D039D /* SBJsonUTF8Stream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonUTF8Stream.h; sourceTree = "<group>"; };
+		6E949E2A1566C342007D039D /* SBJsonUTF8Stream.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonUTF8Stream.m; sourceTree = "<group>"; };
+		6E949E2B1566C342007D039D /* SBJsonWriter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJsonWriter.h; sourceTree = "<group>"; };
+		6E949E2C1566C342007D039D /* SBJsonWriter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SBJsonWriter.m; sourceTree = "<group>"; };
+		6E949E391566CA64007D039D /* RatedProjectTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = RatedProjectTableViewController.h; path = SmartSourcer/RatedProjectTableViewController.h; sourceTree = "<group>"; };
+		6E949E3A1566CA64007D039D /* RatedProjectTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = RatedProjectTableViewController.m; path = SmartSourcer/RatedProjectTableViewController.m; sourceTree = "<group>"; };
+		6E949E4C1566D308007D039D /* ComponentsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentsTableViewController.h; sourceTree = "<group>"; };
+		6E949E4D1566D308007D039D /* ComponentsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComponentsTableViewController.m; sourceTree = "<group>"; };
+		6E949E511566D5C1007D039D /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
+		6E949E521566D5C1007D039D /* DetailViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailViewController.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		6E949DD91566B5C8007D039D /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6E949DE11566B5C8007D039D /* UIKit.framework in Frameworks */,
+				6E949DE31566B5C8007D039D /* Foundation.framework in Frameworks */,
+				6E949DE51566B5C8007D039D /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		6E949DD11566B5C8007D039D = {
+			isa = PBXGroup;
+			children = (
+				6E949E4F1566D56F007D039D /* splitview */,
+				6E949E051566B9DA007D039D /* ProjectTableView */,
+				6E949E3C1566CA71007D039D /* RatedProjectTableView */,
+				6E949E131566C31E007D039D /* JSON */,
+				6E949E011566B8FC007D039D /* media */,
+				6E949DE61566B5C8007D039D /* SmartSourcer */,
+				6E949DDF1566B5C8007D039D /* Frameworks */,
+				6E949DDD1566B5C8007D039D /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		6E949DDD1566B5C8007D039D /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				6E949DDC1566B5C8007D039D /* SmartSourcer.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		6E949DDF1566B5C8007D039D /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				6E949DE01566B5C8007D039D /* UIKit.framework */,
+				6E949DE21566B5C8007D039D /* Foundation.framework */,
+				6E949DE41566B5C8007D039D /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		6E949DE61566B5C8007D039D /* SmartSourcer */ = {
+			isa = PBXGroup;
+			children = (
+				6E949DEF1566B5C8007D039D /* SmartSourcerAppDelegate.h */,
+				6E949DF01566B5C8007D039D /* SmartSourcerAppDelegate.m */,
+				6E949DF21566B5C9007D039D /* MainStoryboard.storyboard */,
+				6E949DF51566B5C9007D039D /* SmartSourcerViewController.h */,
+				6E949DF61566B5C9007D039D /* SmartSourcerViewController.m */,
+				6E949DE71566B5C8007D039D /* Supporting Files */,
+			);
+			path = SmartSourcer;
+			sourceTree = "<group>";
+		};
+		6E949DE71566B5C8007D039D /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				6E949DE81566B5C8007D039D /* SmartSourcer-Info.plist */,
+				6E949DE91566B5C8007D039D /* InfoPlist.strings */,
+				6E949DEC1566B5C8007D039D /* main.m */,
+				6E949DEE1566B5C8007D039D /* SmartSourcer-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		6E949E011566B8FC007D039D /* media */ = {
+			isa = PBXGroup;
+			children = (
+				6E949E091566BF21007D039D /* anderes3.jpg */,
+				6E949E0A1566BF21007D039D /* anderes4.jpg */,
+				6E949E0B1566BF21007D039D /* background.jpg */,
+				6E949E0C1566BF21007D039D /* Einstellungen.jpg */,
+				6E949E0D1566BF21007D039D /* projektAuswaehlen.jpg */,
+			);
+			name = media;
+			path = SmartSourcer;
+			sourceTree = "<group>";
+		};
+		6E949E051566B9DA007D039D /* ProjectTableView */ = {
+			isa = PBXGroup;
+			children = (
+				6E949E061566BA0B007D039D /* ProjectTableViewController.h */,
+				6E949E071566BA0B007D039D /* ProjectTableViewController.m */,
+			);
+			name = ProjectTableView;
+			sourceTree = "<group>";
+		};
+		6E949E131566C31E007D039D /* JSON */ = {
+			isa = PBXGroup;
+			children = (
+				6E949E141566C342007D039D /* NSObject+SBJson.h */,
+				6E949E151566C342007D039D /* NSObject+SBJson.m */,
+				6E949E161566C342007D039D /* SBJson.h */,
+				6E949E171566C342007D039D /* SBJsonParser.h */,
+				6E949E181566C342007D039D /* SBJsonParser.m */,
+				6E949E191566C342007D039D /* SBJsonStreamParser.h */,
+				6E949E1A1566C342007D039D /* SBJsonStreamParser.m */,
+				6E949E1B1566C342007D039D /* SBJsonStreamParserAccumulator.h */,
+				6E949E1C1566C342007D039D /* SBJsonStreamParserAccumulator.m */,
+				6E949E1D1566C342007D039D /* SBJsonStreamParserAdapter.h */,
+				6E949E1E1566C342007D039D /* SBJsonStreamParserAdapter.m */,
+				6E949E1F1566C342007D039D /* SBJsonStreamParserState.h */,
+				6E949E201566C342007D039D /* SBJsonStreamParserState.m */,
+				6E949E211566C342007D039D /* SBJsonStreamWriter.h */,
+				6E949E221566C342007D039D /* SBJsonStreamWriter.m */,
+				6E949E231566C342007D039D /* SBJsonStreamWriterAccumulator.h */,
+				6E949E241566C342007D039D /* SBJsonStreamWriterAccumulator.m */,
+				6E949E251566C342007D039D /* SBJsonStreamWriterState.h */,
+				6E949E261566C342007D039D /* SBJsonStreamWriterState.m */,
+				6E949E271566C342007D039D /* SBJsonTokeniser.h */,
+				6E949E281566C342007D039D /* SBJsonTokeniser.m */,
+				6E949E291566C342007D039D /* SBJsonUTF8Stream.h */,
+				6E949E2A1566C342007D039D /* SBJsonUTF8Stream.m */,
+				6E949E2B1566C342007D039D /* SBJsonWriter.h */,
+				6E949E2C1566C342007D039D /* SBJsonWriter.m */,
+			);
+			name = JSON;
+			sourceTree = "<group>";
+		};
+		6E949E3C1566CA71007D039D /* RatedProjectTableView */ = {
+			isa = PBXGroup;
+			children = (
+				6E949E391566CA64007D039D /* RatedProjectTableViewController.h */,
+				6E949E3A1566CA64007D039D /* RatedProjectTableViewController.m */,
+			);
+			name = RatedProjectTableView;
+			sourceTree = "<group>";
+		};
+		6E949E4B1566D2E1007D039D /* ComponentsTableView */ = {
+			isa = PBXGroup;
+			children = (
+				6E949E4C1566D308007D039D /* ComponentsTableViewController.h */,
+				6E949E4D1566D308007D039D /* ComponentsTableViewController.m */,
+			);
+			name = ComponentsTableView;
+			sourceTree = "<group>";
+		};
+		6E949E4F1566D56F007D039D /* splitview */ = {
+			isa = PBXGroup;
+			children = (
+				6E8886101566DF0A00EBC90E /* SplitViewBarButtonItemPresenter.h */,
+				6E949E501566D578007D039D /* DetailView */,
+				6E949E4B1566D2E1007D039D /* ComponentsTableView */,
+			);
+			name = splitview;
+			sourceTree = "<group>";
+		};
+		6E949E501566D578007D039D /* DetailView */ = {
+			isa = PBXGroup;
+			children = (
+				6E949E511566D5C1007D039D /* DetailViewController.h */,
+				6E949E521566D5C1007D039D /* DetailViewController.m */,
+			);
+			name = DetailView;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		6E949DDB1566B5C8007D039D /* SmartSourcer */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 6E949DFA1566B5C9007D039D /* Build configuration list for PBXNativeTarget "SmartSourcer" */;
+			buildPhases = (
+				6E949DD81566B5C8007D039D /* Sources */,
+				6E949DD91566B5C8007D039D /* Frameworks */,
+				6E949DDA1566B5C8007D039D /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = SmartSourcer;
+			productName = SmartSourcer;
+			productReference = 6E949DDC1566B5C8007D039D /* SmartSourcer.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		6E949DD31566B5C8007D039D /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				CLASSPREFIX = SmartSourcer;
+				LastUpgradeCheck = 0430;
+			};
+			buildConfigurationList = 6E949DD61566B5C8007D039D /* Build configuration list for PBXProject "SmartSourcer" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 6E949DD11566B5C8007D039D;
+			productRefGroup = 6E949DDD1566B5C8007D039D /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				6E949DDB1566B5C8007D039D /* SmartSourcer */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		6E949DDA1566B5C8007D039D /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6E949DEB1566B5C8007D039D /* InfoPlist.strings in Resources */,
+				6E949DF41566B5C9007D039D /* MainStoryboard.storyboard in Resources */,
+				6E949E0E1566BF21007D039D /* anderes3.jpg in Resources */,
+				6E949E0F1566BF21007D039D /* anderes4.jpg in Resources */,
+				6E949E101566BF21007D039D /* background.jpg in Resources */,
+				6E949E111566BF21007D039D /* Einstellungen.jpg in Resources */,
+				6E949E121566BF21007D039D /* projektAuswaehlen.jpg in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		6E949DD81566B5C8007D039D /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6E949DED1566B5C8007D039D /* main.m in Sources */,
+				6E949DF11566B5C8007D039D /* SmartSourcerAppDelegate.m in Sources */,
+				6E949DF71566B5C9007D039D /* SmartSourcerViewController.m in Sources */,
+				6E949E081566BA0B007D039D /* ProjectTableViewController.m in Sources */,
+				6E949E2D1566C342007D039D /* NSObject+SBJson.m in Sources */,
+				6E949E2E1566C342007D039D /* SBJsonParser.m in Sources */,
+				6E949E2F1566C342007D039D /* SBJsonStreamParser.m in Sources */,
+				6E949E301566C342007D039D /* SBJsonStreamParserAccumulator.m in Sources */,
+				6E949E311566C342007D039D /* SBJsonStreamParserAdapter.m in Sources */,
+				6E949E321566C342007D039D /* SBJsonStreamParserState.m in Sources */,
+				6E949E331566C342007D039D /* SBJsonStreamWriter.m in Sources */,
+				6E949E341566C342007D039D /* SBJsonStreamWriterAccumulator.m in Sources */,
+				6E949E351566C342007D039D /* SBJsonStreamWriterState.m in Sources */,
+				6E949E361566C342007D039D /* SBJsonTokeniser.m in Sources */,
+				6E949E371566C342007D039D /* SBJsonUTF8Stream.m in Sources */,
+				6E949E381566C342007D039D /* SBJsonWriter.m in Sources */,
+				6E949E3B1566CA64007D039D /* RatedProjectTableViewController.m in Sources */,
+				6E949E4E1566D308007D039D /* ComponentsTableViewController.m in Sources */,
+				6E949E531566D5C1007D039D /* DetailViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		6E949DE91566B5C8007D039D /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6E949DEA1566B5C8007D039D /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		6E949DF21566B5C9007D039D /* MainStoryboard.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				6E949DF31566B5C9007D039D /* en */,
+			);
+			name = MainStoryboard.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		6E949DF81566B5C9007D039D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		6E949DF91566B5C9007D039D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.1;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		6E949DFB1566B5C9007D039D /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SmartSourcer/SmartSourcer-Prefix.pch";
+				INFOPLIST_FILE = "SmartSourcer/SmartSourcer-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		6E949DFC1566B5C9007D039D /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "SmartSourcer/SmartSourcer-Prefix.pch";
+				INFOPLIST_FILE = "SmartSourcer/SmartSourcer-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		6E949DD61566B5C8007D039D /* Build configuration list for PBXProject "SmartSourcer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6E949DF81566B5C9007D039D /* Debug */,
+				6E949DF91566B5C9007D039D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		6E949DFA1566B5C9007D039D /* Build configuration list for PBXNativeTarget "SmartSourcer" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				6E949DFB1566B5C9007D039D /* Debug */,
+				6E949DFC1566B5C9007D039D /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 6E949DD31566B5C8007D039D /* Project object */;
+}
