@@ -7,6 +7,7 @@
 //
 
 #import "ShowClassificationTableViewController.h"
+#import "ComponentDetailInfoViewController.h"
 
 @interface ShowClassificationTableViewController ()
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
@@ -34,6 +35,7 @@
     self.availableCells = components;
     self.navigationItem.prompt = classification;
     self.navigationController.navigationBarHidden = YES;
+    self.title = classification;
     [self.tableView reloadData];
 }
 
@@ -42,12 +44,20 @@
     [super viewDidLoad];
 
 
+
 }
 
 - (void)viewDidUnload
 {
     [super viewDidUnload];
+    self.navigationItem.prompt = nil;
 
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    self.navigationController.navigationBarHidden = YES;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -99,13 +109,21 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+    [self performSegueWithIdentifier:@"showComponentDetail" sender:[self.tableView cellForRowAtIndexPath:indexPath]];
+}
+
+
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(UITableViewCell *)sender
+{
+    if ([segue.identifier isEqualToString:@"showComponentDetail"]) {
+        ComponentDetailInfoViewController *cdivc = (ComponentDetailInfoViewController *)segue.destinationViewController;
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
+        cdivc.managedObjectContext = self.managedObjectContext;
+        [cdivc setComponent:[[self.availableCells objectAtIndex:indexPath.row] objectAtIndex:0]];
+
+        
+    }
 }
 
 @end

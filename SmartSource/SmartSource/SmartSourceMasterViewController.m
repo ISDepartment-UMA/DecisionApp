@@ -53,27 +53,59 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    if ([defaults objectForKey:@"loginData"] == nil) {
-        [defaults setObject:[NSArray arrayWithObjects:@"http://79.125.4.182/remote-api", @"rtoermer", @"hundhund", nil] forKey:@"loginData"];
-        [defaults synchronize];
-        
-        
-    }
+
     
+    //call loadProjects in seperate thread to retrieve projects
+    //[NSThread detachNewThreadSelector:@selector(loadProjects) toTarget:self withObject:nil];
     
-    self.availableCells = [self getAllProjectNames];
-    self.displayedCells = self.availableCells;
+    //search bar
     self.projectSearchBar.delegate = self;
     
     //add observer so data is reloaded, once the main menu disappears
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateScreen) name:@"UpdateMaserView" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showAllProjects) name:@"UpdateMaserViewFromCodeBeamer" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showRatedProjects) name:@"UpdateMasterViewFromCoreData" object:nil];
 }
 
-- (void)updateScreen
+//method to be called in seperate thread that retrieves information about all projects from code beamer
+- (void)loadProjectsFromCodeBeamer
 {
-        
     self.availableCells = [self getAllProjectNames];
+    self.displayedCells = self.availableCells;
+    [self.tableView reloadData];
+    
+}
+
+//method that loads all projects if main menu is poped
+- (void)showAllProjects
+{
+    [self.detailScreen setProjectDetails:nil];
+    [NSThread detachNewThreadSelector:@selector(loadProjectsFromCodeBeamer) toTarget:self withObject:nil];
+}
+
+- (void)showRatedProjects
+{
+    [self.detailScreen setProjectDetails:nil];
+
+    //get all projects from core database
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Project"];
+    NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    request.sortDescriptors = [NSArray arrayWithObject:sortDescription];
+    NSError *error = nil;
+    NSArray *matches = [self.managedObjectContext executeFetchRequest:request error:&error];
+    
+    //initiate array of available projects
+    NSMutableArray *availableProjects = [NSMutableArray array];
+    
+    
+    //put id, name and description of all projects into available projects
+    for (int i=0; i<[matches count]; i++) {
+        Project *currProject = [matches objectAtIndex:i];
+        [availableProjects addObject:[NSArray arrayWithObjects:currProject.projectID, currProject.name, currProject.descr, nil]];
+    }
+    
+    
+    
+    self.availableCells = [availableProjects copy];
     self.displayedCells = self.availableCells;
     [self.tableView reloadData];
 }
@@ -228,7 +260,6 @@
         return [NSMutableArray arrayWithObject:[NSMutableArray arrayWithObjects:@"", @"Fehler!", @"",  nil]];
     }
 }
-
 
 
 

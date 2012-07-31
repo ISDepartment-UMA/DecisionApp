@@ -183,8 +183,14 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    static NSString *CellIdentifier = @"tableCell";
-    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+    //build cell
+    UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleDefault reuseIdentifier:@"tableCell"];
+    for (int i=0; i< [self.columns count]; i++) {
+        UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20 + (i*71), 0, 61, 43)];
+        [label setTag:(i+1)];
+        [cell.contentView addSubview:label];
+    }
+    
     
     //top line of the table
     if (indexPath.row == 0) {

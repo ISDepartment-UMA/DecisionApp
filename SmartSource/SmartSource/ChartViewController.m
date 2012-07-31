@@ -88,34 +88,44 @@
     }
     
     
-    CGRect frame = CGRectMake(0, 183, 703, 501);
+    CGRect frame = CGRectMake(0, 0, 703, 501);
     BNPieChart *chart = [[BNPieChart alloc] initWithFrame:frame];
     chart.backgroundColor = [UIColor whiteColor];
-    
+    int index = 0;
     
     for (int i=0; i<[componentClassification count]; i++) {
         
         double numberInThisCategory = 0.0;
         NSString *category;
+
         
         if ((numberInThisCategory = [[componentClassification objectAtIndex:i] count]) > 0) {
             
             if (i == 0) {
-                category = @"A";
+                category = @"A - In-House";
+                if (self.textLabelA.hidden = YES) {
+                    [self.textLabelA setHidden:NO];
+                    self.textLabelA.textColor = [self getRGBForIndex:index];
+                    index++;
+                }
             } else if (i == 1) {
-                category = @"B";
+                category = @"B - Indifferent";
+                if (self.textLabelB.hidden = YES) {
+                    [self.textLabelB setHidden:NO];
+                    self.textLabelB.textColor = [self getRGBForIndex:index];
+                    index++;
+                }
             } else {
-                category = @"C";
+                category = @"C - Likely Outsourced";
+                if (self.textLabelC.hidden = YES) {
+                    [self.textLabelC setHidden:NO];
+                    self.textLabelC.textColor = [self getRGBForIndex:index];
+                    index++;
+                }
             }
             [chart addSlicePortion:(numberInThisCategory/totalComponents) withName:category];
         }
     }
-    
-
-    //set the color of the text labels with recommendation according to colors in chart
-    self.textLabelA.textColor = [self getRGBForIndex:0];
-    self.textLabelB.textColor = [self getRGBForIndex:1];
-    self.textLabelC.textColor = [self getRGBForIndex:2];
     
     
     
@@ -149,7 +159,7 @@
 
 - (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
 {
-    barButtonItem.title = NSLocalizedString(@"Projects", @"Projects");
+    barButtonItem.title = NSLocalizedString(@"Result Overview", @"Result Overview");
     [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
     self.masterPopoverController = popoverController;
 }
@@ -166,6 +176,11 @@
     if ([segue.identifier isEqualToString:@"decisionTable"]) {
         DecisionTableViewController *decTVC = segue.destinationViewController;
         decTVC.managedObjectContext = self.managedObjectContext;
+    }
+    
+    if ([segue.identifier isEqualToString:@"showClassification"]) {
+        ShowClassificationTableViewController *scTVC = segue.destinationViewController;
+        scTVC.managedObjectContext = self.managedObjectContext;
     }
 }
 

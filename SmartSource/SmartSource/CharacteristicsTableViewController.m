@@ -41,11 +41,6 @@
 {
     [super viewDidLoad];
 
-    // Uncomment the following line to preserve selection between presentations.
-    // self.clearsSelectionOnViewWillAppear = NO;
- 
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
 - (void)viewDidUnload
@@ -92,6 +87,7 @@
     NSString *message = @"Please enter the name for your new Super Characteristic!";
     AlertView * alert = [[AlertView alloc] initWithTitle:@"Super Characteristic" message:message delegate:self cancelButtonTitle:@"Insert" otherButtonTitles:@"Cancel", nil];
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
+    alert.identifier = @"insert";
     [alert show];
 }
 
@@ -103,41 +99,89 @@
     alert.alertViewStyle = UIAlertViewStylePlainTextInput;
     
     UITableViewCell *cell = (UITableViewCell *)sender.superview.superview;
-    alert.stringToPass = [self.SuperCharacteristics objectAtIndex:[self.tableView indexPathForCell:cell].section-1];
+    alert.objectToPass = [self.SuperCharacteristics objectAtIndex:[self.tableView indexPathForCell:cell].section-1];
+    alert.identifier = @"insert";
     [alert show];
 }
 
 - (void)alertView:(AlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{ 
     
-    //if insertbutton clicked and title is super characteristic and input not empty
-    if ((buttonIndex == 0) && ([alertView.title isEqualToString:@"Super Characteristic"]) && (![[[alertView textFieldAtIndex:0] text] isEqualToString:@""])) {
-        
-        //then insert the new supercharacteristic
-        [AvailableSuperCharacteristic addNewAvailableSuperCharacteristic:[[alertView textFieldAtIndex:0] text] toManagedObjectContext:self.managedObjectContext];
-        
-        //save context
-        NSError *error = nil;
-        if (![self.managedObjectContext save:&error]) {
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
+    
+    //response from alert to insert new characteristic
+    
+    
+    if ([alertView.identifier isEqualToString:@"insert"]) {
+        //if insertbutton clicked and title is super characteristic and input not empty
+        if ((buttonIndex == 0) && ([alertView.title isEqualToString:@"Super Characteristic"]) && (![[[alertView textFieldAtIndex:0] text] isEqualToString:@""])) {
+            
+            //then insert the new supercharacteristic
+            [AvailableSuperCharacteristic addNewAvailableSuperCharacteristic:[[alertView textFieldAtIndex:0] text] toManagedObjectContext:self.managedObjectContext];
+            
+            //save context
+            NSError *error = nil;
+            if (![self.managedObjectContext save:&error]) {
+                NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+                abort();
+            }
+            [self getRatingCharacteristics];
+            [self.tableView reloadData];
+            
+            //if insertbutton clicked and title is characteristic and input not empty
+        } else if ((buttonIndex == 0) && ([alertView.title isEqualToString:@"Characteristic"]) && (![[[alertView textFieldAtIndex:0] text] isEqualToString:@""])) {
+            
+            NSString *superCharacteristicName = (NSString *)alertView.objectToPass;
+            //then insert the new characteristic
+            [AvailableCharacteristic addNewAvailableCharacteristic:[[alertView textFieldAtIndex:0] text] toSuperCharacteristic:superCharacteristicName toManagedObjectContext:self.managedObjectContext];
+            
+            //save context
+            NSError *error = nil;
+            if (![self.managedObjectContext save:&error]) {
+                NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+                abort();
+            }
+            [self getRatingCharacteristics];
+            [self.tableView reloadData];
+            
         }
-        [self getRatingCharacteristics];
-        [self.tableView reloadData];
         
-    //if insertbutton clicked and title is characteristic and input not empty
-    } else if ((buttonIndex == 0) && ([alertView.title isEqualToString:@"Characteristic"]) && (![[[alertView textFieldAtIndex:0] text] isEqualToString:@""])) {
+    //response from alert to delete characteristic
         
-        //then insert the new characteristic
-        [AvailableCharacteristic addNewAvailableCharacteristic:[[alertView textFieldAtIndex:0] text] toSuperCharacteristic:alertView.stringToPass toManagedObjectContext:self.managedObjectContext];
         
-        //save context
-        NSError *error = nil;
-        if (![self.managedObjectContext save:&error]) {
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
+    } else if ([alertView.identifier isEqualToString:@"delete"]) {
+        
+        //if delete button was pressed
+        if (buttonIndex == 0) {
+            
+            UITableViewCell *cell = (UITableViewCell *)alertView.objectToPass;
+            NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+            NSFetchRequest *request;
+            
+            
+            //characteristic to delete is supercharacteristic
+            if (indexPath.row == 0) {
+                 request = [NSFetchRequest fetchRequestWithEntityName:@"AvailableSuperCharacteristic"];
+            } else {
+                 request = [NSFetchRequest fetchRequestWithEntityName:@"AvailableCharacteristic"];
+            }
+            //look for 
+            request.predicate = [NSPredicate predicateWithFormat:@"name =%@", alertView.title];
+            NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+            request.sortDescriptors = [NSArray arrayWithObject:sortDescription];
+            NSError *error = nil;
+            NSArray *matches = [self.managedObjectContext executeFetchRequest:request error:&error];
+            
+            //delete characteristic -- if it's a supercharacteristic, cascade will delete all characteristics that belong to it
+            [self.managedObjectContext deleteObject:[matches objectAtIndex:0]];
+            
+            //save context
+            if (![self.managedObjectContext save:&error]) {
+                NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+                abort();
+            }
+            
+            [self getRatingCharacteristics];
+            [self.tableView reloadData];        
         }
-        [self getRatingCharacteristics];
-        [self.tableView reloadData];
         
     }
 }
@@ -166,9 +210,12 @@
             //get cell
             static NSString *CellIdentifier = @"SuperCharacteristicCell";
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-            
             //set label
             cell.textLabel.text = [self.SuperCharacteristics objectAtIndex:indexPath.section-1];
+            
+            [cell setAccessoryView:[self buildDeleteButton]];
+            cell.accessoryView.userInteractionEnabled = YES;
+
             return cell;
         
         //beginning with the second row of each section, show the subcharacteristics
@@ -180,6 +227,9 @@
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
             //add label
             cell.textLabel.text = [[self.Characteristics objectAtIndex:indexPath.section-1] objectAtIndex:indexPath.row-1];
+            
+            [cell setAccessoryView:[self buildDeleteButton]];
+            cell.accessoryView.userInteractionEnabled = YES;
             return cell; 
             
         //in the last row of each section, add a button to add a new subcharacteristic to the supercharacteristic
@@ -193,6 +243,40 @@
     }
 
     
+}
+
+- (UIButton *)buildDeleteButton
+{
+    UIImage *normal = [UIImage imageNamed:@"delete.png"];
+    UIButton *deleteButton = [[UIButton alloc] initWithFrame:CGRectMake(915, 22, 34, 33)];
+    [deleteButton setImage:normal forState:UIControlStateNormal];
+    [deleteButton addTarget:self action:@selector(eraseCharacteristic:) forControlEvents:UIControlEventTouchUpInside];
+    
+    return deleteButton;
+}
+
+- (void)eraseCharacteristic:(UIButton *)sender
+{
+    //erase
+    UITableViewCell *cell = (UITableViewCell *)sender.superview;
+    NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+    
+    NSString *characteristicType = @"Characteristic?";
+    if (indexPath.row == 0) {
+        characteristicType = @"Super Characteristic?";
+    }
+
+    
+
+    
+    //show allert that will ask for name of new characteristic
+    NSString *message = [@"Do you really want to delete this " stringByAppendingString:characteristicType];
+    AlertView * alert = [[AlertView alloc] initWithTitle:cell.textLabel.text message:message delegate:self cancelButtonTitle:@"Delete" otherButtonTitles:@"Cancel", nil];
+    alert.objectToPass = cell;
+    alert.identifier = @"delete";
+    alert.alertViewStyle = UIAlertViewStyleDefault;
+    
+    [alert show];
 }
 
 - (void)getRatingCharacteristics

@@ -10,6 +10,7 @@
 
 @interface AlertView : UIAlertView
 
-@property (strong, nonatomic)NSString *stringToPass;
+@property (strong, nonatomic) id objectToPass;
+@property (strong, nonatomic) NSString *identifier;
 
 @end

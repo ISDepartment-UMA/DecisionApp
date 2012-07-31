@@ -131,13 +131,20 @@
     self.componentScreen = componentTVC;
     
     
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    self.navigationController.navigationBarHidden = YES;
+
 }
 
 
 
 - (void)viewDidUnload
 {
-
     [super viewDidUnload];
 }
 
@@ -148,14 +155,6 @@
 }
 
 
-
-
-
-//makes sure, that there's no navigation bar while RatingTableViewController is on screen
-- (void)viewWillAppear:(BOOL)animated
-{
-    self.navigationController.navigationBar.hidden = YES;
-}
 
 #pragma mark - Split view
 
@@ -314,6 +313,8 @@
     CGRect highTextFrame = CGRectMake(550, 10, 50, 25);
     UILabel *highTextLabel = [[UILabel alloc] initWithFrame:highTextFrame];
     highTextLabel.text = @"high";
+    [highTextLabel setBackgroundColor:[UIColor clearColor]];
+    
     [cell.contentView addSubview:highTextLabel];
     
     //medium
@@ -325,6 +326,9 @@
     CGRect mediumTextFrame = CGRectMake(400, 10, 70, 25);
     UILabel *mediumTextLabel = [[UILabel alloc] initWithFrame:mediumTextFrame];
     mediumTextLabel.text = @"medium";
+    [mediumTextLabel setBackgroundColor:[UIColor clearColor]];
+
+    
     [cell.contentView addSubview:mediumTextLabel];
     
     //low
@@ -336,6 +340,9 @@
     CGRect lowTextFrame = CGRectMake(300, 10, 50, 25);
     UILabel *lowTextLabel = [[UILabel alloc] initWithFrame:lowTextFrame];
     lowTextLabel.text = @"low";
+    [lowTextLabel setBackgroundColor:[UIColor clearColor]];
+
+    
     [cell.contentView addSubview:lowTextLabel];
     
     

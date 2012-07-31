@@ -21,6 +21,8 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
+    
+    //build core data context and pass it
     // Override point for customization after application launch.
     SmartSourceSplitViewController *splitViewController = (SmartSourceSplitViewController *)self.window.rootViewController;
     splitViewController.managedObjectContext = self.managedObjectContext;

@@ -10,7 +10,8 @@
 
 @implementation AlertView
 
-@synthesize stringToPass =_stringToPass;
+@synthesize objectToPass = _objectToPass;
+@synthesize identifier = _identifier;
 
 - (id)initWithFrame:(CGRect)frame
 {

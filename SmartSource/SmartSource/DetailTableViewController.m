@@ -25,10 +25,9 @@
 
 
 @interface DetailTableViewController ()
-@property (strong, nonatomic) NSArray *currentProject; //the ID of the currently displayed project
+@property (strong, nonatomic) NSArray *currentProject; //array of details about the current project
 @property (strong, nonatomic) NSArray *cellNames;
 @property (nonatomic) Boolean hasLoadedBefore;
-@property (strong, nonatomic) IBOutlet UIButton *rateButton;
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
 @property (strong, nonatomic) SmartSourceMasterViewController *projectScreen;
 @end
@@ -39,12 +38,12 @@
 @synthesize masterPopoverController = _masterPopoverController;
 @synthesize hasLoadedBefore = _hasLoadedBefore;
 @synthesize cellNames = _cellNames;
-@synthesize rateButton = _rateButton;
 @synthesize currentProject = _currentProject;
 @synthesize fetchedResultsController = _fetchedResultsController;
 @synthesize managedObjectContext = _managedObjectContext;
 
 
+//returns names for detail description of project
 - (NSArray *)cellNames
 {
     return [NSArray arrayWithObjects:@"ID", @"Project Name", @"Project Description", @"Category", @"Start-Date", @"End-Date", @"Creator", nil];
@@ -60,17 +59,6 @@
 }
 
 
-//rateButtonPressed starts the rating of the differen Software Components of a Project
-- (IBAction)rateButtonPressed:(id)sender {
-    
-    //show components view controller on left side
-    [self.projectScreen performSegueWithIdentifier:@"componentsMenu" sender:self.projectScreen];
-    
-    //disable the rating button, so the segue can't be pushed a second time
-    [self performSegueWithIdentifier:@"ratingScreen" sender:self];
-
-}
-
 
 - (IBAction)mainMenu:(id)sender {
         [self.splitViewController performSegueWithIdentifier:@"mainMenu" sender:self.splitViewController];
@@ -82,28 +70,29 @@
 //pass a project's information to make the detail view present its details
 - (void)setProjectDetails:(NSString *)projectID
 {
-
-    //get project information
-    NSDictionary *project = [self getProjectInfo:projectID];
-    self.currentProject = [NSArray arrayWithObjects:projectID, [project objectForKey:@"name"], [project objectForKey:@"description"], [project objectForKey:@"category"], [project objectForKey:@"start"], [project objectForKey:@"end"], [project objectForKey:@"creator"], nil];
-    
-    //if the project has already been completely rated, show alert and button in navigationbar
-    if ([self ratingIsCompleteForProject:projectID]) {
+    if (projectID == nil) {
         
-        self.navigationItem.prompt = @"This project has already been rated!";
-        
-        UIBarButtonItem *showResults = [[UIBarButtonItem alloc] initWithTitle:@"Show Results" style:UIBarButtonItemStyleBordered target:self action:@selector(showResults)];
-        [self.navigationItem setRightBarButtonItem:showResults animated:YES];
-        
-    //if the project has not been completely rated and buttons are shown, remove them
+        //show nothing in table view and hide navigation bar
+        self.currentProject = nil;
+        [self.navigationController setNavigationBarHidden:YES];
     } else {
         
-        self.navigationItem.prompt = nil;
-        [self.navigationItem setRightBarButtonItem:nil];
+        
+        //get project information
+        NSDictionary *project = [self getProjectInfo:projectID];
+        self.currentProject = [NSArray arrayWithObjects:projectID, [project objectForKey:@"name"], [project objectForKey:@"description"], [project objectForKey:@"category"], [project objectForKey:@"start"], [project objectForKey:@"end"], [project objectForKey:@"creator"], nil];
+        
+        
+        //put rating buttons into navigation bar
+        [self handleRatingButtonsInNavigationBar];
+        
+        //show rate button
+        [self.navigationController setNavigationBarHidden:NO];
     }
+
     
-    //show rate button
-    self.navigationController.navigationBarHidden = NO;
+    
+    
     [self.tableView reloadData];
 }
 
@@ -113,6 +102,68 @@
     [self.projectScreen performSegueWithIdentifier:@"showResults" sender:self.projectScreen];
     
 }
+
+
+//method that is executed if the user choses to rate this project
+- (void)rateProjectPressed
+{
+    //show components view controller on left side
+    [self.projectScreen performSegueWithIdentifier:@"componentsMenu" sender:self.projectScreen];
+    
+    //show rating screen on the right side
+    [self performSegueWithIdentifier:@"ratingScreen" sender:self];
+    
+    //post notification to select the first component in the components menu
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ComponentTableViewControllerSelect" object:nil userInfo:[NSDictionary dictionary]];
+    
+}
+
+
+//method called when the user selects to delete the project rating
+- (void)deleteProject
+{
+    //show alert that asks user if he really wants to delete the project
+    NSString *message = @"Do you really want to delete the stored Project Rating?";
+    AlertView * alert = [[AlertView alloc] initWithTitle:@"Delete Rating" message:message delegate:self cancelButtonTitle:@"Delete" otherButtonTitles:@"Cancel", nil];
+    alert.alertViewStyle = UIAlertViewStyleDefault;
+    [alert show];
+}
+
+//reacts to the user's selection in the alert view to delete the project rating
+- (void)alertView:(AlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{ 
+    
+    //if delete button was pressed
+    if (buttonIndex == 0) {
+        
+        //then delete the current rating from the core database
+        //look for project in core database
+        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Project"];
+        request.predicate = [NSPredicate predicateWithFormat:@"projectID =%@", [self.currentProject objectAtIndex:0]];
+        NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+        request.sortDescriptors = [NSArray arrayWithObject:sortDescription];
+        NSError *error = nil;
+        NSArray *matches = [self.managedObjectContext executeFetchRequest:request error:&error];
+        
+        //delete project
+        //deletion rule in core database is set to cascade, so deleting the project will delete all components, supercharacteristics and characteristics
+        [self.managedObjectContext deleteObject:[matches objectAtIndex:0]];
+        
+        //save context
+        if (![self.managedObjectContext save:&error]) {
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            abort();
+        }
+        
+        //put button to rate the project into the navigationbar
+        UIBarButtonItem *rateProject = [[UIBarButtonItem alloc] initWithTitle:@"Rate this Project" style:UIBarButtonItemStyleBordered target:self action:@selector(rateProjectPressed)];
+        [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObject:rateProject]];
+        
+        //remove alert that project has been rated
+        self.navigationItem.prompt = nil;
+    }
+}
+
+
 
 
 //checks weather the rating of the currently displayed project is complete or not
@@ -166,6 +217,9 @@
     SmartSourceMasterViewController *master = (SmartSourceMasterViewController *)[masterNavigation.viewControllers objectAtIndex:0];
     master.detailScreen = self;
     self.projectScreen = master;
+    self.navigationController.navigationBarHidden = YES;
+
+    
     
 }
      
@@ -173,8 +227,6 @@
 
 - (void)viewDidUnload
 {
-    
-    [self setRateButton:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
 }
@@ -195,28 +247,58 @@
         self.hasLoadedBefore=YES;
     }
     
-    //insert root rating characteristics
-    [AvailableSuperCharacteristic addNewAvailableSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:self.managedObjectContext];
-    [AvailableSuperCharacteristic addNewAvailableSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:self.managedObjectContext];
     
-    [AvailableCharacteristic addNewAvailableCharacteristic:@"Software Object Communication" toSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:self.managedObjectContext];
-    [AvailableCharacteristic addNewAvailableCharacteristic:@"Communication of Requirements" toSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:self.managedObjectContext];
-    [AvailableCharacteristic addNewAvailableCharacteristic:@"Communication among Developers" toSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:self.managedObjectContext];
+    //put rating buttons into navigation bar
+    [self handleRatingButtonsInNavigationBar];
+
+
+}
+
+
+//puts buttons into navigation bar
+//for already rated projects: rate project, show results, delete project
+//for projects without a rating stored: rate project
+- (void)handleRatingButtonsInNavigationBar
+{
+
+
     
-    [AvailableCharacteristic addNewAvailableCharacteristic:@"Business Process Specifity" toSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:self.managedObjectContext];
-    [AvailableCharacteristic addNewAvailableCharacteristic:@"Functional Specifity" toSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:self.managedObjectContext];
-    [AvailableCharacteristic addNewAvailableCharacteristic:@"Technical Specifity" toSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:self.managedObjectContext];
+    //put button to rate the project into the navigationbar
+    UIBarButtonItem *rateProject = [[UIBarButtonItem alloc] initWithTitle:@"Rate this Project" style:UIBarButtonItemStyleBordered target:self action:@selector(rateProjectPressed)];
+    [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObject:rateProject]];
     
-    //save context
-    NSError *error = nil;
-    if (![self.managedObjectContext save:&error]) {
-        // Replace this implementation with code to handle the error appropriately.
-        // abort() causes the application to generate a crash log and terminate. You should not use this function in a shipping application, although it may be useful during development. 
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
+    //if the project has already been completely rated, show alert and button in navigationbar
+    if ([self ratingIsCompleteForProject:[self.currentProject objectAtIndex:0]]) {
+        
+        self.navigationItem.prompt = @"This project has already been rated!";
+        
+        //button to show results
+        UIBarButtonItem *showResults = [[UIBarButtonItem alloc] initWithTitle:@"Show Results" style:UIBarButtonItemStyleBordered target:self action:@selector(showResults)];
+        NSMutableArray *buttonItems = [self.navigationItem.rightBarButtonItems mutableCopy];
+        [buttonItems addObject:showResults];
+        
+        //button to delete rating
+        UIBarButtonItem *deleteProject = [[UIBarButtonItem alloc] initWithTitle:@"Delete Rating" style:UIBarButtonItemStyleBordered target:self action:@selector(deleteProject)];
+        [deleteProject setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor redColor], UITextAttributeTextColor, nil] forState:UIControlStateNormal];
+        [buttonItems addObject:deleteProject];
+        
+        //add buttons to navigation bar
+        [self.navigationItem setRightBarButtonItems:[buttonItems copy] animated:YES];
+        
+        //if the project has not been completely, remove the alert
+    } else {
+        
+        self.navigationItem.prompt = nil;
+        
+    }
+    
+    if (self.currentProject == nil) {
+        self.navigationItem.rightBarButtonItem = nil;
+        [self.navigationController setNavigationBarHidden:NO];
     }
 
 }
+
 
 
 //retrieves project Information for a passed projectID

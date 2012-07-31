@@ -9,7 +9,7 @@
 #import "MenuUIViewController.h"
 #import "SettingsTableViewControllerViewController.h"
 #import "SmartSourceMasterViewController.h"
-
+#import "ClassificationExplanationViewController.h"
 @interface MenuUIViewController ()
 
 
@@ -32,6 +32,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [self setTitle:@"Main Menu"];
 	// Do any additional setup after loading the view.
 }
 
@@ -53,7 +54,14 @@
 
 - (IBAction)selectProjects:(id)sender {
     [self dismissModalViewControllerAnimated:YES];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateMaserView" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateMaserViewFromCodeBeamer" object:nil];
+    
+}
+
+- (IBAction)showRatedProjects:(id)sender {
+    [self dismissModalViewControllerAnimated:YES];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateMasterViewFromCoreData" object:nil];
+
     
 }
 
@@ -62,6 +70,11 @@
     if ([segue.identifier isEqualToString:@"settings"]) {
         SettingsTableViewControllerViewController *setVC = segue.destinationViewController;
         setVC.managedObjectContext = self.managedObjectContext;
+    }
+    if ([segue.identifier isEqualToString:@"help"]) {
+        ClassificationExplanationViewController *dest = segue.destinationViewController;
+        dest.managedObjectContext = self.managedObjectContext;
+        
     }
 }
 

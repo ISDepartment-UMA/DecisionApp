@@ -77,7 +77,8 @@
         NSMutableArray *tmp = [NSMutableArray array];
         
         //iterate through subcharacteristics
-        NSArray *enumerator = [NSArray arrayWithArray:[tmpasc.availableSuperCharacteristicOf allObjects]];
+        NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
+        NSArray *enumerator = [tmpasc.availableSuperCharacteristicOf sortedArrayUsingDescriptors:descriptors];
         for (int y=0; y<[enumerator count]; y++) {
             AvailableCharacteristic *tmpcharacteristic = [enumerator objectAtIndex:y];
             
@@ -261,23 +262,61 @@
     // e.g. self.myOutlet = nil;
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    //add observer for notifications
+    //this notification makes the ComponentTableViewController select
+    //  a) the first component if an empty nsdictionary is passed as user info
+    //  b) a certain component if its copmponentID is passed in a dictionary via user info --> objectforKey:@"id"
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectComponent:) name:@"ComponentTableViewControllerSelect" object:nil];
+}
+
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
     
+    
     //pop detail view back to rating view controller
     [self.ratingScreen.navigationController popToViewController:self.ratingScreen animated:NO];
+    
+    //if detail view is now not a RatingTableViewController, then return to root view controller and perform segue
+    //ths is necessary when poping back from the componentdetailinfoviewcontroller and the rating table view controller hasn't been pushed so far
+    UINavigationController *navigation = [self.splitViewController.viewControllers lastObject];
+    if (![navigation.visibleViewController isKindOfClass:[RatingTableViewViewController class]]) {
+        [navigation popToRootViewControllerAnimated:NO];
+        [[navigation.viewControllers objectAtIndex:0] performSegueWithIdentifier:@"ratingScreen" sender:self];
+    }
 
     
     //select first row
     if ([self.availableCells count] > 0) {
         
         [self.ratingScreen setComponent:[[self.availableCells objectAtIndex:0] objectAtIndex:0] ofProject:self.currentProject withRatingCharacteristics:self.characteristics];
+    }
+    
+
+}
+
+- (void)selectComponent:(NSNotification *)notification
+{
+    NSString *projectID = [notification.userInfo objectForKey:@"id"];
+    
+    if (projectID != nil) {
+        for (int i=0; i<[self.availableCells count]; i++) {
+            if ([[[self.availableCells objectAtIndex:i] objectAtIndex:0] isEqualToString:projectID])
+            {
+                NSIndexPath *index = [NSIndexPath indexPathForRow:i inSection:0];
+                [self.tableView selectRowAtIndexPath:index animated:YES scrollPosition:UITableViewScrollPositionTop];
+            }
+        }
+    } else if ([self.availableCells count] > 0){
         NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
         [self.tableView selectRowAtIndexPath:index animated:YES scrollPosition:UITableViewScrollPositionTop];
     }
     
-
+    
 }
 
 

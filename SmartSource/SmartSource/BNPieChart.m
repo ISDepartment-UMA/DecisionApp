@@ -76,7 +76,7 @@
 - (void)setFrame:(CGRect)frame {
   [super setFrame:frame];
   
-  fontSize = frame.size.width / 20;
+  fontSize = frame.size.width / 30;
   if (fontSize < 9) fontSize = 9;
   
   // Compute the center & radius of the circle.
@@ -326,7 +326,8 @@ float dist(float x1, float y1, float x2, float y2) {
 - (void)moveInLabel:(int)index {
 	float outerRadius = radius / kRadiusPortion;
 	UILabel* label = [nameLabels objectAtIndex:index];
-	float distance = [self approxDistFromCenter:label.frame];
+    float distance = 0.0;
+    distance = [self approxDistFromCenter:label.frame];
 	float excessDist = distance - outerRadius;
 	if (excessDist < 5.0) return;
 	float rayAngle = ([self pointAtIndex:index] +

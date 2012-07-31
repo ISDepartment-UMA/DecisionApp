@@ -8,7 +8,7 @@
     <entity name="AvailableSuperCharacteristic" representedClassName="AvailableSuperCharacteristic" syncable="YES">
         <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="availableSuperCharacteristicOf" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="AvailableCharacteristic" inverseName="hasAvailableSuperCharacteristic" inverseEntity="AvailableCharacteristic" syncable="YES"/>
+        <relationship name="availableSuperCharacteristicOf" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="AvailableCharacteristic" inverseName="hasAvailableSuperCharacteristic" inverseEntity="AvailableCharacteristic" syncable="YES"/>
     </entity>
     <entity name="Characteristic" representedClassName="Characteristic" syncable="YES">
         <attribute name="componentID" optional="YES" attributeType="String" syncable="YES"/>
@@ -24,14 +24,14 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="projectID" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="partOf" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="consistsOf" inverseEntity="Project" syncable="YES"/>
-        <relationship name="ratedBy" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="SuperCharacteristic" inverseName="rates" inverseEntity="SuperCharacteristic" syncable="YES"/>
+        <relationship name="ratedBy" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SuperCharacteristic" inverseName="rates" inverseEntity="SuperCharacteristic" syncable="YES"/>
     </entity>
     <entity name="Project" representedClassName="Project" syncable="YES">
         <attribute name="descr" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="projectID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="timestamp" optional="YES" attributeType="Date" syncable="YES"/>
-        <relationship name="consistsOf" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Component" inverseName="partOf" inverseEntity="Component" syncable="YES"/>
+        <relationship name="consistsOf" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Component" inverseName="partOf" inverseEntity="Component" syncable="YES"/>
     </entity>
     <entity name="SuperCharacteristic" representedClassName="SuperCharacteristic" syncable="YES">
         <attribute name="componentID" optional="YES" attributeType="String" syncable="YES"/>
@@ -39,14 +39,14 @@
         <attribute name="projectID" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="weight" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <relationship name="rates" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Component" inverseName="ratedBy" inverseEntity="Component" syncable="YES"/>
-        <relationship name="superCharacteristicOf" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Characteristic" inverseName="hasSuperCharacteristic" inverseEntity="Characteristic" syncable="YES"/>
+        <relationship name="superCharacteristicOf" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Characteristic" inverseName="hasSuperCharacteristic" inverseEntity="Characteristic" syncable="YES"/>
     </entity>
     <elements>
         <element name="AvailableCharacteristic" positionX="135" positionY="-180" width="128" height="90"/>
         <element name="AvailableSuperCharacteristic" positionX="160" positionY="48" width="128" height="90"/>
         <element name="Characteristic" positionX="45" positionY="267" width="128" height="135"/>
-        <element name="Component" positionX="-227" positionY="-18" width="128" height="135"/>
-        <element name="Project" positionX="-225" positionY="273" width="128" height="105"/>
+        <element name="Component" positionX="-333" positionY="-36" width="128" height="135"/>
+        <element name="Project" positionX="-225" positionY="273" width="128" height="120"/>
         <element name="SuperCharacteristic" positionX="-81" positionY="-135" width="128" height="135"/>
     </elements>
 </model>
