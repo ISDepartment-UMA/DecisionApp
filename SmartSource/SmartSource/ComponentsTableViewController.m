@@ -199,7 +199,8 @@
     SBJsonParser *parser = [[SBJsonParser alloc] init];
     
     //building the url
-    NSString *url = [[[[[[[[@"http://wifo1-52.bwl.uni-mannheim.de:8080/axis2/services/DataFetcher/getAllComponentsForProject?url=" stringByAppendingString:serviceURL] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&projectID="] stringByAppendingString:projectID] stringByAppendingString:@"&response=application/json"];
+    NSString *url = [[[[[[[[@"http://wifo1-52.bwl.uni-mannheim.de:8081/axis2/services/DataFetcher/getAllComponentsForProject?url=" stringByAppendingString:serviceURL] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&projectID="] stringByAppendingString:projectID] stringByAppendingString:@"&response=application/json"];
+
     
     //sending request
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
