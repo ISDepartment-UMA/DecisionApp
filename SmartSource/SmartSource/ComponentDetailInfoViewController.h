@@ -7,11 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ClassificationModel.h"
 
-@interface ComponentDetailInfoViewController : UITableViewController <UISplitViewControllerDelegate>
-@property NSFetchedResultsController *fetchedResultsController;
-@property NSManagedObjectContext *managedObjectContext;
+@interface ComponentDetailInfoViewController : UITableViewController
 
-- (void)setComponent:(NSString *)componentID;
+
+- (void)setComponent:(NSString *)componentID andModel:(ClassificationModel *)model;
+
+
 
 @end

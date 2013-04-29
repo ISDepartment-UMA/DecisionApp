@@ -10,8 +10,7 @@
 #import "SmartSourceSplitViewController.h"
 
 @interface MenuUIViewController : UIViewController
-@property NSFetchedResultsController *fetchedResultsController;
-@property NSManagedObjectContext *managedObjectContext;
+
 
 
 @end

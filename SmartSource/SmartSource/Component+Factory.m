@@ -11,6 +11,7 @@
 #import "SBJson.h"
 
 @implementation Component (Factory)
+
 + (Component *)addNewComponent:(NSString *)componentID toProject:(NSString *)projectID andManagedObjectContext:(NSManagedObjectContext *)context
 {
     Component *comp = nil;

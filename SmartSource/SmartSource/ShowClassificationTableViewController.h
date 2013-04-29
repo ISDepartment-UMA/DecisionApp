@@ -7,12 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ClassificationModel.h"
+
 
 @interface ShowClassificationTableViewController : UITableViewController <UISplitViewControllerDelegate>
 
-@property NSFetchedResultsController *fetchedResultsController;
-@property NSManagedObjectContext *managedObjectContext;
+- (void)setDisplayedClassification:(NSString *)classification fromModel:(ClassificationModel *)model;
+@property (strong, nonatomic) UIPopoverController *masterPopoverController;
 
-- (void)setDisplayedClassification:(NSString *)classification withComponents:(NSArray *)components;;
 
 @end

@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 
 @interface SmartSourceSplitViewController : UISplitViewController
-@property NSFetchedResultsController *fetchedResultsController;
-@property NSManagedObjectContext *managedObjectContext;
+
 
 @end

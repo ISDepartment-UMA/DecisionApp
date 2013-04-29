@@ -12,25 +12,27 @@
 #import "Component.h"
 #import "DecisionTableViewController.h"
 #import "ShowClassificationTableViewController.h"
-#import "ResultMasterViewController.h"
 #import "BNColor.h"
+#import "ClassificationModel.h"
+#import "SmartSourceAppDelegate.h"
 
 @interface ChartViewController ()
+
 @property (strong, nonatomic) IBOutlet UILabel *textLabelA;
 @property (strong, nonatomic) IBOutlet UILabel *textLabelB;
-@property (strong, nonatomic) UIPopoverController *masterPopoverController;
 @property (strong, nonatomic) IBOutlet UILabel *textLabelC;
-@property (strong, nonatomic) ResultMasterViewController *resultMasterScreen;
+
+
+//classification model
+@property (strong, nonatomic) ClassificationModel *resultModel;
 @end
 
 @implementation ChartViewController
-@synthesize resultMasterScreen = _resultMasterScreen;
 @synthesize textLabelA = _textLabelA;
 @synthesize textLabelB = _textLabelB;
 @synthesize masterPopoverController = _masterPopoverController;
 @synthesize textLabelC = _textLabelC;
-@synthesize managedObjectContext = _managedObjectContext;
-@synthesize fetchedResultsController = _fetchedResultsController;
+@synthesize resultModel = _resultModel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -42,13 +44,39 @@
 }
 
 
-
-- (void)viewDidLoad
+//returns classification from model
+- (NSArray *)getClassificationForCurrentProject
 {
-    [super viewDidLoad];
-    [self.resultMasterScreen setResultScreen:self];
-	// Do any additional setup after loading the view.
+    return self.resultModel.classification;
 }
+
+- (void)showDecisionTable
+{
+    //if decision table has been selected, dismiss popovercontroller
+    [self.masterPopoverController dismissPopoverAnimated:YES];
+    //perform segue
+    [self performSegueWithIdentifier:@"decisionTable" sender:self];
+}
+
+- (void)showClassification:(NSString *)classification
+{
+    //if classification has been selected, dismiss popovercontroller
+    [self.masterPopoverController dismissPopoverAnimated:YES];
+    [self performSegueWithIdentifier:@"showClassification" sender:classification];
+    
+}
+
+
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"MasterViewGet" object:self];
+    //if decision table has been selected, dismiss popovercontroller
+    [self.masterPopoverController dismissPopoverAnimated:YES];
+    
+}
+
 
 
 - (void)viewDidUnload
@@ -70,16 +98,33 @@
 {
     [super viewWillAppear:animated];
     self.navigationController.navigationBarHidden = NO;
+    [self.splitViewController setDelegate:self];
     [self.navigationItem setHidesBackButton:YES];
-    self.navigationItem.title = [[@"Component Classification for " stringByAppendingString:self.resultMasterScreen.currentProjectTitle] stringByAppendingString:@":"];
+
 }
+
+- (void)initializeClassificationForProject:(NSString *)projectID
+{    
+    //initialize model
+    self.resultModel = [[ClassificationModel alloc] initWithProjectID:projectID];
+    
+    //build result chart from model
+    [self createViewForClassification:self.resultModel.classification];
+    
+    //set title in navigation bar
+    self.navigationItem.title = [[@"Component Classification for " stringByAppendingString:[self.resultModel getProjectName]] stringByAppendingString:@":"];
+    
+    
+}
+
+
 
 
 //method called to display chart
 //passed parameter is a 2-dimensional array of classifications
 //index 0 <-> AClassified Components, index 1 -B, index 2 - C
 //2nd dimension - components
-- (void)createViewForProject:(NSArray *)componentClassification
+- (void)createViewForClassification:(NSArray *)componentClassification
 {
     
     double totalComponents = 0.0;
@@ -171,16 +216,36 @@
     self.masterPopoverController = nil;
 }
 
+
+
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
+    //segue to decision table
     if ([segue.identifier isEqualToString:@"decisionTable"]) {
+        
+        //pass result model
         DecisionTableViewController *decTVC = segue.destinationViewController;
-        decTVC.managedObjectContext = self.managedObjectContext;
+        decTVC.resultModel = self.resultModel;
+        
+        //pass barbuttonitem that hides popover controller to rating screen
+        if(self.navigationItem.leftBarButtonItem != nil) {
+            decTVC.navigationItem.leftBarButtonItem = self.navigationItem.leftBarButtonItem;
+            decTVC.masterPopoverController = self.masterPopoverController;
+        }
     }
     
+    //segue to classification
     if ([segue.identifier isEqualToString:@"showClassification"]) {
+        
+        //pass result model
         ShowClassificationTableViewController *scTVC = segue.destinationViewController;
-        scTVC.managedObjectContext = self.managedObjectContext;
+        [scTVC setDisplayedClassification:sender fromModel:self.resultModel];
+        
+        //pass barbuttonitem that hides popover controller to rating screen
+        if(self.navigationItem.leftBarButtonItem != nil) {
+            scTVC.navigationItem.leftBarButtonItem = self.navigationItem.leftBarButtonItem;
+            scTVC.masterPopoverController = self.masterPopoverController;
+        }
     }
 }
 

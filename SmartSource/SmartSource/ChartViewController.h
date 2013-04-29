@@ -7,15 +7,17 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ResultMasterViewController.h"
 
 @interface ChartViewController : UIViewController <UISplitViewControllerDelegate>
 
 
-@property NSFetchedResultsController *fetchedResultsController;
-@property NSManagedObjectContext *managedObjectContext;
-- (void)setResultMasterScreen:(id)resultMasterScreen;
+
+- (void)initializeClassificationForProject:(NSString *)projectID;
+- (NSArray *)getClassificationForCurrentProject;
+- (void)showDecisionTable;
+- (void)showClassification:(NSString *)classification;
+@property (strong, nonatomic) UIPopoverController *masterPopoverController;
 
 
-- (void)createViewForProject:(NSArray *)componentClassification;
+
 @end

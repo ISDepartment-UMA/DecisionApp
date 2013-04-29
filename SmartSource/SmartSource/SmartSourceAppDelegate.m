@@ -9,7 +9,6 @@
 #import "SmartSourceAppDelegate.h"
 #import "DetailTableViewController.h"
 #import "SmartSourceSplitViewController.h"
-
 #import "SmartSourceMasterViewController.h"
 
 @implementation SmartSourceAppDelegate
@@ -18,25 +17,29 @@
 @synthesize managedObjectContext = __managedObjectContext;
 @synthesize managedObjectModel = __managedObjectModel;
 @synthesize persistentStoreCoordinator = __persistentStoreCoordinator;
+@synthesize barButtonItem = _barButtonItem;
+@synthesize masterPopOverController = _masterPopOverController;
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     
     //build core data context and pass it
     // Override point for customization after application launch.
+
     SmartSourceSplitViewController *splitViewController = (SmartSourceSplitViewController *)self.window.rootViewController;
-    splitViewController.managedObjectContext = self.managedObjectContext;
-    UINavigationController *navigationController = [splitViewController.viewControllers lastObject];
-    splitViewController.delegate = (id)navigationController.topViewController;
+    UINavigationController *navigationControllerDetail = [splitViewController.viewControllers lastObject];
+    DetailTableViewController *detail = (DetailTableViewController *)navigationControllerDetail.topViewController;
+    splitViewController.delegate = detail;
     
     UINavigationController *detailNavigationConroller = [splitViewController.viewControllers objectAtIndex:1];
     DetailTableViewController *detailTVC = (DetailTableViewController *)detailNavigationConroller.topViewController;
-    detailTVC.managedObjectContext = self.managedObjectContext;
 
-    UINavigationController *masterNavigationController = [splitViewController.viewControllers objectAtIndex:0];
-    SmartSourceMasterViewController *controller = (SmartSourceMasterViewController *)masterNavigationController.topViewController;
-    controller.managedObjectContext = self.managedObjectContext;
-    controller.detailScreen = detailTVC; 
+    
+   
+    UINavigationController *navigationMaster = [splitViewController.viewControllers objectAtIndex:0];
+    SmartSourceMasterViewController *controller = (SmartSourceMasterViewController *)navigationMaster.visibleViewController;
+
+    controller.detailScreen = detailTVC;
     
     
     return YES;

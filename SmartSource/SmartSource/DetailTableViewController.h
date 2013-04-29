@@ -8,12 +8,13 @@
 
 #import <UIKit/UIKit.h>
 #import "CoreData/CoreData.h"
+#import "CodeBeamerModel.h"
 
 @interface DetailTableViewController : UITableViewController <UISplitViewControllerDelegate>
 
-@property NSFetchedResultsController *fetchedResultsController;
-@property NSManagedObjectContext *managedObjectContext;
-- (void)setProjectDetails:(NSString *)projectID;
 
+- (NSArray *)getAvailableProjects;
+- (void)selectProjectWithID:(NSString *)projectID;
+@property (strong, nonatomic) UIPopoverController *masterPopoverController;
 
 @end

@@ -33,7 +33,6 @@
 		6E07421B15947DD7000C480E /* checkbox.png in Resources */ = {isa = PBXBuildFile; fileRef = 6E07421815947DD7000C480E /* checkbox.png */; };
 		6E07421C15947DD7000C480E /* checkedbox.png in Resources */ = {isa = PBXBuildFile; fileRef = 6E07421915947DD7000C480E /* checkedbox.png */; };
 		6E07421F15947ED0000C480E /* MenuUIViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E07421E15947ED0000C480E /* MenuUIViewController.m */; };
-		6E074223159481A0000C480E /* ComponentsTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E074222159481A0000C480E /* ComponentsTableViewController.m */; };
 		6E07422A159488B7000C480E /* RatingTableViewViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E074229159488B7000C480E /* RatingTableViewViewController.m */; };
 		6E07422D1594905B000C480E /* Slider.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E07422C1594905A000C480E /* Slider.m */; };
 		6E109D6015A1B66F00D3C9F0 /* settings.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6E109D5B15A1B66F00D3C9F0 /* settings.jpg */; };
@@ -47,8 +46,11 @@
 		6E1B81E615C18214006D6C61 /* forward.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6E1B81E415C18214006D6C61 /* forward.jpg */; };
 		6E1B81E915C1B6DA006D6C61 /* projects_72x72.png in Resources */ = {isa = PBXBuildFile; fileRef = 6E1B81E815C1B6DA006D6C61 /* projects_72x72.png */; };
 		6E1B81EB15C1B70B006D6C61 /* projects_144x144.png in Resources */ = {isa = PBXBuildFile; fileRef = 6E1B81EA15C1B70B006D6C61 /* projects_144x144.png */; };
-		6E1C639F15A4AF7700A5DDF5 /* ResultMasterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E1C639E15A4AF7700A5DDF5 /* ResultMasterViewController.m */; };
 		6E1C63A215A4C78700A5DDF5 /* ShowClassificationTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E1C63A115A4C78700A5DDF5 /* ShowClassificationTableViewController.m */; };
+		6E3935C716D3B90C00E72EB0 /* CharacteristicCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E3935C616D3B90C00E72EB0 /* CharacteristicCell.m */; };
+		6E3935D016D3DA4000E72EB0 /* CodeBeamerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E3935CF16D3DA4000E72EB0 /* CodeBeamerModel.m */; };
+		6E56D7CA16D2741E00A989AA /* ProjectModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E56D7C916D2741E00A989AA /* ProjectModel.m */; };
+		6E56D7CE16D27D9000A989AA /* ComponentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E56D7CD16D27D9000A989AA /* ComponentModel.m */; };
 		6E5907A415A5AD910064FD93 /* BNColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E5907A115A5AD910064FD93 /* BNColor.m */; };
 		6E5907A515A5AD910064FD93 /* BNPieChart.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E5907A315A5AD910064FD93 /* BNPieChart.m */; };
 		6E5907A815A5AEDF0064FD93 /* NSObject+Be.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E5907A715A5AEDE0064FD93 /* NSObject+Be.m */; };
@@ -65,6 +67,7 @@
 		6E80892115A605EB00654468 /* AvailableCharacteristic+Factory.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E80891E15A605EB00654468 /* AvailableCharacteristic+Factory.m */; };
 		6E80892215A605EB00654468 /* AvailableSuperCharacteristic+Factory.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E80892015A605EB00654468 /* AvailableSuperCharacteristic+Factory.m */; };
 		6E95CFDB15BA2A880082B69D /* delete.png in Resources */ = {isa = PBXBuildFile; fileRef = 6E95CFDA15BA2A880082B69D /* delete.png */; };
+		6EAF562516DFDB68004F027F /* ClassificationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EAF562416DFDB67004F027F /* ClassificationModel.m */; };
 		6EC9203515A45C140020F3C0 /* DecisionTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EC9203415A45C140020F3C0 /* DecisionTableViewController.m */; };
 		6ED9230D15B9813000872D20 /* ComponentDetailInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6ED9230C15B9813000872D20 /* ComponentDetailInfoViewController.m */; };
 		6EF1D67215BDA02D009168BD /* HelpViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EF1D67115BDA02D009168BD /* HelpViewController.m */; };
@@ -123,8 +126,6 @@
 		6E07421915947DD7000C480E /* checkedbox.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = checkedbox.png; sourceTree = "<group>"; };
 		6E07421D15947ED0000C480E /* MenuUIViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MenuUIViewController.h; sourceTree = "<group>"; };
 		6E07421E15947ED0000C480E /* MenuUIViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MenuUIViewController.m; sourceTree = "<group>"; };
-		6E074221159481A0000C480E /* ComponentsTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentsTableViewController.h; sourceTree = "<group>"; };
-		6E074222159481A0000C480E /* ComponentsTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComponentsTableViewController.m; sourceTree = "<group>"; };
 		6E074228159488B7000C480E /* RatingTableViewViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RatingTableViewViewController.h; sourceTree = "<group>"; };
 		6E074229159488B7000C480E /* RatingTableViewViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RatingTableViewViewController.m; sourceTree = "<group>"; };
 		6E07422B1594905A000C480E /* Slider.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Slider.h; sourceTree = "<group>"; };
@@ -142,10 +143,16 @@
 		6E1B81E415C18214006D6C61 /* forward.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = forward.jpg; sourceTree = "<group>"; };
 		6E1B81E815C1B6DA006D6C61 /* projects_72x72.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = projects_72x72.png; path = ../projects_72x72.png; sourceTree = "<group>"; };
 		6E1B81EA15C1B70B006D6C61 /* projects_144x144.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = projects_144x144.png; path = ../projects_144x144.png; sourceTree = "<group>"; };
-		6E1C639D15A4AF7700A5DDF5 /* ResultMasterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResultMasterViewController.h; sourceTree = "<group>"; };
-		6E1C639E15A4AF7700A5DDF5 /* ResultMasterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResultMasterViewController.m; sourceTree = "<group>"; };
 		6E1C63A015A4C78700A5DDF5 /* ShowClassificationTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShowClassificationTableViewController.h; sourceTree = "<group>"; };
 		6E1C63A115A4C78700A5DDF5 /* ShowClassificationTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowClassificationTableViewController.m; sourceTree = "<group>"; };
+		6E3935C516D3B90C00E72EB0 /* CharacteristicCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CharacteristicCell.h; sourceTree = "<group>"; };
+		6E3935C616D3B90C00E72EB0 /* CharacteristicCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CharacteristicCell.m; sourceTree = "<group>"; };
+		6E3935CE16D3DA4000E72EB0 /* CodeBeamerModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CodeBeamerModel.h; sourceTree = "<group>"; };
+		6E3935CF16D3DA4000E72EB0 /* CodeBeamerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CodeBeamerModel.m; sourceTree = "<group>"; };
+		6E56D7C816D2741E00A989AA /* ProjectModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectModel.h; sourceTree = "<group>"; };
+		6E56D7C916D2741E00A989AA /* ProjectModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectModel.m; sourceTree = "<group>"; };
+		6E56D7CC16D27D9000A989AA /* ComponentModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentModel.h; sourceTree = "<group>"; };
+		6E56D7CD16D27D9000A989AA /* ComponentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComponentModel.m; sourceTree = "<group>"; };
 		6E5907A015A5AD910064FD93 /* BNColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BNColor.h; sourceTree = "<group>"; };
 		6E5907A115A5AD910064FD93 /* BNColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BNColor.m; sourceTree = "<group>"; };
 		6E5907A215A5AD910064FD93 /* BNPieChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BNPieChart.h; sourceTree = "<group>"; };
@@ -176,6 +183,8 @@
 		6E80891F15A605EB00654468 /* AvailableSuperCharacteristic+Factory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AvailableSuperCharacteristic+Factory.h"; sourceTree = "<group>"; };
 		6E80892015A605EB00654468 /* AvailableSuperCharacteristic+Factory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AvailableSuperCharacteristic+Factory.m"; sourceTree = "<group>"; };
 		6E95CFDA15BA2A880082B69D /* delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = delete.png; sourceTree = "<group>"; };
+		6EAF562316DFDB67004F027F /* ClassificationModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClassificationModel.h; sourceTree = "<group>"; };
+		6EAF562416DFDB67004F027F /* ClassificationModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClassificationModel.m; sourceTree = "<group>"; };
 		6EC9203315A45C140020F3C0 /* DecisionTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DecisionTableViewController.h; sourceTree = "<group>"; };
 		6EC9203415A45C140020F3C0 /* DecisionTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DecisionTableViewController.m; sourceTree = "<group>"; };
 		6ED9230B15B9813000872D20 /* ComponentDetailInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentDetailInfoViewController.h; sourceTree = "<group>"; };
@@ -244,6 +253,7 @@
 		6E0741C7159474BB000C480E /* SmartSource */ = {
 			isa = PBXGroup;
 			children = (
+				6E3E8F0C16E958E800D01CD5 /* Models */,
 				6EAF4B621599C9C3003958E9 /* CoreData */,
 				6E07422015947ED6000C480E /* Main Menu */,
 				6E0741E715947920000C480E /* SplitView */,
@@ -345,10 +355,12 @@
 		6E0742271594889E000C480E /* RatingScreen */ = {
 			isa = PBXGroup;
 			children = (
-				6E07422B1594905A000C480E /* Slider.h */,
 				6E07422C1594905A000C480E /* Slider.m */,
 				6E074228159488B7000C480E /* RatingTableViewViewController.h */,
 				6E074229159488B7000C480E /* RatingTableViewViewController.m */,
+				6E07422B1594905A000C480E /* Slider.h */,
+				6E3935C516D3B90C00E72EB0 /* CharacteristicCell.h */,
+				6E3935C616D3B90C00E72EB0 /* CharacteristicCell.m */,
 			);
 			name = RatingScreen;
 			sourceTree = "<group>";
@@ -362,6 +374,21 @@
 				6E109D6A15A1CFAC00D3C9F0 /* SettingsTableViewControllerViewController.m */,
 			);
 			name = Settings;
+			sourceTree = "<group>";
+		};
+		6E3E8F0C16E958E800D01CD5 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				6EAF562316DFDB67004F027F /* ClassificationModel.h */,
+				6EAF562416DFDB67004F027F /* ClassificationModel.m */,
+				6E3935CE16D3DA4000E72EB0 /* CodeBeamerModel.h */,
+				6E3935CF16D3DA4000E72EB0 /* CodeBeamerModel.m */,
+				6E56D7CC16D27D9000A989AA /* ComponentModel.h */,
+				6E56D7CD16D27D9000A989AA /* ComponentModel.m */,
+				6E56D7C816D2741E00A989AA /* ProjectModel.h */,
+				6E56D7C916D2741E00A989AA /* ProjectModel.m */,
+			);
+			name = Models;
 			sourceTree = "<group>";
 		};
 		6E59079F15A5AD7A0064FD93 /* ChartClasses */ = {
@@ -438,12 +465,8 @@
 		6ECDF42A159B926300EA4590 /* Master */ = {
 			isa = PBXGroup;
 			children = (
-				6E074221159481A0000C480E /* ComponentsTableViewController.h */,
-				6E074222159481A0000C480E /* ComponentsTableViewController.m */,
 				6E0741D9159474BB000C480E /* SmartSourceMasterViewController.h */,
 				6E0741DA159474BB000C480E /* SmartSourceMasterViewController.m */,
-				6E1C639D15A4AF7700A5DDF5 /* ResultMasterViewController.h */,
-				6E1C639E15A4AF7700A5DDF5 /* ResultMasterViewController.m */,
 			);
 			name = Master;
 			sourceTree = "<group>";
@@ -495,7 +518,7 @@
 			isa = PBXProject;
 			attributes = {
 				CLASSPREFIX = SmartSource;
-				LastUpgradeCheck = 0430;
+				LastUpgradeCheck = 0460;
 			};
 			buildConfigurationList = 6E0741B5159474BB000C480E /* Build configuration list for PBXProject "SmartSource" */;
 			compatibilityVersion = "Xcode 3.2";
@@ -562,7 +585,6 @@
 				6E07420F15947B8A000C480E /* SBJsonUTF8Stream.m in Sources */,
 				6E07421015947B8A000C480E /* SBJsonWriter.m in Sources */,
 				6E07421F15947ED0000C480E /* MenuUIViewController.m in Sources */,
-				6E074223159481A0000C480E /* ComponentsTableViewController.m in Sources */,
 				6E07422A159488B7000C480E /* RatingTableViewViewController.m in Sources */,
 				6E07422D1594905B000C480E /* Slider.m in Sources */,
 				6EF4375C159BA0D50038091B /* CharacteristicsTableViewController.m in Sources */,
@@ -570,7 +592,6 @@
 				6E109D6815A1C0A700D3C9F0 /* AlertView.m in Sources */,
 				6E109D6B15A1CFAC00D3C9F0 /* SettingsTableViewControllerViewController.m in Sources */,
 				6EC9203515A45C140020F3C0 /* DecisionTableViewController.m in Sources */,
-				6E1C639F15A4AF7700A5DDF5 /* ResultMasterViewController.m in Sources */,
 				6E1C63A215A4C78700A5DDF5 /* ShowClassificationTableViewController.m in Sources */,
 				6E5907A415A5AD910064FD93 /* BNColor.m in Sources */,
 				6E5907A515A5AD910064FD93 /* BNPieChart.m in Sources */,
@@ -592,6 +613,11 @@
 				6ED9230D15B9813000872D20 /* ComponentDetailInfoViewController.m in Sources */,
 				6EF1D67215BDA02D009168BD /* HelpViewController.m in Sources */,
 				6EF1D67715BDAA12009168BD /* ClassificationExplanationViewController.m in Sources */,
+				6E56D7CA16D2741E00A989AA /* ProjectModel.m in Sources */,
+				6E56D7CE16D27D9000A989AA /* ComponentModel.m in Sources */,
+				6E3935C716D3B90C00E72EB0 /* CharacteristicCell.m in Sources */,
+				6E3935D016D3DA4000E72EB0 /* CodeBeamerModel.m in Sources */,
+				6EAF562516DFDB68004F027F /* ClassificationModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -624,6 +650,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
@@ -650,6 +680,10 @@
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
 				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;

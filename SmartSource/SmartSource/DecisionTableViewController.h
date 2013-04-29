@@ -7,11 +7,13 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ClassificationModel.h"
 
 @interface DecisionTableViewController : UITableViewController <UISplitViewControllerDelegate>
 
-@property NSFetchedResultsController *fetchedResultsController;
-@property NSManagedObjectContext *managedObjectContext;
-- (void)createRatingTable:(NSString *)projectID;
+@property (nonatomic, strong) ClassificationModel *resultModel;
+@property (strong, nonatomic) UIPopoverController *masterPopoverController;
+
+
 
 @end

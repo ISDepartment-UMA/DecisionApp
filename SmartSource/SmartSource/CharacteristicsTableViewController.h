@@ -10,7 +10,5 @@
 
 @interface CharacteristicsTableViewController : UITableViewController <UIActionSheetDelegate>
 
-@property NSFetchedResultsController *fetchedResultsController;
-@property NSManagedObjectContext *managedObjectContext;
 
 @end

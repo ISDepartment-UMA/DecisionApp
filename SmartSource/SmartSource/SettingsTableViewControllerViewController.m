@@ -16,6 +16,7 @@
 #import "SuperCharacteristic+Factory.h"
 #import "Characteristic+Factory.h"
 #import "Component+Factory.h"
+#import "SmartSourceAppDelegate.h"
 
 @interface SettingsTableViewControllerViewController ()
 
@@ -23,8 +24,6 @@
 @end
 
 @implementation SettingsTableViewControllerViewController
-@synthesize managedObjectContext = _managedObjectContext;
-@synthesize fetchedResultsController = _fetchedResultsController;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -49,6 +48,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
 
 }
 
@@ -209,39 +209,44 @@
     if (([alertView.identifier isEqualToString:@"reset"]) && (buttonIndex == 0)) {
         
         
+        //getContext
+        //get context
+        SmartSourceAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+        NSManagedObjectContext *context = appDelegate.managedObjectContext;
+        
         //delete all supercharacteristics
         NSFetchRequest *request1 = [NSFetchRequest fetchRequestWithEntityName:@"AvailableSuperCharacteristic"];
         NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
         request1.sortDescriptors = [NSArray arrayWithObject:sortDescription];
         NSError *error = nil;
-        NSArray *matches1 = [self.managedObjectContext executeFetchRequest:request1 error:&error];
+        NSArray *matches1 = [context executeFetchRequest:request1 error:&error];
         
         for (int i=0; i<[matches1 count]; i++) {
             //delete supercharacteristic, cascade will delete all characteristics that belong to it
-            [self.managedObjectContext deleteObject:[matches1 objectAtIndex:i]];
+            [context deleteObject:[matches1 objectAtIndex:i]];
         }
         
         //delete all projects
         NSFetchRequest *request2 = [NSFetchRequest fetchRequestWithEntityName:@"Project"];
         request2.sortDescriptors = [NSArray arrayWithObject:sortDescription];
-        NSArray *matches2 = [self.managedObjectContext executeFetchRequest:request2 error:&error];
+        NSArray *matches2 = [context executeFetchRequest:request2 error:&error];
         
         for (int i=0; i<[matches2 count]; i++) {
             //delete supercharacteristic, cascade will delete all characteristics that belong to it
-            [self.managedObjectContext deleteObject:[matches2 objectAtIndex:i]];
+            [context deleteObject:[matches2 objectAtIndex:i]];
         }
         
         //insert root rating characteristics
-        [AvailableSuperCharacteristic addNewAvailableSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:self.managedObjectContext];
-        [AvailableSuperCharacteristic addNewAvailableSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:self.managedObjectContext];
+        [AvailableSuperCharacteristic addNewAvailableSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:context];
+        [AvailableSuperCharacteristic addNewAvailableSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:context];
         
-        [AvailableCharacteristic addNewAvailableCharacteristic:@"Software Object Communication" toSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:self.managedObjectContext];
-        [AvailableCharacteristic addNewAvailableCharacteristic:@"Communication of Requirements" toSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:self.managedObjectContext];
-        [AvailableCharacteristic addNewAvailableCharacteristic:@"Communication among Developers" toSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:self.managedObjectContext];
+        [AvailableCharacteristic addNewAvailableCharacteristic:@"Software Object Communication" toSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:context];
+        [AvailableCharacteristic addNewAvailableCharacteristic:@"Communication of Requirements" toSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:context];
+        [AvailableCharacteristic addNewAvailableCharacteristic:@"Communication among Developers" toSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:context];
         
-        [AvailableCharacteristic addNewAvailableCharacteristic:@"Business Process Specifity" toSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:self.managedObjectContext];
-        [AvailableCharacteristic addNewAvailableCharacteristic:@"Functional Specifity" toSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:self.managedObjectContext];
-        [AvailableCharacteristic addNewAvailableCharacteristic:@"Technical Specifity" toSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:self.managedObjectContext];
+        [AvailableCharacteristic addNewAvailableCharacteristic:@"Business Process Specifity" toSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:context];
+        [AvailableCharacteristic addNewAvailableCharacteristic:@"Functional Specifity" toSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:context];
+        [AvailableCharacteristic addNewAvailableCharacteristic:@"Technical Specifity" toSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:context];
         
         
         //reset default loginData
@@ -251,7 +256,7 @@
         [defaults synchronize];
         
         //save context
-        if (![self.managedObjectContext save:&error]) {
+        if (![context save:&error]) {
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
             abort();
         }
@@ -266,7 +271,6 @@
 {
     if ([segue.identifier isEqualToString:@"editCharacteristics"]) {
         CharacteristicsTableViewController *charVC = segue.destinationViewController;
-        charVC.managedObjectContext = self.managedObjectContext;
     }
 }
 

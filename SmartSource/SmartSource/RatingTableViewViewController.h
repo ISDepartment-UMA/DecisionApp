@@ -7,11 +7,19 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Component+Factory.h"
+#import "Slider.h"
+
 
 @interface RatingTableViewViewController : UITableViewController <UISplitViewControllerDelegate>
-@property NSFetchedResultsController *fetchedResultsController;
-@property NSManagedObjectContext *managedObjectContext;
 
-- (void)setComponent:(NSString *)componentID ofProject:(NSString *)projectID withRatingCharacteristics:(NSArray *)characteristics;
-- (void)saveValueForSlider:(UISlider *)slider;
+- (void)setProject:(NSString *)projectID;
+- (void)setComponent:(NSInteger *)component;
+- (NSArray *)getAvailableComponents;
+- (void)saveValueForSlider:(Slider *)slider;
+- (void)checkForCompleteness;
+
+@property (strong, nonatomic) UIPopoverController *masterPopoverController;
+
+
 @end

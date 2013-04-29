@@ -16,8 +16,7 @@
 @end
 
 @implementation MenuUIViewController
-@synthesize managedObjectContext = _managedObjectContext;
-@synthesize fetchedResultsController = _fetchedResultsController;
+
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -54,13 +53,13 @@
 
 - (IBAction)selectProjects:(id)sender {
     [self dismissModalViewControllerAnimated:YES];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateMaserViewFromCodeBeamer" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"LoadProjectsFromCodebeamer" object:nil];
     
 }
 
 - (IBAction)showRatedProjects:(id)sender {
     [self dismissModalViewControllerAnimated:YES];
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"UpdateMasterViewFromCoreData" object:nil];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"LoadProjectsFromCoreData" object:nil];
 
     
 }
@@ -69,11 +68,10 @@
 {
     if ([segue.identifier isEqualToString:@"settings"]) {
         SettingsTableViewControllerViewController *setVC = segue.destinationViewController;
-        setVC.managedObjectContext = self.managedObjectContext;
+
     }
     if ([segue.identifier isEqualToString:@"help"]) {
         ClassificationExplanationViewController *dest = segue.destinationViewController;
-        dest.managedObjectContext = self.managedObjectContext;
         
     }
 }

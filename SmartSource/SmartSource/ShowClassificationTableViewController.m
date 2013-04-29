@@ -8,18 +8,19 @@
 
 #import "ShowClassificationTableViewController.h"
 #import "ComponentDetailInfoViewController.h"
+#import "ClassificationModel.h"
 
 @interface ShowClassificationTableViewController ()
-@property (strong, nonatomic) UIPopoverController *masterPopoverController;
+
 @property (strong, nonatomic) NSArray *availableCells;
+@property (strong, nonatomic) ClassificationModel *resultModel;
 
 @end
 
 @implementation ShowClassificationTableViewController
-@synthesize fetchedResultsController = _fetchedResultsController;
-@synthesize managedObjectContext = _managedObjectContext;
 @synthesize masterPopoverController = _masterPopoverController;
 @synthesize availableCells = _availableCells;
+@synthesize resultModel = _resultModel;
 
 - (id)initWithStyle:(UITableViewStyle)style
 {
@@ -30,11 +31,11 @@
     return self;
 }
 
-- (void)setDisplayedClassification:(NSString *)classification withComponents:(NSArray *)components
+- (void)setDisplayedClassification:(NSString *)classification fromModel:(ClassificationModel *)model
 {
-    self.availableCells = components;
-    self.navigationItem.prompt = classification;
-    self.navigationController.navigationBarHidden = YES;
+    self.navigationItem.hidesBackButton = YES;
+    self.resultModel = model;
+    self.availableCells = [model getComponentsForCategory:classification];
     self.title = classification;
     [self.tableView reloadData];
 }
@@ -57,7 +58,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    self.navigationController.navigationBarHidden = YES;
+    self.navigationController.navigationBarHidden = NO;
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
@@ -116,11 +117,14 @@
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(UITableViewCell *)sender
 {
+    
+    //segue to component detail info view
     if ([segue.identifier isEqualToString:@"showComponentDetail"]) {
+        
+        //hand over model and component
         ComponentDetailInfoViewController *cdivc = (ComponentDetailInfoViewController *)segue.destinationViewController;
         NSIndexPath *indexPath = [self.tableView indexPathForCell:sender];
-        cdivc.managedObjectContext = self.managedObjectContext;
-        [cdivc setComponent:[[self.availableCells objectAtIndex:indexPath.row] objectAtIndex:0]];
+        [cdivc setComponent:[[self.availableCells objectAtIndex:indexPath.row] objectAtIndex:0] andModel:self.resultModel];
 
         
     }

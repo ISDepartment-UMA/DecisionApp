@@ -11,6 +11,6 @@
 
 @interface Slider : UISlider
 
-- (void)setRatingController:(id)ratingController;
+- (void)setSliderDelegate:(id)ratingController;
 
 @end

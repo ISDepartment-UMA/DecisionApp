@@ -10,9 +10,12 @@
 #import "AvailableCharacteristic+Factory.h"
 #import "AvailableSuperCharacteristic+Factory.h"
 #import "AlertView.h"
-
+#import "SmartSourceAppDelegate.h"
 
 @interface CharacteristicsTableViewController ()
+@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+
+
 @property (nonatomic, strong) NSArray *SuperCharacteristics;
 @property (nonatomic, strong) NSArray *Characteristics;
 
@@ -22,7 +25,6 @@
 @implementation CharacteristicsTableViewController
 @synthesize SuperCharacteristics = _SuperCharacteristics;
 @synthesize Characteristics = _Characteristics;
-@synthesize fetchedResultsController = _fetchedResultsController;
 @synthesize managedObjectContext = _managedObjectContext;
 
 
@@ -40,6 +42,10 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    
+    //get context
+    SmartSourceAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    self.managedObjectContext = appDelegate.managedObjectContext;
 
 }
 
@@ -108,7 +114,9 @@
     
     
     //response from alert to insert new characteristic
-    
+    //get context
+    SmartSourceAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
+    self.managedObjectContext = appDelegate.managedObjectContext;
     
     if ([alertView.identifier isEqualToString:@"insert"]) {
         //if insertbutton clicked and title is super characteristic and input not empty

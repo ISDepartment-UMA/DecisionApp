@@ -20,27 +20,36 @@
 #import "Characteristic+Factory.h"
 #import "Component+Factory.h"
 #import "AlertView.h"
-#import "ResultMasterViewController.h"
 #import "ChartViewController.h"
+#import "SmartSourceAppDelegate.h"
 
 
 @interface DetailTableViewController ()
-@property (strong, nonatomic) NSArray *currentProject; //array of details about the current project
+
+//information on the left side of the cell
 @property (strong, nonatomic) NSArray *cellNames;
+//...and the right side
+@property (strong, nonatomic) NSArray *displayedProject;
+//variable necessary for the segue to main menu
 @property (nonatomic) Boolean hasLoadedBefore;
-@property (strong, nonatomic) UIPopoverController *masterPopoverController;
-@property (strong, nonatomic) SmartSourceMasterViewController *projectScreen;
+
+//model
+@property (strong, nonatomic) CodeBeamerModel *codeBeamerModel;
+
+//available projects, either from codebeamer or from core database
+@property (strong, nonatomic) NSArray *availableProjects;
+
+
 @end
 
 @implementation DetailTableViewController
-
-@synthesize projectScreen = _projectScreen;
-@synthesize masterPopoverController = _masterPopoverController;
 @synthesize hasLoadedBefore = _hasLoadedBefore;
 @synthesize cellNames = _cellNames;
-@synthesize currentProject = _currentProject;
-@synthesize fetchedResultsController = _fetchedResultsController;
-@synthesize managedObjectContext = _managedObjectContext;
+@synthesize codeBeamerModel = _codeBeamerModel;
+@synthesize displayedProject = _displayedProject;
+@synthesize availableProjects = _availableProjects;
+@synthesize masterPopoverController = _masterPopoverController;
+
 
 
 //returns names for detail description of project
@@ -59,63 +68,29 @@
 }
 
 
-
 - (IBAction)mainMenu:(id)sender {
-        [self.splitViewController performSegueWithIdentifier:@"mainMenu" sender:self.splitViewController];
+    
+    [self.splitViewController performSegueWithIdentifier:@"mainMenu" sender:self.splitViewController];
 }
 
 
-
-
-//pass a project's information to make the detail view present its details
-- (void)setProjectDetails:(NSString *)projectID
-{
-    if (projectID == nil) {
-        
-        //show nothing in table view and hide navigation bar
-        self.currentProject = nil;
-        [self.navigationController setNavigationBarHidden:YES];
-    } else {
-        
-        
-        //get project information
-        NSDictionary *project = [self getProjectInfo:projectID];
-        self.currentProject = [NSArray arrayWithObjects:projectID, [project objectForKey:@"name"], [project objectForKey:@"description"], [project objectForKey:@"category"], [project objectForKey:@"start"], [project objectForKey:@"end"], [project objectForKey:@"creator"], nil];
-        
-        
-        //put rating buttons into navigation bar
-        [self handleRatingButtonsInNavigationBar];
-        
-        //show rate button
-        [self.navigationController setNavigationBarHidden:NO];
-    }
-
-    
-    
-    
-    [self.tableView reloadData];
-}
 
 - (void)showResults
 {
     //perform resultssegue on projectscreen
-    [self.projectScreen performSegueWithIdentifier:@"showResults" sender:self.projectScreen];
-    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"MasterViewPerformSegueToResults" object:self];
+    [self performSegueWithIdentifier:@"atAGlance" sender:self];
 }
 
 
 //method that is executed if the user choses to rate this project
 - (void)rateProjectPressed
 {
-    //show components view controller on left side
-    [self.projectScreen performSegueWithIdentifier:@"componentsMenu" sender:self.projectScreen];
+    //notify master view controller to perform segue
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"MasterViewPerformSegue" object:self];
     
     //show rating screen on the right side
     [self performSegueWithIdentifier:@"ratingScreen" sender:self];
-    
-    //post notification to select the first component in the components menu
-    [[NSNotificationCenter defaultCenter] postNotificationName:@"ComponentTableViewControllerSelect" object:nil userInfo:[NSDictionary dictionary]];
-    
 }
 
 
@@ -130,29 +105,13 @@
 }
 
 //reacts to the user's selection in the alert view to delete the project rating
-- (void)alertView:(AlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{ 
+- (void)alertView:(AlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
     
-    //if delete button was pressed
+    //delete project if user resses button 0
     if (buttonIndex == 0) {
         
-        //then delete the current rating from the core database
-        //look for project in core database
-        NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Project"];
-        request.predicate = [NSPredicate predicateWithFormat:@"projectID =%@", [self.currentProject objectAtIndex:0]];
-        NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-        request.sortDescriptors = [NSArray arrayWithObject:sortDescription];
-        NSError *error = nil;
-        NSArray *matches = [self.managedObjectContext executeFetchRequest:request error:&error];
-        
         //delete project
-        //deletion rule in core database is set to cascade, so deleting the project will delete all components, supercharacteristics and characteristics
-        [self.managedObjectContext deleteObject:[matches objectAtIndex:0]];
-        
-        //save context
-        if (![self.managedObjectContext save:&error]) {
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
+        [self.codeBeamerModel deleteProjectWithID:[self.displayedProject objectAtIndex:0]];
         
         //put button to rate the project into the navigationbar
         UIBarButtonItem *rateProject = [[UIBarButtonItem alloc] initWithTitle:@"Rate this Project" style:UIBarButtonItemStyleBordered target:self action:@selector(rateProjectPressed)];
@@ -161,66 +120,118 @@
         //remove alert that project has been rated
         self.navigationItem.prompt = nil;
     }
+    
+    
 }
 
 
 
-
-//checks weather the rating of the currently displayed project is complete or not
-- (BOOL)ratingIsCompleteForProject:(NSString *)projectID
+- (void)viewWillAppear:(BOOL)animated
 {
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Project"];
-    request.predicate = [NSPredicate predicateWithFormat:@"projectID =%@", projectID];
-    NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-    request.sortDescriptors = [NSArray arrayWithObject:sortDescription];
-    NSError *error = nil;
-    NSArray *matches = [self.managedObjectContext executeFetchRequest:request error:&error];
+    [super viewWillAppear:animated];
     
-    if ([matches count] == 0) {
-        return NO;
-    }
-    Project *project = [matches lastObject];
-    NSEnumerator *componentEnumerator = [project.consistsOf objectEnumerator];
+    //show navigation bar
+    self.navigationController.navigationBarHidden = NO;
     
-    //iterate through components
-    Component *comp;
-    while ((comp = [componentEnumerator nextObject]) != nil) {
-        
-        
-        //iterate through all SuperCharacteristics
-        SuperCharacteristic *superChar;
-        NSEnumerator *superCharEnumerator = [comp.ratedBy objectEnumerator];
-        while ((superChar = [superCharEnumerator nextObject]) != nil) {
-            
-            //iterate through all characteristics and add their values to the value of supercharacteristic
-            Characteristic *characteristic;
-            NSEnumerator *charEnumerator = [superChar.superCharacteristicOf objectEnumerator];
-            while ((characteristic = [charEnumerator nextObject]) != nil) {
-                if ([characteristic.value intValue] == 0) {
-                    return NO;
-                }
-            }
+    //add button to main menu
+    UIBarButtonItem *barbutton = [[UIBarButtonItem alloc] initWithTitle:@"Main Menu" style:UIBarButtonItemStyleBordered target:self action:@selector(mainMenu:)];
+    if ([self.navigationItem.leftBarButtonItems count] > 0) {
+        UIBarButtonItem *buttonThere = [self.navigationItem.leftBarButtonItems lastObject];
+        if (![buttonThere.title isEqualToString:@"Main Menu"]) {
+            [self.navigationItem setLeftBarButtonItems: [NSArray arrayWithObjects:[self.navigationItem.leftBarButtonItems objectAtIndex:0], barbutton, nil]];
         }
+    } else {
+        [self.navigationItem setLeftBarButtonItems: [NSArray arrayWithObject:barbutton]];
     }
     
-    return YES;
+    //initiate code beamer model
+    self.codeBeamerModel = [[CodeBeamerModel alloc] init];
+        
+    //option 1: projects from codebeamer
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showAllProjects) name:@"LoadProjectsFromCodebeamer" object:nil];
+    
+    //option 2: stored projects from core data
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showRatedProjects) name:@"LoadProjectsFromCoreData" object:nil];
+}
+
+
+//option 2 :stored projects from core data
+- (void)showRatedProjects
+{
+    //get stored project from code beamer model
+    self.availableProjects = [self.codeBeamerModel getStoredProjects];
+    
+    //notification for master view controller to get available projects
+    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"MasterViewGet" object:self];
+    //[[NSNotificationCenter defaultCenter] postNotificationName:@"LoadProjectsIntoMasterView" object:self];
+}
+
+//option 1: projects from codebeamer
+- (void)showAllProjects
+{
+    //load projects from model in an extrathread
+    //[NSThread detachNewThreadSelector:@selector(getProjectsFromModel) toTarget:self withObject:nil];
+    dispatch_queue_t serialQueue = dispatch_queue_create("com.unique.name.queue", DISPATCH_QUEUE_SERIAL);
+    dispatch_sync(serialQueue, ^{
+        self.availableProjects = [self.codeBeamerModel getAllProjectNames];
+        if (self.availableProjects) {
+            //notification to tell master view that this is the detail view
+            [[NSNotificationCenter defaultCenter] postNotificationName:@"MasterViewGet" object:self];
+            //[[NSNotificationCenter defaultCenter] postNotificationName:@"LoadProjectsIntoMasterView" object:self];
+        }
+    });
+}
+
+//model to be called in seperate thread to get all projects
+- (void)getProjectsFromModel
+{
+    self.availableProjects = [self.codeBeamerModel getAllProjectNames];
+
+    //if no projects returned, show alert
+    if (!self.availableProjects) {
+
+        NSString *message = @"Communication to server failed. Please check your login data!";
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        alert.alertViewStyle = UIAlertViewStyleDefault;
+        [alert show];
+
+        
+    //else load projects into masterview
+    } else {
+        
+        //notification to tell master view that this is the detail view
+        [[NSNotificationCenter defaultCenter] postNotificationName:@"MasterViewGet" object:self];
+        //[[NSNotificationCenter defaultCenter] postNotificationName:@"LoadProjectsIntoMasterView" object:self];
+    }
+    
     
 }
 
 
-- (void)viewDidLoad
+//display project at index that was selected in master view
+- (void)selectProjectWithID:(NSString *)projectID
 {
-    
-    //set the smartsourcemasterviewcontroller's detail screen to self
-    [super viewDidLoad];
-    UINavigationController *masterNavigation = [self.splitViewController.viewControllers objectAtIndex:0];
-    SmartSourceMasterViewController *master = (SmartSourceMasterViewController *)[masterNavigation.viewControllers objectAtIndex:0];
-    master.detailScreen = self;
-    self.projectScreen = master;
-    self.navigationController.navigationBarHidden = YES;
 
+    self.displayedProject = [self.codeBeamerModel getProjectInfo:projectID];
+    [self.tableView reloadData];
     
+    //show rate button
+    [self.navigationController setNavigationBarHidden:NO];
     
+    //if project has been selected, dismiss popovercontroller
+    [self.masterPopoverController dismissPopoverAnimated:YES];
+    
+    //handle buttons
+    [self handleRatingButtonsInNavigationBar];
+}
+
+
+
+//public method to be called from masterviewcontroller to retrieve all available projects
+- (NSArray *)getAvailableProjects
+{
+    return [self.availableProjects copy];
 }
      
 
@@ -238,6 +249,7 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    [self.splitViewController setDelegate:self];
     [super viewDidAppear:animated];
     if (!(self.hasLoadedBefore))
     {
@@ -250,6 +262,7 @@
     
     //put rating buttons into navigation bar
     [self handleRatingButtonsInNavigationBar];
+    
 
 
 }
@@ -260,15 +273,18 @@
 //for projects without a rating stored: rate project
 - (void)handleRatingButtonsInNavigationBar
 {
+    //if no project is selected, don't show any button
+    if (self.displayedProject == nil) {
+        self.navigationItem.rightBarButtonItem = nil;
+        return;
+    }
 
-
-    
     //put button to rate the project into the navigationbar
     UIBarButtonItem *rateProject = [[UIBarButtonItem alloc] initWithTitle:@"Rate this Project" style:UIBarButtonItemStyleBordered target:self action:@selector(rateProjectPressed)];
     [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObject:rateProject]];
     
     //if the project has already been completely rated, show alert and button in navigationbar
-    if ([self ratingIsCompleteForProject:[self.currentProject objectAtIndex:0]]) {
+    if ([self.codeBeamerModel ratingIsCompleteForProject:[self.displayedProject objectAtIndex:0]]) {
         
         self.navigationItem.prompt = @"This project has already been rated!";
         
@@ -288,67 +304,39 @@
         //if the project has not been completely, remove the alert
     } else {
         
+        //hide buttons
         self.navigationItem.prompt = nil;
         
     }
-    
-    if (self.currentProject == nil) {
-        self.navigationItem.rightBarButtonItem = nil;
-        [self.navigationController setNavigationBarHidden:NO];
-    }
 
-}
-
-
-
-//retrieves project Information for a passed projectID
-- (NSDictionary *)getProjectInfo:(NSString *)projectID
-{
-    //login data from nsuserdefaults
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSArray *loginData = [defaults objectForKey:@"loginData"];
-    NSString *serviceUrl = @"";
-    NSString *login = @"";
-    NSString *password = @"";
-    
-    if (loginData != nil) {
-        //decode url to pass it in http request
-        serviceUrl = (__bridge NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)[loginData objectAtIndex:0], NULL, CFSTR(":/?#[]@!$ &'()*+,;=\"<>%{}|\\^~`"), CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
-        login = [loginData objectAtIndex:1];
-        password = [loginData objectAtIndex:2];
-    } else {
-        return nil;
-    } 
-    
-    //JSON request to web service
-    SBJsonParser *parser = [[SBJsonParser alloc] init];
-    NSString *url = [[[[[[[[@"http://wifo1-52.bwl.uni-mannheim.de:8080/axis2/services/DataFetcher/getInfoForProjectObject?url=" stringByAppendingString:serviceUrl] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&projectID="] stringByAppendingString:projectID] stringByAppendingString:@"&response=application/json"];
-    
-    //sending request
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-    NSString *json_string = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
-    NSDictionary *responsedic = [parser objectWithString:json_string error:nil];
-    NSDictionary *returnedObjects = [responsedic objectForKey:@"return"];
-    return returnedObjects;
-    
 }
 
 #pragma mark - Split view
 
 - (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
 {
+    
     barButtonItem.title = NSLocalizedString(@"Projects", @"Projects");
-    [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
+    if ([self.navigationItem.leftBarButtonItems count] > 0) {
+        [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObjects: barButtonItem, [self.navigationItem.leftBarButtonItems objectAtIndex:0], nil]];
+    } else {
+        [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObject:barButtonItem]];
+    }
     self.masterPopoverController = popoverController;
 }
 
 - (void)splitViewController:(UISplitViewController *)splitController willShowViewController:(UIViewController *)viewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
 {
     // Called when the view is shown again in the split view, invalidating the button and popover controller.
-    [self.navigationItem setLeftBarButtonItem:nil animated:YES];
+    [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObject:[self.navigationItem.leftBarButtonItems lastObject]]];
     self.masterPopoverController = nil;
 }
+
+
+
+
+
+
 
 #pragma mark - Table view data source
 
@@ -357,7 +345,7 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.currentProject count];
+    return [self.displayedProject count];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -368,7 +356,7 @@
     // Configure the cell...
     
     cell.textLabel.text = [self.cellNames objectAtIndex:indexPath.row];
-    cell.detailTextLabel.text = [self.currentProject objectAtIndex:indexPath.row];
+    cell.detailTextLabel.text = [self.displayedProject objectAtIndex:indexPath.row];
     return cell;
 }
 
@@ -378,29 +366,45 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Navigation logic may go here. Create and push another view controller.
-    /*
-     <#DetailViewController#> *detailViewController = [[<#DetailViewController#> alloc] initWithNibName:@"<#Nib name#>" bundle:nil];
-     // ...
-     // Pass the selected object to the new view controller.
-     [self.navigationController pushViewController:detailViewController animated:YES];
-     */
+    //nothing
 }
 
 -(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
     
+    //segue to rating screen
     if ([segue.identifier isEqualToString:@"ratingScreen"]) {
+        
+        //pass selected project to rating screen
         RatingTableViewViewController *destination = segue.destinationViewController;
-        destination.managedObjectContext = self.managedObjectContext;
+        [destination setProject:[self.displayedProject objectAtIndex:0]];
+        
+        //pass barbuttonitem that hides popover controller to rating screen
+        if([self.navigationItem.leftBarButtonItems count] > 1) {
+            UIBarButtonItem *barButtonItem = [self.navigationItem.leftBarButtonItems objectAtIndex:0];
+            barButtonItem.title = NSLocalizedString(@"Components", @"Components");
+            destination.navigationItem.leftBarButtonItem = barButtonItem;
+            destination.masterPopoverController = self.masterPopoverController;
+            
+        }
     }
     
     
-    
+    //segue to results screen
     if ([segue.identifier isEqualToString:@"atAGlance"]) {
+        
+        //pass selected project to results screen
         ChartViewController  *resOVC = segue.destinationViewController;
-        resOVC.managedObjectContext = self.managedObjectContext;
-        [resOVC setResultMasterScreen:sender]; 
+        [resOVC initializeClassificationForProject:[self.displayedProject objectAtIndex:0]];
+        
+        //pass barbuttonitem that hides popover controller to result screen
+        if([self.navigationItem.leftBarButtonItems count] > 1) {
+            UIBarButtonItem *barButtonItem = [self.navigationItem.leftBarButtonItems objectAtIndex:0];
+            barButtonItem.title = NSLocalizedString(@"Result Overview", @"Result Overview");
+            resOVC.navigationItem.leftBarButtonItem = barButtonItem;
+            resOVC.masterPopoverController = self.masterPopoverController;
+            
+        }
     }
     
 

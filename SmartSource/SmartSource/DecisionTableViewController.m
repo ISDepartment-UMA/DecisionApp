@@ -13,15 +13,13 @@
 #import "Characteristic.h"
 
 @interface DecisionTableViewController ()
-@property (strong, nonatomic) UIPopoverController *masterPopoverController;
 @property (strong, nonatomic) NSArray *columns;
 @end
 
 @implementation DecisionTableViewController
-@synthesize fetchedResultsController = _fetchedResultsController;
-@synthesize managedObjectContext = _managedObjectContext;
 @synthesize masterPopoverController = _masterPopoverController;
 @synthesize columns = _columns;
+@synthesize resultModel = _resultModel;
 
 
 - (id)initWithStyle:(UITableViewStyle)style
@@ -45,104 +43,21 @@
 
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    self.navigationController.navigationBarHidden = NO;
+    self.navigationItem.hidesBackButton = YES;
+    self.columns = [self.resultModel getColumnsForDecisionTable];
+}
+
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
 }
 
 
-//creates a table featuring all possible combinations of characteristics ratings and their result for the classification
-- (void)createRatingTable:(NSString *)projectID
-{
-    //get Project details from core database
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Project"];
-    request.predicate = [NSPredicate predicateWithFormat:@"projectID =%@", projectID];
-    NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-    request.sortDescriptors = [NSArray arrayWithObject:sortDescription];
-    NSError *error = nil;
-    NSArray *matches = [self.managedObjectContext executeFetchRequest:request error:&error];
-    Project *project = [matches lastObject];
-    Component *oneComponent = [project.consistsOf objectEnumerator].nextObject;
-    
-    //initiate coulmn array
-    NSMutableArray *columns = [NSMutableArray array];
-    double characteristicNumber = 0;
-    double numberOfCombinations = pow(3, [oneComponent.ratedBy count]);
-    
-    //iterate through supercharacteristics
-    SuperCharacteristic *currentSuperchar;
-    NSEnumerator *superCharEnumerator = [oneComponent.ratedBy objectEnumerator];
-    while ((currentSuperchar = [superCharEnumerator nextObject]) != nil) {
-        
-        //prepare array with all possible ratings of available characteristics
-        NSMutableArray *tmp = [NSMutableArray array];
-        
-        while ([[tmp copy] count] <= numberOfCombinations) {
-            for (int i=0; i<pow(3.0, characteristicNumber); i++) {
-                if ([[tmp copy] count] <= numberOfCombinations) {
-                    [tmp addObject:[NSNumber numberWithInt:1]];
-                }
-            }
-            for (int i=0; i<pow(3.0, characteristicNumber); i++) {
-                if ([[tmp copy] count] <= numberOfCombinations) {
-                    [tmp addObject:[NSNumber numberWithInt:2]];
-                }
-            }
-            for (int i=0; i<pow(3.0, characteristicNumber); i++) {
-                if ([[tmp copy] count] <= numberOfCombinations) {
-                    [tmp addObject:[NSNumber numberWithInt:3]];
-                }
-            }
-        }
-        [columns addObject:[NSArray arrayWithObjects:currentSuperchar.name, currentSuperchar.weight, [tmp copy], nil]];
-        characteristicNumber++;
-        
-    }
-    
-    //build the weighted average of all supercharacteristics and determine its ABC status
-    //get the sum of all weights of supercharacteristics
-    double sumWeight = 0;
-    for (int i=0; i<[[columns copy] count]; i++) {
-        sumWeight += [[[columns objectAtIndex:i] objectAtIndex:1] doubleValue];
-    }
-    
-    //prepar rating array
-     NSMutableArray *tmpWeightedValues = [NSMutableArray array];
-    
-    
-    for (int i=0; i < [[[columns lastObject] objectAtIndex:2] count]; i++) {
-        //get the sum of weighted ratings
-        double sum = 0;
-        for (int y=0; y<[columns count]; y++) {
-            sum = sum + ([[[[columns objectAtIndex:y] objectAtIndex:2] objectAtIndex:i] intValue] * [[[columns objectAtIndex:y] objectAtIndex:1] intValue]);
-        }
-        
-        //devide the sum of weighted ratings by the sum of weights
-        double weightedValue = (sum/sumWeight);
-        
-        //--> weighted value
-        if (weightedValue < 1.67) {
-            [tmpWeightedValues addObject:@"C"];
-        } else if (weightedValue < 2.34) {
-            [tmpWeightedValues addObject:@"B"];
-        } else if (weightedValue <= 3) {
-            [tmpWeightedValues addObject:@"A"];
-        }
-        
-            
-        
 
-    }
-    
-    NSArray *weightedValues = [NSArray arrayWithObjects:@"Weighted Value", @"", tmpWeightedValues, nil];
-    [columns addObject:weightedValues];
-    
-    self.navigationController.navigationBarHidden = YES;
-    self.columns = [columns copy];
-    
-    
-    
-}
 
 
 

@@ -10,7 +10,4 @@
 
 @interface SettingsTableViewControllerViewController : UITableViewController
 
-@property NSFetchedResultsController *fetchedResultsController;
-@property NSManagedObjectContext *managedObjectContext;
-
 @end

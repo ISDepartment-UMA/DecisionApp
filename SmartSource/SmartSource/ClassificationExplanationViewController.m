@@ -14,6 +14,7 @@
 #import "Slider.h"
 
 @interface ClassificationExplanationViewController ()
+@property (strong, nonatomic) ClassificationModel *resultModel;
 @property (strong, nonatomic) NSArray *views;
 
 @property (strong, nonatomic) NSArray *superChars;
@@ -23,19 +24,20 @@
 @property (nonatomic) float totalWeightOfSuperCharacteristics;
 @property (nonatomic) float weightedSumOfSuperCharacteristics;
 @property (nonatomic, strong) NSArray *valuesOfSuperCharacteristics;
+@property (nonatomic, strong) UIPopoverController *masterPopoverController;
 
 
 @end
 
 @implementation ClassificationExplanationViewController
-@synthesize fetchedResultsController = _fetchedResultsController;
-@synthesize managedObjectContext = _managedObjectContext;
 @synthesize superChars = _superChars;
 @synthesize chars = _chars;
 @synthesize totalWeightOfSuperCharacteristics = _totalWeightOfSuperCharacteristics;
 @synthesize views = _views;
 @synthesize weightedSumOfSuperCharacteristics = _weightedSumOfSuperCharacteristics;
 @synthesize valuesOfSuperCharacteristics = _valuesOfSuperCharacteristics;
+@synthesize resultModel = _resultModel;
+@synthesize masterPopoverController = _masterPopoverController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -44,6 +46,32 @@
         // Custom initialization
     }
     return self;
+}
+
+- (void)handleSwipeRightFrom:(UISwipeGestureRecognizer *)swipe
+{
+    NSLog(@"recieved");
+    if ([self.view isEqual:[self.views objectAtIndex:1]]) {
+            NSLog(@"goto First");
+            [self toFirst];
+        } else if ([self.view isEqual:[self.views objectAtIndex:2]]) {
+            NSLog(@"goto Second");
+            [self toSecond];
+        }
+}
+
+- (void)handleSwipeLeftFrom:(UISwipeGestureRecognizer *)swipe
+{
+    NSLog(@"recieved");
+    if ([self.view isEqual:[self.views objectAtIndex:0]]) {
+        NSLog(@"goto Second");
+        [self toSecond];
+    } else if ([self.view isEqual:[self.views objectAtIndex:1]]) {
+        NSLog(@"goto Third");
+        [self toThird];
+    }
+    
+    
 }
 
 - (void)viewDidLoad
@@ -58,6 +86,13 @@
     UIView *second = [self buildSecondScreen];
     UIView *third = [self buildThirdScreen];
     
+    
+    
+    
+    
+
+    
+    /*
     //build scrollview with views and add it
     UIScrollView *scroll = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, frameOfScreen.size.height, frameOfScreen.size.width)];
     scroll.contentSize = CGSizeMake(frameOfScreen.size.height, first.frame.size.height);
@@ -67,12 +102,10 @@
     [scroll addSubview:first];
     
     [self.view addSubview:scroll];
+    */
+    self.view = first;
     
-    //swipe recognizer
-    UISwipeGestureRecognizer *rightRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(toSecond)];
-    rightRecognizer.direction = UISwipeGestureRecognizerDirectionRight;
-    [rightRecognizer setNumberOfTouchesRequired:1];
-    [self.view addGestureRecognizer:rightRecognizer];
+    
     
     self.views = [NSArray arrayWithObjects:self.view, second, third, nil];
 
@@ -97,75 +130,18 @@
     return YES;
 }
 
-//public method that sets the displayed component and retrieves rating data from core database
-//--> self.chars, self.superChars
-- (void)setComponent:(NSString *)componentID;
+- (void)setComponent:(NSString *)componentID andModel:(ClassificationModel *)model
 {
+    //set model
+    self.resultModel = model;
+    NSArray *returnedValues = [self.resultModel getCharsAndValuesArray:componentID];
+    self.superChars = [returnedValues objectAtIndex:0];
+    self.chars = [returnedValues objectAtIndex:1];
 
-    //retrieving the rating values
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Component"];
-    request.predicate = [NSPredicate predicateWithFormat:@"id =%@", componentID];
-    NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-    request.sortDescriptors = [NSArray arrayWithObject:sortDescription];
-    NSError *error = nil;
-    NSArray *matches = [self.managedObjectContext executeFetchRequest:request error:&error];
-    Component *comp = [matches lastObject];
     
-    
-    
-    //initiate arrays of used supercharacteristics and characteristics
-    NSMutableArray *usedSuperChars = [NSMutableArray array];
-    NSMutableArray *usedChars = [NSMutableArray array];
-    
-    //initiate arrays for values
-    NSMutableArray *valueSuperChars = [NSMutableArray array];
-    NSMutableArray *valueChars = [NSMutableArray array];
-    
-    
-    //iterate through all supercharacteristics
-    SuperCharacteristic *superChar;
-    
-    //sort supercharacteristics
-    NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
-    NSEnumerator *superCharEnumerator = [[comp.ratedBy sortedArrayUsingDescriptors:descriptors] objectEnumerator];
-    
-    while ((superChar = [superCharEnumerator nextObject]) != nil) {
-        
-        //add supercharacteristic to used supercharacteristic array
-        [usedSuperChars addObject:superChar.name];
-        
-        
-        //add weight to array of supercharacteristic's values
-        [valueSuperChars addObject:superChar.weight];
-        
-        //iterate through all characteristics of supercharacteristic
-        Characteristic *characteristic;
-        
-        NSMutableArray *characteristicsOfSuperchar = [NSMutableArray array];
-        NSMutableArray *valueOfCharacteristics = [NSMutableArray array];
-        
-        NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
-        NSEnumerator *charEnumerator = [[superChar.superCharacteristicOf sortedArrayUsingDescriptors:descriptors] objectEnumerator];
-        
-        while ((characteristic = [charEnumerator nextObject]) != nil) {
-            
-            //add characteristic to characteristic array
-            [characteristicsOfSuperchar addObject:characteristic.name];
-            
-            //add characteristic value to array
-            [valueOfCharacteristics addObject:characteristic.value];
-        }
-        
-        //add array of characteristics to characteristics array
-        [usedChars addObject:characteristicsOfSuperchar];
-        [valueChars addObject:valueOfCharacteristics];
-        
-        
-    }
-    
-    self.superChars = [NSArray arrayWithObjects:[usedSuperChars copy], [valueSuperChars copy], nil];
-    self.chars = [NSArray arrayWithObjects:[usedChars copy], [valueChars copy], nil];
 }
+
+
 
 
 
@@ -266,6 +242,11 @@
     
     self.weightedSumOfSuperCharacteristics = weightedSumOfSupercharacteristics;
     self.valuesOfSuperCharacteristics = [valuesOfSuperchars copy];
+    
+    //add swipe recongizer
+    UISwipeGestureRecognizer *recognizerLeftFirst = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeLeftFrom:)];
+    [recognizerLeftFirst setDirection:(UISwipeGestureRecognizerDirectionLeft)];
+    [viewToPut addGestureRecognizer:recognizerLeftFirst];
     
     
     
@@ -389,6 +370,15 @@
     [slider setFrame:CGRectMake(480, 110 + ([[self.superChars objectAtIndex:0] count] * 100) , 200, 50)];
     [viewToPut addSubview:slider];
     
+    //swipe recognizer
+    UISwipeGestureRecognizer *recognizerRightSecond = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeRightFrom:)];
+    [recognizerRightSecond setDirection:(UISwipeGestureRecognizerDirectionRight)];
+    [viewToPut addGestureRecognizer:recognizerRightSecond];
+    
+    UISwipeGestureRecognizer *recognizerLeftSecond = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeLeftFrom:)];
+    [recognizerLeftSecond setDirection:(UISwipeGestureRecognizerDirectionLeft)];
+    [viewToPut addGestureRecognizer:recognizerLeftSecond];
+    
     return viewToPut;
 }
 
@@ -489,7 +479,10 @@
     [viewToPut addSubview:end];
     
     
-    
+    //swipe
+    UISwipeGestureRecognizer *recognizerRightThird = [[UISwipeGestureRecognizer alloc] initWithTarget:self action:@selector(handleSwipeRightFrom:)];
+    [recognizerRightThird setDirection:(UISwipeGestureRecognizerDirectionRight)];
+    [viewToPut addGestureRecognizer:recognizerRightThird];
     
     
     
@@ -589,6 +582,8 @@
     [view addSubview:label7];
     return view;
 }
+
+
 
 - (UIView *)buildABCSliderView:(float)value
 {
@@ -730,6 +725,7 @@
     
     
 }
+
 
 
 

@@ -7,20 +7,12 @@
 //
 
 #import "SmartSourceMasterViewController.h"
-#import "Json/SBJson.h"
 #import "DetailTableViewController.h"
-#import "ComponentsTableViewController.h"
-#import "ResultMasterViewController.h"
-#import "RatingTableViewViewController.h"
-
-//unnötig?
-#import "AvailableCharacteristic+Factory.h"
-#import "AvailableSuperCharacteristic+Factory.h"
-#import "Project+Factory.h"
-#import "SuperCharacteristic+Factory.h"
-#import "Characteristic+Factory.h"
 #import "Component+Factory.h"
-#import "AlertView.h"
+
+
+
+
 
 
 @interface SmartSourceMasterViewController ()
@@ -28,20 +20,23 @@
 
 @property (nonatomic, strong)NSArray *availableCells;
 @property (strong, nonatomic) NSArray *displayedCells;  //cells that are displayed in the tableview
-@property (strong, nonatomic) NSString * selectedProject;
+@property (strong, nonatomic) NSString *state;
+@property (strong, nonatomic) NSArray *componentClassification;
 
 
 @end
 
 @implementation SmartSourceMasterViewController
-@synthesize selectedProject = _selectedProject;
 @synthesize detailScreen = _detailScreen;
-@synthesize fetchedResultsController = _fetchedResultsController;
 @synthesize detailViewController = _detailViewController;
-@synthesize managedObjectContext = __managedObjectContext;
 @synthesize projectSearchBar = _projectSearchBar;
 @synthesize availableCells = _availableCells;
 @synthesize displayedCells = _displayedCells;
+//"projects", "components", "results"
+@synthesize state = _state;
+@synthesize ratingScreen = _ratingScreen;
+@synthesize resultScreen = _resultScreen;
+@synthesize componentClassification = _componentClassification;
 
 
 - (void)awakeFromNib
@@ -53,62 +48,143 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-
-    
-    //call loadProjects in seperate thread to retrieve projects
-    //[NSThread detachNewThreadSelector:@selector(loadProjects) toTarget:self withObject:nil];
-    
+    self.state = @"projects";
     //search bar
     self.projectSearchBar.delegate = self;
     
-    //add observer so data is reloaded, once the main menu disappears
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showAllProjects) name:@"UpdateMaserViewFromCodeBeamer" object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showRatedProjects) name:@"UpdateMasterViewFromCoreData" object:nil];
-}
-
-//method to be called in seperate thread that retrieves information about all projects from code beamer
-- (void)loadProjectsFromCodeBeamer
-{
-    self.availableCells = [self getAllProjectNames];
-    self.displayedCells = self.availableCells;
-    [self.tableView reloadData];
     
 }
 
-//method that loads all projects if main menu is poped
-- (void)showAllProjects
-{
-    [self.detailScreen setProjectDetails:nil];
-    [NSThread detachNewThreadSelector:@selector(loadProjectsFromCodeBeamer) toTarget:self withObject:nil];
-}
 
-- (void)showRatedProjects
+- (void)getDataFromDetailScreen
 {
-    [self.detailScreen setProjectDetails:nil];
+    //projects
+    if ([self.detailScreen.navigationController.visibleViewController isKindOfClass:[DetailTableViewController class]]) {
+        [self.navigationItem setLeftBarButtonItems:nil];
+        self.state = @"projects";
+        self.projectSearchBar.text = @"";
+        self.navigationItem.title = @"Projects";
+        self.projectSearchBar.hidden = NO;
+        self.availableCells = [self.detailScreen getAvailableProjects];
+        self.displayedCells = [self.availableCells copy];
+        [self.tableView reloadData];
+        
+     
+    //components
+    } else if ([self.detailScreen.navigationController.visibleViewController isKindOfClass:[RatingTableViewViewController class]]) {
+        self.ratingScreen = (RatingTableViewViewController *)self.detailScreen.navigationController.visibleViewController;
+        self.state = @"components";
+        self.navigationItem.title = @"Components";
+        //get available components from detail screen
+        self.availableCells = [self.ratingScreen getAvailableComponents];
+        self.displayedCells = self.availableCells;
+        self.projectSearchBar.text = @"";
+        //self.projectSearchBar.hidden = YES;
+        [self.tableView reloadData];
+        
+        //add back button
+        //add button to main menu
+        UIBarButtonItem *barbutton = [[UIBarButtonItem alloc] initWithTitle:@"Projects" style:UIBarButtonItemStyleBordered target:self action:@selector(backToProjects)];
+        [self.navigationItem setLeftBarButtonItem:barbutton];
+        
+        //if there are components, select the first one
+        if ([self.availableCells count] > 0) {
+            NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
+            [self.tableView selectRowAtIndexPath:index animated:NO scrollPosition:UITableViewScrollPositionTop];
+        } else {
+            NSString *message = @"No Components Available in this Project";
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+            alert.alertViewStyle = UIAlertViewStyleDefault;
+            [alert show];
+        }
+        
+    
 
-    //get all projects from core database
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Project"];
-    NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-    request.sortDescriptors = [NSArray arrayWithObject:sortDescription];
-    NSError *error = nil;
-    NSArray *matches = [self.managedObjectContext executeFetchRequest:request error:&error];
-    
-    //initiate array of available projects
-    NSMutableArray *availableProjects = [NSMutableArray array];
-    
-    
-    //put id, name and description of all projects into available projects
-    for (int i=0; i<[matches count]; i++) {
-        Project *currProject = [matches objectAtIndex:i];
-        [availableProjects addObject:[NSArray arrayWithObjects:currProject.projectID, currProject.name, currProject.descr, nil]];
+    //results
+    } else if ([self.detailScreen.navigationController.visibleViewController isKindOfClass:[ChartViewController class]]) {
+        self.state = @"results";
+        self.navigationItem.title = @"Results Overview";
+        self.resultScreen = (ChartViewController *)self.detailScreen.navigationController.visibleViewController;
+        self.availableCells = [NSArray arrayWithObjects:@"At One Glance", @"A Classified", @"B Classified", @"C Classified", @"Detailed Decision Table" ,nil];
+        self.displayedCells = self.availableCells;
+        self.projectSearchBar.hidden = YES;
+        self.componentClassification = [self.resultScreen getClassificationForCurrentProject];
+        [self.tableView reloadData];
+        
+        
+        //check if there is a rating screen in the detailnavigationcontroller
+         //if there is a RatingTableViewController in the Controller stack of the NavigationController of the detail side then pop to it
+         //else pop to root view controller
+         
+         RatingTableViewViewController *ratingController = nil;
+         for (id controller in self.detailScreen.navigationController.viewControllers) {
+             if ([controller isKindOfClass:[RatingTableViewViewController class]]) {
+                ratingController = controller;
+                break;
+             }
+         }
+        
+        if (ratingController) {
+            self.ratingScreen = ratingController;
+            //add button back to rating
+            UIBarButtonItem *barbutton = [[UIBarButtonItem alloc] initWithTitle:@"Rating" style:UIBarButtonItemStyleBordered target:self action:@selector(backToRating)];
+            [self.navigationItem setLeftBarButtonItem:barbutton];
+        } else {
+            //add button back to projects
+            UIBarButtonItem *barbutton = [[UIBarButtonItem alloc] initWithTitle:@"Projects" style:UIBarButtonItemStyleBordered target:self action:@selector(backToProjects)];
+            [self.navigationItem setLeftBarButtonItem:barbutton];
+            self.ratingScreen = nil;
+        }
+        
+        
+        
+        NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
+        [self.tableView selectRowAtIndexPath:index animated:NO scrollPosition:UITableViewScrollPositionTop];
+        
     }
-    
-    
-    
-    self.availableCells = [availableProjects copy];
-    self.displayedCells = self.availableCells;
-    [self.tableView reloadData];
 }
+
+
+//gets called if the user wants to go back to projects
+- (void)backToProjects
+{
+    //pop detail view back to detailscreen
+    [self.detailScreen.navigationController popToViewController:self.detailScreen animated:YES];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"MasterViewGet" object:self];
+
+}
+
+
+//executed when user wants to pop back to the rating screen
+- (void)backToRating
+{
+    [self.detailScreen.navigationController popToViewController:self.ratingScreen animated:YES];
+}
+
+- (void)selectComponentOnRatingScreen:(NSNotification *)notification
+{
+    if ([self.state isEqualToString:@"components"]) {
+        
+        NSLog(@"backcomponentcheck");
+        NSLog(@"alles klar");
+    }
+}
+
+
+
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(getDataFromDetailScreen) name:@"MasterViewGet" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(selectComponentOnRatingScreen:) name:@"selectComponentOnRatingScreen" object:nil];
+
+    
+}
+
+
+
+
 
 
 - (void)viewDidAppear:(BOOL)animated
@@ -118,10 +194,10 @@
     //if view appears, set displayed cells to available cells, this avoids problems when poping back to project selection
     self.displayedCells = self.availableCells;
     self.projectSearchBar.text = @"";
+    [self.tableView reloadData];
+    [self getDataFromDetailScreen];
     
-    if (![self.detailScreen.navigationController.visibleViewController isKindOfClass:[self.detailScreen class]]) {
-        [self.detailScreen.navigationController popToViewController:self.detailScreen animated:NO];
-    }
+    
 }
 
 
@@ -139,9 +215,6 @@
     return YES;
 }
 
-- (IBAction)mainMenuPressed:(id)sender {
-    [self.splitViewController performSegueWithIdentifier:@"mainMenu" sender:self];
-}
 
 #pragma mark - Table View
 
@@ -149,7 +222,13 @@
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
-    return [self.displayedCells count];
+    if (self.availableCells) {
+        return [self.displayedCells count];
+    } else {
+        return 0;
+    }
+    
+
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -157,110 +236,101 @@
     static NSString *CellIdentifier = @"projectCell";
     UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
     
-    // Configure the cell...
-    NSArray *projectInfo = [NSArray arrayWithObjects:@"Error", @"Error", @"Error", @"Error", nil];
     
-    //check if the communication to the server returned projects
-    if ([[self.displayedCells objectAtIndex:indexPath.row] count] > 1) {
-        projectInfo = [self.displayedCells objectAtIndex:indexPath.row];
+    //project
+    if ([self.state isEqualToString:@"projects"]) {
+        // Configure the cell...
+        NSArray *projectInfo = [NSArray arrayWithObjects:@"Error", @"Error", @"Error", @"Error", nil];
         
-    //else show error message
-    } else {
-        NSString *message = @"Communication to server failed. Please check your login data!";
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        alert.alertViewStyle = UIAlertViewStyleDefault;
-        [alert show];
+        
+        //check if the communication to the server returned projects
+        if (self.availableCells) {
+            if ([[self.displayedCells objectAtIndex:indexPath.row] count] > 1) {
+                projectInfo = [self.displayedCells objectAtIndex:indexPath.row];
+            }
+        }
+        cell.textLabel.text = [projectInfo objectAtIndex:1];
+        cell.detailTextLabel.text = @"";
+    
+        
+    //component
+    } else if ([self.state isEqualToString:@"components"]) {
+        if ([self.availableCells count]>0) {
+            Component *comp = [self.displayedCells objectAtIndex:indexPath.row];
+            cell.textLabel.text = comp.name;
+            cell.detailTextLabel.text = @"";
+        } else {
+            cell.textLabel.text =@"";
+        }
+        
+    
+        
+    //results
+    } else if ([self.state isEqualToString:@"results"]) {
+        // Configure the cell...
+        cell.textLabel.text = [self.availableCells objectAtIndex:indexPath.row];
+        
+        if ((indexPath.row >0) && (indexPath.row <4) && (self.componentClassification)) {
+            int number = [[self.componentClassification objectAtIndex:(indexPath.row-1)] count];
+            cell.detailTextLabel.text = [NSString stringWithFormat:@"%d", number];
+        }
     }
-    
-    
-    cell.textLabel.text = [projectInfo objectAtIndex:1];
 
 
     return cell;
 }
 
-// JSON query to get all project ids, names and descriptions
-//@return: two dimensional array
-// 1st dimension: project
-// 2nd dimension: property: 0:ID - 1:Name - 2:Description -3:BOOL if it's already in the database
-- (NSArray *)getAllProjectNames
+
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
-    //login data from nsuserdefaults
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSArray *loginData = [defaults objectForKey:@"loginData"];
-    NSString *serviceUrl = @"";
-    NSString *login = @"";
-    NSString *password = @"";
-    
-    
-    if (loginData != nil) {
+    if ([self.state isEqualToString:@"projects"]) {
+        //set detail screen
+        [self.detailScreen selectProjectWithID:[[self.displayedCells objectAtIndex:indexPath.row] objectAtIndex:0]];
+    } else if ([self.state isEqualToString:@"components"]) {
+        //set the currently displayed component in the rating table view controller
+        [self.ratingScreen setComponent:indexPath.row];
+    } else if ([self.state isEqualToString:@"results"]) {
         
-        //decode url to pass it in http request
-        serviceUrl = (__bridge NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)[loginData objectAtIndex:0], NULL, CFSTR(":/?#[]@!$ &'()*+,;=\"<>%{}|\\^~`"), CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
-        login = [loginData objectAtIndex:1];
-        password = [loginData objectAtIndex:2];
-    } else {
-        return nil;
-    } 
-    
-    //JSON request to web service
+        [self.resultScreen.navigationController popToViewController:self.resultScreen animated:NO];
         
-    SBJsonParser *parser = [[SBJsonParser alloc] init];
-    NSString *url = [[[[[[@"http://wifo1-52.bwl.uni-mannheim.de:8081/axis2/services/DataFetcher/getAllProjects?url=" stringByAppendingString:serviceUrl] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&response=application/json"];
-    
-    
-    //sending request
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-    NSString *json_string = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
-    NSDictionary *responsedic = [parser objectWithString:json_string error:nil];
-    NSDictionary *projectsTotal = [responsedic objectForKey:@"return"];
-    
-    //difference between one returned project and more than one
-    @try {
-        NSEnumerator *projects = [projectsTotal objectEnumerator];
-        id next = [projects nextObject];
-        
-        //only one project returned
-        if ([next isKindOfClass:[NSArray class]]) {
-            NSString *id = [NSString stringWithFormat:@"%d", [[next objectAtIndex:0] integerValue]];
-            NSString *name = [next objectAtIndex:1];
-            NSString *description = [next objectAtIndex:2];
-
-            return [NSMutableArray arrayWithObject:[NSMutableArray arrayWithObjects:id, name, description, nil]];
+        //if user wants to see the decision talbe
+        if (indexPath.row ==4) {
+            [self.resultScreen showDecisionTable];
         }
         
-        //more than one project returned
-        NSMutableArray *allProjects;
-        NSEnumerator *oneproject = [next objectEnumerator];
-        
-        //retrieve project name, id and description in 2-dimensional array
-        //0: ID 1:Name 2:Description
-        NSArray *current = [oneproject nextObject];
-        NSString *id = [NSString stringWithFormat:@"%d", [[current objectAtIndex:0] integerValue]];
-        NSString *name = [current objectAtIndex:1];
-        NSString *description = [current objectAtIndex:2];
-
-        allProjects = [NSMutableArray arrayWithObject:[NSMutableArray arrayWithObjects:id, name, description, nil]];
-        
-        NSDictionary *temp;
-        while ((temp = [projects nextObject]) != nil) {
-            NSEnumerator *temp2 = [temp objectEnumerator];
-            NSArray *current = [temp2 nextObject];
-            NSString *id = [NSString stringWithFormat:@"%d", [[current objectAtIndex:0] integerValue]];
-            NSString *name = [current objectAtIndex:1];
-            NSString *description = [current objectAtIndex:2];
-            [allProjects addObject:[NSMutableArray arrayWithObjects:id, name, description, nil]];
+        //if user wants to see the components of a, b or c-classification
+        if ((indexPath.row > 0) && (indexPath.row <4)) {
+            
+            //set the title of the classification
+            NSString *classification = @"";
+            switch (indexPath.row) {
+                case 1:
+                    classification = @"A - Components";
+                    break;
+                case 2:
+                    classification = @"B - Components";
+                    break;
+                case 3:
+                    classification = @"C - Components";
+                    break;
+                    
+                default:
+                    break;
+            }
+            
+            [self.resultScreen showClassification:classification];
+            
+            
         }
         
-        //return
-        return allProjects;
+        
     }
-    @catch (NSException *exception) {
-        return [NSMutableArray arrayWithObject:[NSMutableArray arrayWithObjects:@"", @"Fehler!", @"",  nil]];
-    }
+    
 }
+
+
 
 
 
@@ -287,14 +357,29 @@
         return;
     }
     
-    NSArray *cell;
-    for (cell in self.availableCells)
-    {
-        NSComparisonResult result = [[cell objectAtIndex:1] compare:searchText options:NSCaseInsensitiveSearch range:NSMakeRange(0, searchText.length)];
-        if (result == NSOrderedSame) {
-            [output addObject:cell];
+    
+    if ([self.state isEqualToString:@"projects"]) {
+        NSArray *cell;
+        for (cell in self.availableCells)
+        {
+            NSComparisonResult result = [[cell objectAtIndex:1] compare:searchText options:NSCaseInsensitiveSearch range:NSMakeRange(0, searchText.length)];
+            if (result == NSOrderedSame) {
+                [output addObject:cell];
+            }
         }
+    } else if ([self.state isEqualToString:@"components"]) {
+        Component *cell;
+        for (cell in self.availableCells)
+        {
+            NSComparisonResult result = [cell.name compare:searchText options:NSCaseInsensitiveSearch range:NSMakeRange(0, searchText.length)];
+            if (result == NSOrderedSame) {
+                [output addObject:cell];
+            }
+        }
+    } else if ([self.state isEqualToString:@"results"]) {
+        //nothing -- search bar hidden
     }
+    
     self.displayedCells = [output copy];
     [self.tableView reloadData];
 }
@@ -321,35 +406,7 @@
 
 
 
-#pragma mark - Table view delegate
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    //set detail screen
-    NSArray *tmpProjectInfo = [self.displayedCells objectAtIndex:indexPath.row];
-    [self.detailScreen setProjectDetails:[tmpProjectInfo objectAtIndex:0]];
-    self.selectedProject = [tmpProjectInfo objectAtIndex:0];
-}
-    
-
-    
-
--(void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([segue.identifier isEqualToString:@"componentsMenu"]) {
-        ComponentsTableViewController *destination = segue.destinationViewController;
-        destination.managedObjectContext = self.managedObjectContext;
-        [destination setProject:self.selectedProject];
-    }
-    
-    if ([segue.identifier isEqualToString:@"showResults"]) {
-        ResultMasterViewController *resultMVC = segue.destinationViewController;
-        resultMVC.managedObjectContext = self.managedObjectContext;
-        [resultMVC prepareResultsForProject:self.selectedProject];
-        
-        [self.detailScreen performSegueWithIdentifier:@"atAGlance" sender:resultMVC];
-    }
-}
 
 
 @end

@@ -9,8 +9,9 @@
 #import "Slider.h"
 #import "RatingTableViewViewController.h"
 
+
 @interface Slider ()
-@property RatingTableViewViewController *ratingController;
+@property (nonatomic, strong) RatingTableViewViewController *sliderDelegate;
 
 
 
@@ -18,7 +19,7 @@
 @end
 
 @implementation Slider
-@synthesize ratingController = _ratingController;
+@synthesize sliderDelegate = _sliderDelegate;
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -26,7 +27,7 @@
     if (self) {
         // Initialization code
     }
-
+    
     return self;
 }
 
@@ -48,22 +49,27 @@
         [self setValue: 5.0 animated: YES];
     }
     
-    [self.ratingController saveValueForSlider:self]; 
+    
+    [self.sliderDelegate saveValueForSlider:self];
+    //UILabel *textLabel = (UILabel *)[self.superview viewWithTag:10];
+    //[self.currentComponentModel saveWeight:[NSNumber numberWithFloat:self.value] forSuperCharacteristic:textLabel.text];
     //[self sendActionsForControlEvents:UIControlEventValueChanged];
+    
+    
 }
 
- 
+
 
 
 
 
 /*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
+ // Only override drawRect: if you perform custom drawing.
+ // An empty implementation adversely affects performance during animation.
+ - (void)drawRect:(CGRect)rect
+ {
+ // Drawing code
+ }
+ */
 
 @end

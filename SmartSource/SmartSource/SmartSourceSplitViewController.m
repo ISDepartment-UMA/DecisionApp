@@ -16,8 +16,8 @@
 @end
 
 @implementation SmartSourceSplitViewController
-@synthesize managedObjectContext = _managedObjectContext;
-@synthesize fetchedResultsController = _fetchedResultsController;
+
+
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -45,15 +45,8 @@
     return UIInterfaceOrientationIsLandscape(interfaceOrientation);
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    if ([segue.identifier isEqualToString:@"mainMenu"]) {
-        UINavigationController *navigation = segue.destinationViewController;
-        MenuUIViewController *menu = [navigation.viewControllers objectAtIndex:0];
-        menu.managedObjectContext = self.managedObjectContext;
-            
-    }
 
-}
+
+
 
 @end

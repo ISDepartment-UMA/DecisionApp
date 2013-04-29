@@ -7,12 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "ClassificationModel.h"
 
 @interface ClassificationExplanationViewController : UIViewController <UITableViewDataSource>
 
-@property NSFetchedResultsController *fetchedResultsController;
-@property NSManagedObjectContext *managedObjectContext;
-
-- (void)setComponent:(NSString *)componentID;
+- (void)setComponent:(NSString *)componentID andModel:(ClassificationModel *)model;
 
 @end
