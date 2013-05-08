@@ -8,8 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "SmartSourceSplitViewController.h"
+#import "DetailTableViewController.h"
 
-@interface MenuUIViewController : UIViewController
+@interface MenuUIViewController : UIViewController <UIAlertViewDelegate>
+@property DetailTableViewController *detailScreen;
 
 
 

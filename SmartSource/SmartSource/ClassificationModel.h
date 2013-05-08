@@ -21,7 +21,7 @@
 - (NSArray *)getComponentsForCategory:(NSString *)category;
 - (NSArray *)getColumnsForDecisionTable;
 - (Component *)getComponentForID:(NSString *)componentID;
-- (NSDictionary *)getComponentInfoForID:(NSString *)componentID;
+- (NSArray *)getComponentInfoForID:(NSString *)componentID;
 - (NSArray *)getCharsAndValuesArray:(NSString *)componentID;
 
 

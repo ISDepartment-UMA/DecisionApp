@@ -18,20 +18,13 @@
 
 @interface ChartViewController ()
 
-@property (strong, nonatomic) IBOutlet UILabel *textLabelA;
-@property (strong, nonatomic) IBOutlet UILabel *textLabelB;
-@property (strong, nonatomic) IBOutlet UILabel *textLabelC;
-
 
 //classification model
 @property (strong, nonatomic) ClassificationModel *resultModel;
 @end
 
 @implementation ChartViewController
-@synthesize textLabelA = _textLabelA;
-@synthesize textLabelB = _textLabelB;
 @synthesize masterPopoverController = _masterPopoverController;
-@synthesize textLabelC = _textLabelC;
 @synthesize resultModel = _resultModel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -81,9 +74,6 @@
 
 - (void)viewDidUnload
 {
-    [self setTextLabelA:nil];
-    [self setTextLabelB:nil];
-    [self setTextLabelC:nil];
     self.navigationController.navigationBarHidden = YES;
     [super viewDidUnload];
     // Release any retained subviews of the main view.
@@ -132,44 +122,57 @@
         totalComponents = totalComponents + [[componentClassification objectAtIndex:i] count];
     }
     
-    
+    //initialize chart
     CGRect frame = CGRectMake(0, 0, 703, 501);
     BNPieChart *chart = [[BNPieChart alloc] initWithFrame:frame];
     chart.backgroundColor = [UIColor whiteColor];
     int index = 0;
+   
+    //create text label for A - component description
+    UILabel *textLabelA = [[UILabel alloc] initWithFrame:CGRectMake(20, 520, 663, 42)];
+    [textLabelA setTextColor:[self getRGBForIndex:0]];
+    [textLabelA setText:@"A - Core Component: Likely to be kept in-house."];
+    [textLabelA setFont:[UIFont fontWithName:@"System" size:17.0]];
+    [self.view addSubview:textLabelA];
     
+    //create text label for B - component description
+    UILabel *textLabelB = [[UILabel alloc] initWithFrame:CGRectMake(20, 570, 663, 42)];
+    [textLabelB setTextColor:[self getRGBForIndex:1]];
+    [textLabelB setText:@"B - Sourcing location indifferent: In-house preferred but outsourcing possible."];
+    [textLabelB setFont:[UIFont fontWithName:@"System" size:17.0]];
+    [self.view addSubview:textLabelB];
+    
+    //create text label for C - component description
+    UILabel *textLabelC = [[UILabel alloc] initWithFrame:CGRectMake(20, 620, 663, 42)];
+    [textLabelC setTextColor:[self getRGBForIndex:2]];
+    [textLabelC setText:@"C - Component most likely to be outsourced."];
+    [textLabelC setFont:[UIFont fontWithName:@"System" size:17.0]];
+    [self.view addSubview:textLabelC];
+    
+    
+    //add slices for classifications with text labels to chart
     for (int i=0; i<[componentClassification count]; i++) {
         
         double numberInThisCategory = 0.0;
-        NSString *category;
-
+        NSString *category = @" ";
         
         if ((numberInThisCategory = [[componentClassification objectAtIndex:i] count]) > 0) {
             
             if (i == 0) {
                 category = @"A - In-House";
-                if (self.textLabelA.hidden = YES) {
-                    [self.textLabelA setHidden:NO];
-                    self.textLabelA.textColor = [self getRGBForIndex:index];
-                    index++;
-                }
+        
             } else if (i == 1) {
                 category = @"B - Indifferent";
-                if (self.textLabelB.hidden = YES) {
-                    [self.textLabelB setHidden:NO];
-                    self.textLabelB.textColor = [self getRGBForIndex:index];
-                    index++;
-                }
+                
             } else {
                 category = @"C - Likely Outsourced";
-                if (self.textLabelC.hidden = YES) {
-                    [self.textLabelC setHidden:NO];
-                    self.textLabelC.textColor = [self getRGBForIndex:index];
-                    index++;
-                }
+                
             }
-            [chart addSlicePortion:(numberInThisCategory/totalComponents) withName:category];
         }
+        [chart addSlicePortion:(numberInThisCategory/totalComponents) withName:category];
+        [self.view setNeedsDisplay];
+        
+        
     }
     
     
@@ -181,22 +184,34 @@
 //builds the same color as used in the chart
 //index: -0 for Component A -1 for Component B -2 for Component c
 - (UIColor *)getRGBForIndex:(int)index {
+    float red, green, blue;
     
-    //switch index 1 and 2 to make first color red and second orange --> A components red
-    //i know, bad implementation :-/
     if (index == 0) {
-        index = 1;
+        //red
+        red = (0.6);//0.5 + 0.5 * cos(5);
+        green = (0);//0.5 + 0.5 * sin(5);
+        blue = (0); //0.5 + 0.5 * cos(1.5 * 5.0 + M_PI / 4.0);
+        
     } else if (index == 1) {
-        index = 0;
+        //orange
+        red = 1;//0.5 + 0.5 * cos(-7);
+        green = 0.5; // + 0.5 * sin(-7);
+        blue = 0; //0.5 + 0.5 * cos(1.5 * (-7) + M_PI / 4.0);
+        /*
+        red = 0.5 + 0.5 * cos(-7);
+        green = 0.5 + 0.5 * sin(-7);
+        blue = 0.5 + 0.5 * cos(1.5 * (-7) + M_PI / 4.0);*/
+        
+    } else if (index == 2) {
+        //green
+        red = 0.5 + 0.5 * cos(-3);
+        green = 0.5 + 0.5 * sin(-3);
+        blue = 0.5 + 0.5 * cos(1.5 * (-3.0) + M_PI / 4.0);
+    } else {
+        return nil;
     }
     
-    int i = 6 - index;
-    float red = 0.5 + 0.5 * cos(i);
-	float green = 0.5 + 0.5 * sin(i);
-    float blue = 0.5 + 0.5 * cos(1.5 * i + M_PI / 4.0);
-    
     return [UIColor colorWithRed:red green:green blue:blue alpha:1.0];
-	
 }
 
 

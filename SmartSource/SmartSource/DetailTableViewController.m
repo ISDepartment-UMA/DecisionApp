@@ -22,6 +22,7 @@
 #import "AlertView.h"
 #import "ChartViewController.h"
 #import "SmartSourceAppDelegate.h"
+#import "MenuUIViewController.h"
 
 
 @interface DetailTableViewController ()
@@ -70,7 +71,7 @@
 
 - (IBAction)mainMenu:(id)sender {
     
-    [self.splitViewController performSegueWithIdentifier:@"mainMenu" sender:self.splitViewController];
+    [self performSegueWithIdentifier:@"mainMenu" sender:self.splitViewController];
 }
 
 
@@ -146,17 +147,13 @@
     
     //initiate code beamer model
     self.codeBeamerModel = [[CodeBeamerModel alloc] init];
-        
-    //option 1: projects from codebeamer
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showAllProjects) name:@"LoadProjectsFromCodebeamer" object:nil];
-    
-    //option 2: stored projects from core data
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(showRatedProjects) name:@"LoadProjectsFromCoreData" object:nil];
 }
 
 
+
+
 //option 2 :stored projects from core data
-- (void)showRatedProjects
+- (void)getProjectsFromCoreData
 {
     //get stored project from code beamer model
     self.availableProjects = [self.codeBeamerModel getStoredProjects];
@@ -168,44 +165,25 @@
 }
 
 //option 1: projects from codebeamer
-- (void)showAllProjects
+- (void)getProjectsFromWebService
 {
     //load projects from model in an extrathread
-    //[NSThread detachNewThreadSelector:@selector(getProjectsFromModel) toTarget:self withObject:nil];
-    dispatch_queue_t serialQueue = dispatch_queue_create("com.unique.name.queue", DISPATCH_QUEUE_SERIAL);
-    dispatch_sync(serialQueue, ^{
-        self.availableProjects = [self.codeBeamerModel getAllProjectNames];
-        if (self.availableProjects) {
-            //notification to tell master view that this is the detail view
-            [[NSNotificationCenter defaultCenter] postNotificationName:@"MasterViewGet" object:self];
-            //[[NSNotificationCenter defaultCenter] postNotificationName:@"LoadProjectsIntoMasterView" object:self];
-        }
-    });
+    [NSThread detachNewThreadSelector:@selector(getProjectsFromWebServiceThread) toTarget:self withObject:nil];
+    
+    
 }
 
-//model to be called in seperate thread to get all projects
-- (void)getProjectsFromModel
+//Method to get projects from model
+- (void)getProjectsFromWebServiceThread
 {
-    self.availableProjects = [self.codeBeamerModel getAllProjectNames];
-
-    //if no projects returned, show alert
-    if (!self.availableProjects) {
-
-        NSString *message = @"Communication to server failed. Please check your login data!";
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        alert.alertViewStyle = UIAlertViewStyleDefault;
-        [alert show];
-
-        
-    //else load projects into masterview
-    } else {
-        
-        //notification to tell master view that this is the detail view
-        [[NSNotificationCenter defaultCenter] postNotificationName:@"MasterViewGet" object:self];
-        //[[NSNotificationCenter defaultCenter] postNotificationName:@"LoadProjectsIntoMasterView" object:self];
+    self.availableProjects = nil;
+    NSArray *result = [self.codeBeamerModel getAllProjectNames];
+    //[NSThread sleepForTimeInterval:2.0];
+    self.availableProjects = result;
+    while (!self.availableProjects) {
+        //do nothing
     }
-    
-    
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"MasterViewGet" object:self];
 }
 
 
@@ -255,7 +233,7 @@
     {
         //at application startup show main menu
         UINavigationController *navigation = self.navigationController;
-        [navigation.splitViewController performSegueWithIdentifier:@"mainMenu" sender:self.splitViewController];
+        [self performSegueWithIdentifier:@"mainMenu" sender:self.splitViewController];
         self.hasLoadedBefore=YES;
     }
     
@@ -405,6 +383,12 @@
             resOVC.masterPopoverController = self.masterPopoverController;
             
         }
+    }
+    
+    if ([segue.identifier isEqualToString:@"mainMenu"]) {
+        UINavigationController *navigation = segue.destinationViewController;
+        MenuUIViewController *mainMenu = [navigation.viewControllers lastObject];
+        [mainMenu setDetailScreen:self];
     }
     
 

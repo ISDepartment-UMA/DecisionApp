@@ -32,7 +32,6 @@
 - (ProjectModel *)initWithProjectID:(NSString *)idOfProject
 {
     self = [super init];
-    NSLog(@"ProjectID");
     //get context
     SmartSourceAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     self.managedObjectContext = appDelegate.managedObjectContext;

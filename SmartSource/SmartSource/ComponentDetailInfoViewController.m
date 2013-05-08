@@ -75,6 +75,14 @@
     //get info about component
     NSArray *returnedObjects = [self.resultModel getComponentInfoForID:componentID];
     self.informationTitles = [returnedObjects objectAtIndex:0];
+    
+    //make first leters in finformation titles capital
+    NSMutableArray *tempInformationTitles = [NSMutableArray array];
+    for (NSString *title in self.informationTitles) {
+        [tempInformationTitles addObject:[title capitalizedString]];
+    }
+    self.informationTitles = [tempInformationTitles copy];
+    
     self.currentComponent = [returnedObjects objectAtIndex:1];
         
     

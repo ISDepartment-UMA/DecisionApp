@@ -45,6 +45,7 @@
 @synthesize masterPopoverController = _masterPopoverController;
 @synthesize currentProject = _currentProject;
 @synthesize availableComponents = _availableComponents;
+@synthesize indexOfDisplayedComponent = _indexOfDisplayedComponent;
 
 
 
@@ -72,7 +73,7 @@
 
 
 //sets the component currently displayed in the ratingtableview
-- (void)setComponent:(NSInteger *)component
+- (void)setComponent:(NSInteger)component
 {
     //initialize model for component
     self.currentComponent = [[ComponentModel alloc] initWithComponent:[self.availableComponents objectAtIndex:component]];
@@ -88,6 +89,7 @@
     
     //if component has been selected, dismiss popovercontroller
     [self.masterPopoverController dismissPopoverAnimated:YES];
+    self.indexOfDisplayedComponent = component;
     
     
     

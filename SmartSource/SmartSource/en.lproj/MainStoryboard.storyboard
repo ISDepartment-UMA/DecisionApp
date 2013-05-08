@@ -89,29 +89,6 @@
                             <view contentMode="scaleToFill" id="8Cm-vI-c3n">
                                 <rect key="frame" x="0.0" y="0.0" width="703" height="704"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <subviews>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="A - Core Component: Likely to be kept in-house." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="0rB-3D-hFQ">
-                                        <rect key="frame" x="20" y="520" width="663" height="42"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="B - Sourcing location indifferent: In-house preferred but outsourcing possible." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="BNT-ls-xbf">
-                                        <rect key="frame" x="20" y="572" width="663" height="42"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="C - Component most likely to be outsourced." lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="NmM-nw-NiK">
-                                        <rect key="frame" x="20" y="614" width="663" height="42"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
                         </subviews>
@@ -120,9 +97,6 @@
                     </view>
                     <navigationItem key="navigationItem" id="NmO-Zi-eue"/>
                     <connections>
-                        <outlet property="textLabelA" destination="0rB-3D-hFQ" id="6YH-Oz-4Mg"/>
-                        <outlet property="textLabelB" destination="BNT-ls-xbf" id="OXM-dh-YTp"/>
-                        <outlet property="textLabelC" destination="NmM-nw-NiK" id="fZI-la-SrU"/>
                         <outlet property="view" destination="8Cm-vI-c3n" id="DB8-CD-e7n"/>
                         <segue destination="Zp7-vd-sen" kind="push" identifier="showClassification" id="Toc-eJ-4X1"/>
                         <segue destination="ykD-Wg-lFg" kind="push" identifier="decisionTable" id="BZb-4I-Uo1"/>
@@ -412,6 +386,34 @@
                                             <segue destination="GhI-dQ-J9C" kind="push" id="JGo-g2-X7G"/>
                                         </connections>
                                     </button>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Evaluation" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="c4H-6x-pDq">
+                                        <rect key="frame" x="168" y="340" width="264" height="35"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="STHeitiSC-Light" family="Heiti SC" pointSize="20"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Settings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="R6V-Qr-dKB">
+                                        <rect key="frame" x="545" y="340" width="264" height="35"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="STHeitiSC-Light" family="Heiti SC" pointSize="20"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Stats" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="BOI-2b-hSi">
+                                        <rect key="frame" x="168" y="579" width="264" height="62"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="STHeitiSC-Light" family="Heiti SC" pointSize="20"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Help" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Cyg-uG-sKr">
+                                        <rect key="frame" x="546" y="579" width="264" height="62"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" name="STHeitiSC-Light" family="Heiti SC" pointSize="20"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
@@ -708,6 +710,7 @@
                                     </subviews>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 </view>
+                                <color key="backgroundColor" red="0.59174981174698793" green="0.017914105200225114" blue="0.031723333093811139" alpha="1" colorSpace="calibratedRGB"/>
                             </tableViewCell>
                         </prototypes>
                         <sections/>
@@ -776,6 +779,7 @@
                     <connections>
                         <segue destination="kVR-V1-rOZ" kind="push" identifier="ratingScreen" id="v63-1y-5dh"/>
                         <segue destination="IWM-hh-r8D" kind="push" identifier="atAGlance" id="xBP-6a-7tf"/>
+                        <segue destination="FGn-e6-OD8" kind="modal" identifier="mainMenu" id="Lk3-ZK-u2i"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="vXZ-FV-MRy" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -960,11 +964,6 @@
         </class>
         <class className="ChartViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ChartViewController.h"/>
-            <relationships>
-                <relationship kind="outlet" name="textLabelA" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="textLabelB" candidateClass="UILabel"/>
-                <relationship kind="outlet" name="textLabelC" candidateClass="UILabel"/>
-            </relationships>
         </class>
         <class className="ClassificationExplanationViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ClassificationExplanationViewController.h"/>
@@ -977,6 +976,9 @@
         </class>
         <class className="DetailTableViewController" superclassName="UITableViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/DetailTableViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="mainMenu:"/>
+            </relationships>
         </class>
         <class className="HelpViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/HelpViewController.h"/>
@@ -1016,6 +1018,7 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
+        <segue reference="Lk3-ZK-u2i"/>
         <segue reference="xBP-6a-7tf"/>
     </inferredMetricsTieBreakers>
 </document>

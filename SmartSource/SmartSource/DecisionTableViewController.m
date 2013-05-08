@@ -46,14 +46,22 @@
 - (void)viewWillAppear:(BOOL)animated
 {
     [super viewWillAppear:animated];
+    [self.splitViewController setDelegate:self];
     self.navigationController.navigationBarHidden = NO;
     self.navigationItem.hidesBackButton = YES;
+    self.navigationItem.title = @"Detailed Information about the A, B, C Categories:";
     self.columns = [self.resultModel getColumnsForDecisionTable];
 }
 
 - (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
 {
     return YES;
+}
+
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    self.navigationItem.title = @"";
 }
 
 
@@ -65,7 +73,7 @@
 
 - (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
 {
-    barButtonItem.title = NSLocalizedString(@"Justification", @"Justification");
+    barButtonItem.title = NSLocalizedString(@"Results Overview", @"Results Overview");
     [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
     self.masterPopoverController = popoverController;
 }
@@ -88,12 +96,14 @@
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
     return @"ABC Analysis";
+    
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
     // Return the number of rows in the section.
     return [[[self.columns objectAtIndex:0] objectAtIndex:2] count];
+    
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -123,8 +133,8 @@
             [label setFrame:CGRectMake(originX, 0, 61, 240)];
             
         }
-    
-    //all other lines
+        
+        //all other lines
     } else {
         for (int i=0; i < ([self.columns count]-1); i++) {
             UILabel *label = (UILabel *)[cell.contentView viewWithTag:(i+1)];
@@ -140,7 +150,7 @@
                 case 2:
                     label.text = @"Medium";
                     label.textColor = [self getRGBForIndex:1];
-
+                    
                     break;
                 case 3:
                     label.text = @"High";
@@ -148,7 +158,7 @@
                 default:
                     break;
             }
-        } 
+        }
         
         //
         UILabel *label = (UILabel *)[cell.contentView viewWithTag:[self.columns count]];
@@ -164,11 +174,13 @@
         
     }
     
-
+    
     // Configure the cell...
     
     return cell;
+    
 }
+
 
 //builds the same color as used in the chart
 //index: -0 for Component A -1 for Component B -2 for Component c

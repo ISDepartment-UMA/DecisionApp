@@ -132,6 +132,7 @@
     NSString *serviceURL = @"";
     NSString *login = @"";
     NSString *password = @"";
+    NSString *javaServiceURL = [defaults objectForKey:@"javaWebserviceConnection"];
     
     if (loginData != nil) {
         
@@ -148,7 +149,7 @@
     SBJsonParser *parser = [[SBJsonParser alloc] init];
     
     //building the url
-    NSString *url = [[[[[[[[@"http://wifo1-52.bwl.uni-mannheim.de:8081/axis2/services/DataFetcher/getAllComponentsForProject?url=" stringByAppendingString:serviceURL] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&projectID="] stringByAppendingString:projectID] stringByAppendingString:@"&response=application/json"];
+    NSString *url = [[[[[[[[[javaServiceURL stringByAppendingString:@"DataFetcher/getAllComponentsForProject?url="] stringByAppendingString:serviceURL] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&projectID="] stringByAppendingString:projectID] stringByAppendingString:@"&response=application/json"];
     
     
     //sending request
@@ -195,6 +196,7 @@
     NSString *serviceUrl = @"";
     NSString *login = @"";
     NSString *password = @"";
+    NSString *javaServiceURL = [defaults objectForKey:@"javaWebserviceConnection"];
     
     if (loginData != nil) {
         serviceUrl = (__bridge NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)[loginData objectAtIndex:0], NULL, CFSTR(":/?#[]@!$ &'()*+,;=\"<>%{}|\\^~`"), CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
@@ -206,7 +208,8 @@
     
     //JSON request to web service
     SBJsonParser *parser = [[SBJsonParser alloc] init];
-    NSString *url = [[[[[[[[@"http://wifo1-52.bwl.uni-mannheim.de:8081/axis2/services/DataFetcher/getInfoForProjectObject?url=" stringByAppendingString:serviceUrl] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&projectID="] stringByAppendingString:projectID] stringByAppendingString:@"&response=application/json"];
+    
+    NSString *url = [[[[[[[[[javaServiceURL stringByAppendingString:@"DataFetcher/getInfoForProjectObject?url="] stringByAppendingString:serviceUrl] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&projectID="] stringByAppendingString:projectID] stringByAppendingString:@"&response=application/json"];
     
     //sending request
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];

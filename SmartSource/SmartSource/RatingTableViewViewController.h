@@ -14,12 +14,13 @@
 @interface RatingTableViewViewController : UITableViewController <UISplitViewControllerDelegate>
 
 - (void)setProject:(NSString *)projectID;
-- (void)setComponent:(NSInteger *)component;
+- (void)setComponent:(NSInteger)component;
 - (NSArray *)getAvailableComponents;
 - (void)saveValueForSlider:(Slider *)slider;
 - (void)checkForCompleteness;
 
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
+@property (nonatomic) NSInteger indexOfDisplayedComponent;
 
 
 @end

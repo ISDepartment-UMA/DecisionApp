@@ -36,9 +36,9 @@
         comp.id = componentID;
         comp.projectID = projectID;
         
-        NSDictionary *componentInformation = [self getComponentForID:componentID];
-        comp.name = [componentInformation objectForKey:@"name"];
-        comp.descr = [componentInformation objectForKey:@"description"];
+        NSDictionary *componentInfo = [self getComponentForID:componentID];
+        comp.name = [componentInfo objectForKey:@"name"];
+        comp.descr = [componentInfo objectForKey:@"description"];
         comp.partOf = [Project addNewProject:projectID toManagedObjectContext:context withTimestamp:nil];
                        
     } else {
@@ -49,7 +49,7 @@ return comp;
                        
                        
 }
-                       
+
 //returns an nsdictionary with component info for a given component id
 + (NSDictionary *)getComponentForID:(NSString *)componentID
 {
@@ -59,6 +59,7 @@ return comp;
     NSString *serviceUrl = @"";
     NSString *login = @"";
     NSString *password = @"";
+    NSString *javaServiceURL = [defaults objectForKey:@"javaWebserviceConnection"];
     
     if (loginData != nil) {
         serviceUrl = (__bridge NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)[loginData objectAtIndex:0], NULL, CFSTR(":/?#[]@!$ &'()*+,;=\"<>%{}|\\^~`"), CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
@@ -66,11 +67,12 @@ return comp;
         password = [loginData objectAtIndex:2];
     } else {
         return nil;
-    } 
+    }
     
     //JSON request to web service
     SBJsonParser *parser = [[SBJsonParser alloc] init];
-    NSString *url = [[[[[[[[@"http://wifo1-52.bwl.uni-mannheim.de:8081/axis2/services/DataFetcher/getComponentInfo?url=" stringByAppendingString:serviceUrl] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&componentID="] stringByAppendingString:componentID] stringByAppendingString:@"&response=application/json"];
+    
+    NSString *url = [[[[[[[[[javaServiceURL stringByAppendingString:@"DataFetcher/getComponentInfo?url="] stringByAppendingString:serviceUrl] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&componentID="] stringByAppendingString:componentID] stringByAppendingString:@"&response=application/json"];
     
     //sending request
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];

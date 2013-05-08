@@ -7,6 +7,8 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "DetailTableViewController.h"
+
 
 @interface CodeBeamerModel : NSObject
 

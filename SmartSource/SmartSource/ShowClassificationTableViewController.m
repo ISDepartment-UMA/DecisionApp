@@ -40,6 +40,13 @@
     [self.tableView reloadData];
 }
 
+- (void)viewWillAppear:(BOOL)animated
+{
+    [super viewWillAppear:animated];
+    [self.splitViewController setDelegate:self];
+    
+}
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
@@ -70,7 +77,7 @@
 
 - (void)splitViewController:(UISplitViewController *)splitController willHideViewController:(UIViewController *)viewController withBarButtonItem:(UIBarButtonItem *)barButtonItem forPopoverController:(UIPopoverController *)popoverController
 {
-    barButtonItem.title = NSLocalizedString(@"Justification", @"Justification");
+    barButtonItem.title = NSLocalizedString(@"Results Overview", @"Results Overview");
     [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
     self.masterPopoverController = popoverController;
 }

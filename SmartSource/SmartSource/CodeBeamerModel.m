@@ -61,7 +61,7 @@
     NSString *serviceUrl = @"";
     NSString *login = @"";
     NSString *password = @"";
-    
+    NSString *javaServiceURL = [defaults objectForKey:@"javaWebserviceConnection"];
     
     if (loginData != nil) {
         
@@ -76,7 +76,8 @@
     //JSON request to web service
     
     SBJsonParser *parser = [[SBJsonParser alloc] init];
-    NSString *url = [[[[[[@"http://wifo1-52.bwl.uni-mannheim.de:8081/axis2/services/DataFetcher/getAllProjects?url=" stringByAppendingString:serviceUrl] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&response=application/json"];
+    
+    NSString *url = [[[[[[[javaServiceURL stringByAppendingString:@"DataFetcher/getAllProjects?url="] stringByAppendingString:serviceUrl] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&response=application/json"];
     
     //sending request
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
@@ -148,6 +149,7 @@
     NSString *serviceUrl = @"";
     NSString *login = @"";
     NSString *password = @"";
+    NSString *javaServiceURL = [defaults objectForKey:@"javaWebserviceConnection"];
     
     if (loginData != nil) {
         //decode url to pass it in http request
@@ -160,7 +162,8 @@
     
     //JSON request to web service
     SBJsonParser *parser = [[SBJsonParser alloc] init];
-    NSString *url = [[[[[[[[@"http://wifo1-52.bwl.uni-mannheim.de:8081/axis2/services/DataFetcher/getInfoForProjectObject?url=" stringByAppendingString:serviceUrl] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&projectID="] stringByAppendingString:projectID] stringByAppendingString:@"&response=application/json"];
+    
+    NSString *url = [[[[[[[[[javaServiceURL stringByAppendingString:@"DataFetcher/getInfoForProjectObject?url="] stringByAppendingString:serviceUrl] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&projectID="] stringByAppendingString:projectID] stringByAppendingString:@"&response=application/json"];
     
     //sending request
     NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];

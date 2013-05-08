@@ -40,10 +40,22 @@
     SmartSourceMasterViewController *controller = (SmartSourceMasterViewController *)navigationMaster.visibleViewController;
 
     controller.detailScreen = detailTVC;
+
+    
+    //set default login data
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    //[defaults setObject:[NSArray arrayWithObjects:@"http://79.125.4.182/remote-api", @"", @"", nil] forKey:@"loginData"];
+    [defaults setObject:[NSArray arrayWithObjects:@"http://79.125.4.182/remote-api", @"rtoermer", @"hundhund", nil] forKey:@"loginData"];
+    [defaults synchronize];
+    [defaults setObject:@"http://wifo1-52.bwl.uni-mannheim.de:8081/axis2/services/" forKey:@"javaWebserviceConnection"];
+
     
     
     return YES;
 }
+
+
+
 							
 - (void)applicationWillResignActive:(UIApplication *)application
 {

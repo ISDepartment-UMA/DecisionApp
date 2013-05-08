@@ -8,6 +8,7 @@
 
 #import "SuperCharacteristic+Factory.h"
 #import "Component+Factory.h"
+#import "SBJson.h"
 
 @implementation SuperCharacteristic (Factory)
 
@@ -49,4 +50,6 @@
     
     
 }
+
+
 @end

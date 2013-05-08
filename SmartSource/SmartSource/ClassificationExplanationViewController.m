@@ -50,24 +50,18 @@
 
 - (void)handleSwipeRightFrom:(UISwipeGestureRecognizer *)swipe
 {
-    NSLog(@"recieved");
     if ([self.view isEqual:[self.views objectAtIndex:1]]) {
-            NSLog(@"goto First");
             [self toFirst];
         } else if ([self.view isEqual:[self.views objectAtIndex:2]]) {
-            NSLog(@"goto Second");
             [self toSecond];
         }
 }
 
 - (void)handleSwipeLeftFrom:(UISwipeGestureRecognizer *)swipe
 {
-    NSLog(@"recieved");
     if ([self.view isEqual:[self.views objectAtIndex:0]]) {
-        NSLog(@"goto Second");
         [self toSecond];
     } else if ([self.view isEqual:[self.views objectAtIndex:1]]) {
-        NSLog(@"goto Third");
         [self toThird];
     }
     
@@ -86,13 +80,6 @@
     UIView *second = [self buildSecondScreen];
     UIView *third = [self buildThirdScreen];
     
-    
-    
-    
-    
-
-    
-    /*
     //build scrollview with views and add it
     UIScrollView *scroll = [[UIScrollView alloc] initWithFrame:CGRectMake(0, 0, frameOfScreen.size.height, frameOfScreen.size.width)];
     scroll.contentSize = CGSizeMake(frameOfScreen.size.height, first.frame.size.height);
@@ -100,10 +87,10 @@
     scroll.showsHorizontalScrollIndicator = YES;
     scroll.bounces = NO;
     [scroll addSubview:first];
-    
+    //self.view = scroll;
     [self.view addSubview:scroll];
-    */
-    self.view = first;
+    
+    //self.view = first;
     
     
     
@@ -219,10 +206,13 @@
         //high, medium or low
         if (superCharValue < 1.67) {
             label.text = [@"Rated Low - Ø=" stringByAppendingString:[NSString stringWithFormat: @"%.2f", superCharValue]];
+            [label setBackgroundColor:[self getRGBForIndex:2]];
         } else if (superCharValue < 2.34) {
             label.text = [@"Rated Medium - Ø=" stringByAppendingString:[NSString stringWithFormat: @"%.2f", superCharValue]];
+            [label setBackgroundColor:[self getRGBForIndex:1]];
         } else if (superCharValue <= 3.0) {
-            label.text = [@"Rated High - Ø=" stringByAppendingString:[NSString stringWithFormat: @"%.2f", superCharValue]];      
+            label.text = [@"Rated High - Ø=" stringByAppendingString:[NSString stringWithFormat: @"%.2f", superCharValue]];
+            [label setBackgroundColor:[self getRGBForIndex:0]];
         }
         
         //add text label with supercharacteristic's rating
@@ -317,16 +307,26 @@
         //text labels for average values
         UILabel *averageValue = [[UILabel alloc] initWithFrame:CGRectMake(70, 70+(i*100), 400, 50)];
         [averageValue setContentMode:UIViewContentModeTop];
-        [averageValue setBackgroundColor:[self getRGBForIndex:i]];
         [averageValue setNumberOfLines:0];
         NSString *value = [formatter stringFromNumber:[self.valuesOfSuperCharacteristics objectAtIndex:i]];
         [averageValue setText:[[[[self.superChars objectAtIndex:0] objectAtIndex:i] stringByAppendingString:@" - Average Value: "] stringByAppendingString:value]];
+        
+        //color according to value
+        UIColor *color;
+        if ([value floatValue] < 1.67) {
+            color = [self getRGBForIndex:2];
+        } else if ([value floatValue] < 2.34) {
+            color = [self getRGBForIndex:1];
+        } else if ([value floatValue] <= 3.0) {
+            color = [self getRGBForIndex:0];
+        }
+        [averageValue setBackgroundColor:color];
         [viewToPut addSubview:averageValue];
         
         //text labels for relative weight
         UILabel *relativeWeight = [[UILabel alloc] initWithFrame:CGRectMake(480, 70+(i*100), 50, 50)];
         [relativeWeight setContentMode:UIViewContentModeTop];
-        [relativeWeight setBackgroundColor:[self getRGBForIndex:i]];
+        [relativeWeight setBackgroundColor:color];
         [relativeWeight setNumberOfLines:0];
         relativeWeight.text = [[[[@" * " stringByAppendingString:[[[self.superChars objectAtIndex:1] objectAtIndex:i] stringValue]] stringByAppendingString:@"/"] stringByAppendingString:[[NSNumber numberWithFloat:self.totalWeightOfSuperCharacteristics] stringValue]] stringByAppendingString:@" "];
         [viewToPut addSubview:relativeWeight];
@@ -334,7 +334,7 @@
         //text labels for product of average values and relative weight
         UILabel *product = [[UILabel alloc] initWithFrame:CGRectMake(540, 70+(i*100), 80, 50)];
         [product setContentMode:UIViewContentModeTop];
-        [product setBackgroundColor:[self getRGBForIndex:i]];
+        [product setBackgroundColor:color];
         [product setNumberOfLines:0];
         float weightedValue = ([[[self.superChars objectAtIndex:1] objectAtIndex:i] floatValue] / self.totalWeightOfSuperCharacteristics)*[[self.valuesOfSuperCharacteristics objectAtIndex:i] floatValue];
         product.text = [@" = " stringByAppendingString:[NSString stringWithFormat: @"%.2f", weightedValue]];
@@ -492,6 +492,8 @@
 
 
 
+
+
 //methods, that switch the displayed screen to first, second or third
 - (void)toSecond
 {
@@ -513,16 +515,34 @@
 //builds the same color as used in the chart
 //index: -0 for Component A -1 for Component B -2 for Component c
 - (UIColor *)getRGBForIndex:(int)index {
-
+    float red, green, blue, alpha;
     
-    int i = 6 - index;
-    float red = 0.5 + 0.5 * cos(i);
-	float green = 0.5 + 0.5 * sin(i);
-    float blue = 0.5 + 0.5 * cos(1.5 * i + M_PI / 4.0);
+    if (index == 0) {
+        //red
+        red = (0.6);//0.5 + 0.5 * cos(5);
+        green = (0);//0.5 + 0.5 * sin(5);
+        blue = (0); //0.5 + 0.5 * cos(1.5 * 5.0 + M_PI / 4.0);
+        alpha = 0.7;
+        
+    } else if (index == 1) {
+        //orange
+        red = 1;//0.5 + 0.5 * cos(-7);
+        green = 0.5; // + 0.5 * sin(-7);
+        blue = 0; //0.5 + 0.5 * cos(1.5 * (-7) + M_PI / 4.0);
+        alpha = 0.8;
+        
+    } else if (index == 2) {
+        //green
+        red = 0.5 + 0.5 * cos(-3);
+        green = 0.5 + 0.5 * sin(-3);
+        blue = 0.5 + 0.5 * cos(1.5 * (-3.0) + M_PI / 4.0);
+        alpha = 0.7;
+        
+    } else {
+        return nil;
+    }
     
-    UIColor *color = [UIColor colorWithRed:1 green:green blue:0 alpha:0.3];
-    return color;
-	
+    return [UIColor colorWithRed:red green:green blue:blue alpha:alpha];
 }
 
 
@@ -688,20 +708,24 @@
         UITableViewCell *cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:@"cell"];
         cell.textLabel.text = [[[self.chars objectAtIndex:0] objectAtIndex:(tableView.tag-1)] objectAtIndex:indexPath.row];
         
-        UIColor *color = [self getRGBForIndex:(tableView.tag-1)];
+        float charValue = [[[[self.chars objectAtIndex:1] objectAtIndex:(tableView.tag-1)] objectAtIndex:indexPath.row] floatValue];
+        
+        //set detail text label and color according to average rating of the supercharacteristic
+        UIColor *color;
+        if (charValue < 1.67) {
+            cell.detailTextLabel.text = @"Low";
+            color = [self getRGBForIndex:2];
+        } else if (charValue < 2.34) {
+            cell.detailTextLabel.text = @"Medium";
+            color = [self getRGBForIndex:1];
+        } else if (charValue <= 3.0) {
+            cell.detailTextLabel.text = @"High";
+            color = [self getRGBForIndex:0];
+        }
+        
         [cell.contentView setBackgroundColor:color];
         [cell.textLabel setBackgroundColor:color];
         [cell.detailTextLabel setBackgroundColor:color];
-        
-        float charValue = [[[[self.chars objectAtIndex:1] objectAtIndex:(tableView.tag-1)] objectAtIndex:indexPath.row] floatValue];
-        
-        if (charValue < 1.67) {
-            cell.detailTextLabel.text = @"Low";
-        } else if (charValue < 2.34) {
-            cell.detailTextLabel.text = @"Medium";
-        } else if (charValue <= 3.0) {
-            cell.detailTextLabel.text = @"High";
-        }
         
         
         [tableView sizeToFit];

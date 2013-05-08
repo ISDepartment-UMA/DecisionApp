@@ -182,6 +182,7 @@
 		6E80891E15A605EB00654468 /* AvailableCharacteristic+Factory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AvailableCharacteristic+Factory.m"; sourceTree = "<group>"; };
 		6E80891F15A605EB00654468 /* AvailableSuperCharacteristic+Factory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AvailableSuperCharacteristic+Factory.h"; sourceTree = "<group>"; };
 		6E80892015A605EB00654468 /* AvailableSuperCharacteristic+Factory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AvailableSuperCharacteristic+Factory.m"; sourceTree = "<group>"; };
+		6E88C46017392DE200BB4118 /* StatusReciever.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = StatusReciever.h; path = SmartSource/Protocols/StatusReciever.h; sourceTree = "<group>"; };
 		6E95CFDA15BA2A880082B69D /* delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = delete.png; sourceTree = "<group>"; };
 		6EAF562316DFDB67004F027F /* ClassificationModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClassificationModel.h; sourceTree = "<group>"; };
 		6EAF562416DFDB67004F027F /* ClassificationModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClassificationModel.m; sourceTree = "<group>"; };
@@ -222,6 +223,7 @@
 		6E0741B0159474BB000C480E = {
 			isa = PBXGroup;
 			children = (
+				6E88C46017392DE200BB4118 /* StatusReciever.h */,
 				6E0741D1159474BB000C480E /* SmartSourceAppDelegate.m */,
 				6E0741D0159474BB000C480E /* SmartSourceAppDelegate.h */,
 				6E0741D3159474BB000C480E /* MainStoryboard.storyboard */,

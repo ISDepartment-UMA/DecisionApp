@@ -87,15 +87,18 @@
         UIBarButtonItem *barbutton = [[UIBarButtonItem alloc] initWithTitle:@"Projects" style:UIBarButtonItemStyleBordered target:self action:@selector(backToProjects)];
         [self.navigationItem setLeftBarButtonItem:barbutton];
         
-        //if there are components, select the first one
-        if ([self.availableCells count] > 0) {
-            NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
-            [self.tableView selectRowAtIndexPath:index animated:NO scrollPosition:UITableViewScrollPositionTop];
-        } else {
+        //if no components in the project, alert!
+        if ([self.availableCells count] == 0) {
             NSString *message = @"No Components Available in this Project";
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error" message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
             alert.alertViewStyle = UIAlertViewStyleDefault;
             [alert show];
+            
+        //select the appropriate component that is currently displayed in the rating screen
+        } else {
+            NSInteger comp = [self.ratingScreen indexOfDisplayedComponent];
+            NSIndexPath *index = [NSIndexPath indexPathForRow:comp inSection:0];
+            [self.tableView selectRowAtIndexPath:index animated:NO scrollPosition:UITableViewScrollPositionTop];
         }
         
     
@@ -224,6 +227,11 @@
     // Return the number of rows in the section.
     if (self.availableCells) {
         return [self.displayedCells count];
+        
+    //if no projects available show activity indicator
+    } else if ([self.state isEqualToString:@"projects"]) {
+        return 1;
+        
     } else {
         return 0;
     }
@@ -240,7 +248,7 @@
     //project
     if ([self.state isEqualToString:@"projects"]) {
         // Configure the cell...
-        NSArray *projectInfo = [NSArray arrayWithObjects:@"Error", @"Error", @"Error", @"Error", nil];
+        NSArray *projectInfo = [NSArray arrayWithObjects:@"", @"", @"", @"", nil];
         
         
         //check if the communication to the server returned projects
@@ -248,6 +256,13 @@
             if ([[self.displayedCells objectAtIndex:indexPath.row] count] > 1) {
                 projectInfo = [self.displayedCells objectAtIndex:indexPath.row];
             }
+        } else {
+            cell.textLabel.text = @"";
+            cell.detailTextLabel.text = @"";
+            UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
+            spinner.frame = CGRectMake(((cell.frame.size.width/2)-20), 0, 40, 40);
+            [cell addSubview:spinner];
+            [spinner startAnimating];
         }
         cell.textLabel.text = [projectInfo objectAtIndex:1];
         cell.detailTextLabel.text = @"";
@@ -285,6 +300,10 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    //make keyboard disappear
+    [self.view endEditing:YES];
+    
+    
     if ([self.state isEqualToString:@"projects"]) {
         //set detail screen
         [self.detailScreen selectProjectWithID:[[self.displayedCells objectAtIndex:indexPath.row] objectAtIndex:0]];

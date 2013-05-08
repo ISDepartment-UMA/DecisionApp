@@ -282,13 +282,35 @@
 
 - (void)getRGBForIndex:(int)index red:(float *)red green:(float *)green blue:(float *)blue {
     
-    //switch index 1 and 2 to make first color red and second orange --> A components red
-    //i know, bad implementation :-/
+    
     if (index == 0) {
-        index = 1;
+        //red
+        *red = (0.6);//0.5 + 0.5 * cos(5);
+        *green = (0);//0.5 + 0.5 * sin(5);
+        *blue = (0); //0.5 + 0.5 * cos(1.5 * 5.0 + M_PI / 4.0);
+        return;
+        
     } else if (index == 1) {
-        index = 0;
+        //orange
+        //orange
+        *red = 1;//0.5 + 0.5 * cos(-7);
+        *green = 0.5; // + 0.5 * sin(-7);
+        *blue = 0; //0.5 + 0.5 * cos(1.5 * (-7) + M_PI / 4.0);
+        /*
+        *red = 0.5 + 0.5 * cos(-7);
+        *green = 0.5 + 0.5 * sin(-7);
+        *blue = 0.5 + 0.5 * cos(1.5 * (-7) + M_PI / 4.0);*/
+        return;
+        
+    } else if (index == 2) {
+        //green
+        *red = 0.5 + 0.5 * cos(-3);
+        *green = 0.5 + 0.5 * sin(-3);
+        *blue = 0.5 + 0.5 * cos(1.5 * (-3.0) + M_PI / 4.0);
+        return;
     }
+    
+    
     
   if (colors) {
     BNColor *color = [colors objectAtIndex:(index % [colors count])];

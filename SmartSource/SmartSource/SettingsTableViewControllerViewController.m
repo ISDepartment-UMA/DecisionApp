@@ -69,7 +69,7 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 3;
+    return 4;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -85,12 +85,13 @@
 
 - (NSString *)tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section
 {
-    NSArray *headers = [NSArray arrayWithObjects:@"Code Beamer Data", @"Rating Characteristics", @"Default Settings", nil];
+    NSArray *headers = [NSArray arrayWithObjects:@"Code Beamer Data", @"Rating Characteristics", @"Java Service Settings", @"Default Settings", nil];
     return [headers objectAtIndex:section];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    //Code Beamer Data
     if (indexPath.section == 0) {
         static NSString *CellIdentifier = @"information";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -115,12 +116,30 @@
         
         return cell;
         return cell;
+        
+    //Rating Characteristics
     } else if (indexPath.section == 1){
         static NSString *CellIdentifier = @"menuSelection";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         cell.textLabel.text = @"Edit Rating Characteristics";
         return cell;
         
+    //Java Web Service
+    } else if (indexPath.section == 2) {
+        static NSString *CellIdentifier = @"information";
+        UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+        
+        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        NSString *webServiceURL = [defaults objectForKey:@"javaWebserviceConnection"];
+        
+        cell.textLabel.text = @"Java Service URL";
+        
+        //don't show password in detail text label
+        cell.detailTextLabel.text = webServiceURL;
+        
+        return cell;
+        
+    //Restore Defaults
     } else {
         static NSString *CellIdentifier = @"menuSelection";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -137,10 +156,12 @@
 {
     if ((indexPath.section == 1) && (indexPath.row==0)) {
         [self performSegueWithIdentifier:@"editCharacteristics" sender:self];
-    } else if (indexPath.section == 2){
+    } else if (indexPath.section == 3){
         
         //show allert that will ask for acknoledgement
-        NSString *message = @"Do you really want to reset the settings to default?";
+        NSString *message1 = @"Do you really want to reset the settings to default?";
+        NSString *message2 = @"This will delete all ratings and additional rating characteristics stored on the device. The login data will be conserved.";
+        NSString *message = [NSString stringWithFormat:@"%@ \n%@", message1, message2];
         AlertView * alert = [[AlertView alloc] initWithTitle:@"Reset" message:message delegate:self cancelButtonTitle:@"Delete" otherButtonTitles:@"Cancel", nil];
         alert.identifier = @"reset";
         alert.alertViewStyle = UIAlertViewStyleDefault;
@@ -153,11 +174,24 @@
 //change code beamer login information
 - (void)tableView:(UITableView *)tableView accessoryButtonTappedForRowWithIndexPath:(NSIndexPath *)indexPath
 {
-    //show alert for selected login information with currently saved value
+    //show alert in order to change the selected data
+    NSArray *titles = nil;
+    NSString *textFieldText = @"";
+    
+    //login data
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSArray *loginData = [defaults objectForKey:@"loginData"];
-    NSArray *titles = [NSArray arrayWithObjects:@"Code Beamer URL", @"Code Beamer Username", @"Code Beamer Password", nil];
-    NSString *message = [[@"Please enter your new" stringByAppendingString:[titles objectAtIndex:indexPath.row]] stringByAppendingString:@"."];
+    if (indexPath.section == 0) {
+        titles = [NSArray arrayWithObjects:@"Code Beamer URL", @"Code Beamer Username", @"Code Beamer Password", nil];
+        NSArray *loginData = [defaults objectForKey:@"loginData"];
+        textFieldText = [loginData objectAtIndex:indexPath.row];
+        
+    //java web service url
+    } else if (indexPath.section == 2) {
+        titles = [NSArray arrayWithObject:@"Java Service URL"];
+        textFieldText = [defaults objectForKey:@"javaWebserviceConnection"];
+    }
+    
+    NSString *message = [[@"Please enter your new " stringByAppendingString:[titles objectAtIndex:indexPath.row]] stringByAppendingString:@"."];
     AlertView * alert = [[AlertView alloc] initWithTitle:[titles objectAtIndex:indexPath.row] message:message delegate:self cancelButtonTitle:@"OK" otherButtonTitles:@"Cancel", nil];
     alert.identifier = @"loginData";
     
@@ -170,8 +204,7 @@
         alert.alertViewStyle = UIAlertViewStylePlainTextInput;
     }
     
-    //set text field to old value
-    [[alert textFieldAtIndex:0] setText:[loginData objectAtIndex:indexPath.row]];
+    [[alert textFieldAtIndex:0] setText:textFieldText];
     [alert show];
     
 }
@@ -196,6 +229,16 @@
         //...or password.
         } else if ([alertView.title isEqualToString:@"Code Beamer Password"]) {
             [loginData replaceObjectAtIndex:2 withObject:[[alertView textFieldAtIndex:0] text]];
+        
+        //....or Java Service URL
+        } else if ([alertView.title isEqualToString:@"Java Service URL"]) {
+            //if last character is not /, then append /
+            NSString *newServiceURL = [[alertView textFieldAtIndex:0] text];
+            NSString *lastChar = [newServiceURL substringFromIndex:([newServiceURL length]-1)];
+            if (![lastChar isEqualToString:@"/"]) {
+                newServiceURL = [newServiceURL stringByAppendingString:@"/"];
+            }
+            [defaults setObject:newServiceURL forKey:@"javaWebserviceConnection"];
         }
         
         //save defaults
@@ -250,11 +293,10 @@
         
         
         //reset default loginData
-        [NSUserDefaults resetStandardUserDefaults];
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        [defaults setObject:[NSArray arrayWithObjects:@"http://79.125.4.182/remote-api", @"rtoermer", @"hundhund", nil] forKey:@"loginData"];
-        [defaults synchronize];
-        
+        //[NSUserDefaults resetStandardUserDefaults];
+        //NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+        //[defaults removeObjectForKey:@"loginData"];
+        //[defaults synchronize];
         //save context
         if (![context save:&error]) {
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
