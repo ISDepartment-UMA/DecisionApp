@@ -18,6 +18,7 @@
 - (NSArray *)getAvailableComponents;
 - (void)saveValueForSlider:(Slider *)slider;
 - (void)checkForCompleteness;
+- (void)saveContext;
 
 @property (strong, nonatomic) UIPopoverController *masterPopoverController;
 @property (nonatomic) NSInteger indexOfDisplayedComponent;

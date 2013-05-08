@@ -23,6 +23,7 @@
 #import "ChartViewController.h"
 #import "SmartSourceAppDelegate.h"
 #import "MenuUIViewController.h"
+#import "ProjectPlatformModel.h"
 
 
 @interface DetailTableViewController ()
@@ -35,7 +36,7 @@
 @property (nonatomic) Boolean hasLoadedBefore;
 
 //model
-@property (strong, nonatomic) CodeBeamerModel *codeBeamerModel;
+@property (strong, nonatomic) ProjectPlatformModel *projectPlatform;
 
 //available projects, either from codebeamer or from core database
 @property (strong, nonatomic) NSArray *availableProjects;
@@ -46,7 +47,7 @@
 @implementation DetailTableViewController
 @synthesize hasLoadedBefore = _hasLoadedBefore;
 @synthesize cellNames = _cellNames;
-@synthesize codeBeamerModel = _codeBeamerModel;
+@synthesize projectPlatform = _projectPlatform;
 @synthesize displayedProject = _displayedProject;
 @synthesize availableProjects = _availableProjects;
 @synthesize masterPopoverController = _masterPopoverController;
@@ -112,7 +113,7 @@
     if (buttonIndex == 0) {
         
         //delete project
-        [self.codeBeamerModel deleteProjectWithID:[self.displayedProject objectAtIndex:0]];
+        [self.projectPlatform deleteProjectWithID:[self.displayedProject objectAtIndex:0]];
         
         //put button to rate the project into the navigationbar
         UIBarButtonItem *rateProject = [[UIBarButtonItem alloc] initWithTitle:@"Rate this Project" style:UIBarButtonItemStyleBordered target:self action:@selector(rateProjectPressed)];
@@ -146,7 +147,7 @@
     }
     
     //initiate code beamer model
-    self.codeBeamerModel = [[CodeBeamerModel alloc] init];
+    self.projectPlatform = [[ProjectPlatformModel alloc] init];
 }
 
 
@@ -156,7 +157,7 @@
 - (void)getProjectsFromCoreData
 {
     //get stored project from code beamer model
-    self.availableProjects = [self.codeBeamerModel getStoredProjects];
+    self.availableProjects = [self.projectPlatform getStoredProjects];
     
     //notification for master view controller to get available projects
     
@@ -177,7 +178,7 @@
 - (void)getProjectsFromWebServiceThread
 {
     self.availableProjects = nil;
-    NSArray *result = [self.codeBeamerModel getAllProjectNames];
+    NSArray *result = [self.projectPlatform getAllProjectNames];
     //[NSThread sleepForTimeInterval:2.0];
     self.availableProjects = result;
     while (!self.availableProjects) {
@@ -191,7 +192,7 @@
 - (void)selectProjectWithID:(NSString *)projectID
 {
 
-    self.displayedProject = [self.codeBeamerModel getProjectInfo:projectID];
+    self.displayedProject = [self.projectPlatform getProjectInfo:projectID];
     [self.tableView reloadData];
     
     //show rate button
@@ -261,23 +262,50 @@
     UIBarButtonItem *rateProject = [[UIBarButtonItem alloc] initWithTitle:@"Rate this Project" style:UIBarButtonItemStyleBordered target:self action:@selector(rateProjectPressed)];
     [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObject:rateProject]];
     
+   //todo
+    
+    
     //if the project has already been completely rated, show alert and button in navigationbar
-    if ([self.codeBeamerModel ratingIsCompleteForProject:[self.displayedProject objectAtIndex:0]]) {
+    if ([self.projectPlatform ratingIsCompleteForProject:[self.displayedProject objectAtIndex:0]]) {
         
-        self.navigationItem.prompt = @"This project has already been rated!";
+        //if rating characteristics have changed during since the last rating
+        if ([self.projectPlatform ratingCharacteristicsHaveChangedForProject:[self.displayedProject objectAtIndex:0]]) {
+            
+            self.navigationItem.prompt = @"This project has already been rated but the rating characteristics have been modified.";
+            //modify rating button
+            self.navigationItem.rightBarButtonItem.title = @"Apply new Characteristics";
+            
+            //button to show results
+            UIBarButtonItem *showResults = [[UIBarButtonItem alloc] initWithTitle:@"Show Previous Results" style:UIBarButtonItemStyleBordered target:self action:@selector(showResults)];
+            NSMutableArray *buttonItems = [self.navigationItem.rightBarButtonItems mutableCopy];
+            [buttonItems addObject:showResults];
+            
+            //button to delete rating
+            UIBarButtonItem *deleteProject = [[UIBarButtonItem alloc] initWithTitle:@"Delete Rating" style:UIBarButtonItemStyleBordered target:self action:@selector(deleteProject)];
+            [deleteProject setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor redColor], UITextAttributeTextColor, nil] forState:UIControlStateNormal];
+            [buttonItems addObject:deleteProject];
+            
+            //add buttons to navigation bar
+            [self.navigationItem setRightBarButtonItems:[buttonItems copy] animated:YES];
+            
+        } else {
+            self.navigationItem.prompt = @"This project has already been rated!";
+            //button to show results
+            UIBarButtonItem *showResults = [[UIBarButtonItem alloc] initWithTitle:@"Show Results" style:UIBarButtonItemStyleBordered target:self action:@selector(showResults)];
+            NSMutableArray *buttonItems = [self.navigationItem.rightBarButtonItems mutableCopy];
+            [buttonItems addObject:showResults];
+            
+            //button to delete rating
+            UIBarButtonItem *deleteProject = [[UIBarButtonItem alloc] initWithTitle:@"Delete Rating" style:UIBarButtonItemStyleBordered target:self action:@selector(deleteProject)];
+            [deleteProject setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor redColor], UITextAttributeTextColor, nil] forState:UIControlStateNormal];
+            [buttonItems addObject:deleteProject];
+            
+            //add buttons to navigation bar
+            [self.navigationItem setRightBarButtonItems:[buttonItems copy] animated:YES];
+        }
         
-        //button to show results
-        UIBarButtonItem *showResults = [[UIBarButtonItem alloc] initWithTitle:@"Show Results" style:UIBarButtonItemStyleBordered target:self action:@selector(showResults)];
-        NSMutableArray *buttonItems = [self.navigationItem.rightBarButtonItems mutableCopy];
-        [buttonItems addObject:showResults];
         
-        //button to delete rating
-        UIBarButtonItem *deleteProject = [[UIBarButtonItem alloc] initWithTitle:@"Delete Rating" style:UIBarButtonItemStyleBordered target:self action:@selector(deleteProject)];
-        [deleteProject setTitleTextAttributes:[NSDictionary dictionaryWithObjectsAndKeys:[UIColor redColor], UITextAttributeTextColor, nil] forState:UIControlStateNormal];
-        [buttonItems addObject:deleteProject];
         
-        //add buttons to navigation bar
-        [self.navigationItem setRightBarButtonItems:[buttonItems copy] animated:YES];
         
         //if the project has not been completely, remove the alert
     } else {

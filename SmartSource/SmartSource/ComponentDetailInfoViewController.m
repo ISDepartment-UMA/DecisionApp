@@ -87,7 +87,7 @@
         
     
     //get characteristics and values for component
-    Component *comp = [self.resultModel getComponentForID:componentID];
+    Component *comp = [self.resultModel getComponentObjectForID:componentID];
 
     //initiate arrays of used supercharacteristics and characteristics
     NSMutableArray *usedSuperChars = [NSMutableArray array];

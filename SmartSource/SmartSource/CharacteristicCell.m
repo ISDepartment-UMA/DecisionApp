@@ -21,6 +21,7 @@
 @implementation CharacteristicCell
 
 @synthesize currentCharacteristic = _currentCharacteristic;
+@synthesize delegate = _delegate;
 
 
 
@@ -150,19 +151,9 @@
         button.selected = !button.selected;
     }
     
-    //get context
-    SmartSourceAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    NSManagedObjectContext *context = appDelegate.managedObjectContext;
-    
-    //save context
-    NSError *error = nil;
-    if (![context save:&error]) {
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"The Project Rating could not be saved!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }
+
+    //savecontext
+    [self.delegate saveContext];
     
     //check for completeness
     [self.delegate checkForCompleteness];

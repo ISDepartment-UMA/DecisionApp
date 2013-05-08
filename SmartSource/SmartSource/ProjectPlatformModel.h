@@ -1,25 +1,23 @@
 //
-//  CodeBeamerModel.h
+//  ProjectPlatformModel.h
 //  SmartSource
 //
-//  Created by Lorenz on 19.02.13.
+//  Created by Lorenz on 08.05.13.
 //
 //
 
 #import <Foundation/Foundation.h>
-#import "DetailTableViewController.h"
 
-
-@interface CodeBeamerModel : NSObject
-
+@interface ProjectPlatformModel : NSObject
 - (NSArray *)getAllProjectNames;
-- (CodeBeamerModel *)init;
+- (ProjectPlatformModel *)init;
 - (NSArray *)getStoredProjects;
 - (NSArray *)getProjectInfo:(NSString *)projectID;
 - (void)deleteProjectWithID:(NSString *)projectID;
 - (BOOL)ratingIsCompleteForProject:(NSString *)projectID;
 - (NSArray *)getSelectedProject;
 - (void)setSelectedProject:(NSArray *)projectID;
+- (BOOL)ratingCharacteristicsHaveChangedForProject:(NSString *)projectID;
 
 
 @end

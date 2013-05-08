@@ -10,4 +10,6 @@
 
 @interface Component (Factory)
 + (Component *)addNewComponent:(NSString *)componentID toProject:(NSString *)projectID andManagedObjectContext:(NSManagedObjectContext *)context;
++ (Component *)getComponentForId:(NSString *)componentID fromManagedObjectContext:(NSManagedObjectContext *)context;
++ (BOOL)saveContext:(NSManagedObjectContext *)context;
 @end

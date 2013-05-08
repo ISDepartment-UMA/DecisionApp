@@ -17,5 +17,6 @@
 - (NSArray *)getCharacteristics;
 - (NSArray *)getComponentInfo;
 - (void)saveWeight:(NSNumber *)weight forSuperCharacteristic:(NSString *)superChar;
+- (BOOL)saveContext;
 
 @end

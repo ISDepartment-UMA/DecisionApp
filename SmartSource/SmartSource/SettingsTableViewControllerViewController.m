@@ -292,11 +292,6 @@
         [AvailableCharacteristic addNewAvailableCharacteristic:@"Technical Specifity" toSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:context];
         
         
-        //reset default loginData
-        //[NSUserDefaults resetStandardUserDefaults];
-        //NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        //[defaults removeObjectForKey:@"loginData"];
-        //[defaults synchronize];
         //save context
         if (![context save:&error]) {
             NSLog(@"Unresolved error %@, %@", error, [error userInfo]);

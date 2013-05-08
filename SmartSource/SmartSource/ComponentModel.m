@@ -12,6 +12,7 @@
 #import "Project+Factory.h"
 #import "RadioButton.h"
 #import "SmartSourceAppDelegate.h"
+#import "WebServiceConnector.h"
 
 @interface ComponentModel()
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
@@ -84,41 +85,16 @@
     return componentInfo;
 }
 
-- (IBAction)checkboxButton:(RadioButton *)button
+
+
+- (NSDictionary *)getComponentForID:(NSString *)componentID
 {
-    //check for other buttons in the same cell and uncheck them
-    for (UIButton *otherButton in [button.superview subviews]) {
-        if ([otherButton isKindOfClass:[button class]] && ![otherButton isEqual:button]) {
-            [otherButton setSelected:NO];
-        }
-    }
-    
-    //check the touched button
-    if (!button.selected) {
-        button.selected = !button.selected;
-        
-        //get the cell of the button
-        UITableViewCell *cell = (UITableViewCell *)button.superview.superview;
-        
-        //store selection in the core database
-        Characteristic *charact = [button getCurrentCharacteristic];
-        charact.value = [NSNumber numberWithInt:button.tag];
-        
-        //save context
-        NSError *error = nil;
-        if (![self.managedObjectContext save:&error]) {
-            
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"The Project Rating could not be saved!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-            [alert show];
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
-        
-        //check for rating completeness
-        //[self.currentModel checkForCompleteness];
-    }
-    
-    
+    return [WebServiceConnector getComponentForID:componentID];
+}
+
+- (BOOL)saveContext
+{
+    return [Component saveContext:self.managedObjectContext];
 }
 
 
@@ -162,33 +138,14 @@
 
 - (void)saveWeight:(NSNumber *)weight forSuperCharacteristic:(NSString *)superChar
 {
-    //store value
+    //talk to core data to save project
     Project *rightProject = self.currentComponent.partOf;
-     NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"SuperCharacteristic"];
-     NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"name =%@", superChar];
-     NSPredicate *predicate2 = [NSPredicate predicateWithFormat:@"projectID =%@", rightProject.projectID];
-     NSArray *predicates = [NSArray arrayWithObjects:predicate1, predicate2, nil];
-     request.predicate = [NSCompoundPredicate andPredicateWithSubpredicates:predicates];
-     
-     NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-     request.sortDescriptors = [NSArray arrayWithObject:sortDescription];
-     NSError *error = nil;
-     NSArray *matches = [self.managedObjectContext executeFetchRequest:request error:&error];
-     
-     //set weight of this supercharacteristic for ALL COMPONENTS of the current project
-     for (SuperCharacteristic *rightSuperCharacteristic in matches) {
-         rightSuperCharacteristic.weight = weight;
-     }
-     
-     
-     if (![self.managedObjectContext save:&error]) {
-     
-     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"The Project Rating could not be saved!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-     [alert show];
-     NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-     abort();
-     }
+    [SuperCharacteristic saveWeight:weight forSuperCharacteristic:superChar inProject:rightProject andManagedObjectContext:self.managedObjectContext];
     
 }
+
+
+
+
 
 @end

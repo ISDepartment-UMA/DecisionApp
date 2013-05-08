@@ -13,6 +13,7 @@
 #import "SuperCharacteristic+Factory.h"
 #import "SmartSourceAppDelegate.h"
 #import "SBJson.h"
+#import "WebServiceConnector.h"
 
 @interface ClassificationModel()
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
@@ -53,20 +54,10 @@
     //get context
     SmartSourceAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     self.managedObjectContext = appDelegate.managedObjectContext;
-
-    
-    //get Project details from core database
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Project"];
-    request.predicate = [NSPredicate predicateWithFormat:@"projectID =%@", projectID];
-    NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-    request.sortDescriptors = [NSArray arrayWithObject:sortDescription];
-    NSError *error = nil;
-    NSArray *matches = [self.managedObjectContext executeFetchRequest:request error:&error];
-    Project *project = [matches lastObject];
     
     //get project
-    self.currentProject = project;
-    NSEnumerator *componentEnumerator = [project.consistsOf objectEnumerator];
+    self.currentProject = [Project getProjectForId:projectID fromManagedObjectContext:self.managedObjectContext];
+    NSEnumerator *componentEnumerator = [self.currentProject.consistsOf objectEnumerator];
     
     //iterate through components
     NSArray *classification = [NSArray arrayWithObjects:[NSMutableArray array], [NSMutableArray array], [NSMutableArray array], nil];
@@ -235,54 +226,13 @@
 }
 
 
-- (Component *)getComponentForID:(NSString *)componentID
-{
-    //get Component details from core database
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Component"];
-    request.predicate = [NSPredicate predicateWithFormat:@"id =%@", componentID];
-    NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-    request.sortDescriptors = [NSArray arrayWithObject:sortDescription];
-    NSError *error = nil;
-    NSArray *matches = [self.managedObjectContext executeFetchRequest:request error:&error];
-    Component *comp = [matches lastObject];
-    
-    return comp;
-}
-
 //returns two-dimensional array with componentinfo
 //0 --> keys
 //1 --> objects
 - (NSArray *)getComponentInfoForID:(NSString *)componentID
 {
-    //login data from nsuserdefaults
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSArray *loginData = [defaults objectForKey:@"loginData"];
-    NSString *serviceUrl = @"";
-    NSString *login = @"";
-    NSString *password = @"";
-    NSString *javaServiceURL = [defaults objectForKey:@"javaWebserviceConnection"];
     
-    if (loginData != nil) {
-        
-        //decode url to pass it in http request
-        serviceUrl = (__bridge NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)[loginData objectAtIndex:0], NULL, CFSTR(":/?#[]@!$ &'()*+,;=\"<>%{}|\\^~`"), CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
-        login = [loginData objectAtIndex:1];
-        password = [loginData objectAtIndex:2];
-    } else {
-        return nil;
-    }
-    
-    //JSON request to web service
-    SBJsonParser *parser = [[SBJsonParser alloc] init];
-    
-    NSString *url = [[[[[[[[[javaServiceURL stringByAppendingString:@"DataFetcher/getComponentInfo?url="] stringByAppendingString:serviceUrl] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&componentID="] stringByAppendingString:componentID] stringByAppendingString:@"&response=application/json"];
-    
-    //sending request
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-    NSString *json_string = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
-    NSDictionary *responsedic = [parser objectWithString:json_string error:nil];
-    NSDictionary *returnedObjects = [responsedic objectForKey:@"return"];
+    NSDictionary *returnedObjects = [WebServiceConnector getComponentForID:componentID];
     
     //put info into two-dimensional array
     //get info about component
@@ -311,6 +261,11 @@
 
 }
 
+- (Component *)getComponentObjectForID:(NSString *)componentID
+{
+    return [Component getComponentForId:componentID fromManagedObjectContext:self.managedObjectContext];
+}
+
 
 /*returns used characteristics and rating values of a component in a three-dimensional array
 
@@ -326,15 +281,7 @@
 - (NSArray *)getCharsAndValuesArray:(NSString *)componentID
 {
     
-    //retrieving the rating values
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Component"];
-    request.predicate = [NSPredicate predicateWithFormat:@"id =%@", componentID];
-    NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-    request.sortDescriptors = [NSArray arrayWithObject:sortDescription];
-    NSError *error = nil;
-    NSArray *matches = [self.managedObjectContext executeFetchRequest:request error:&error];
-    NSLog([NSString stringWithFormat:@"%d", [matches count]]);
-    Component *comp = [matches lastObject];
+    Component *comp = [Component getComponentForId:componentID fromManagedObjectContext:self.managedObjectContext];
     
     
     

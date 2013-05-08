@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6E0474E7173A531F006F4558 /* WebServiceConnector.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E0474E6173A531F006F4558 /* WebServiceConnector.m */; };
+		6E0474EA173A58EF006F4558 /* ProjectPlatformModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E0474E9173A58EE006F4558 /* ProjectPlatformModel.m */; };
 		6E0741C0159474BB000C480E /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E0741BF159474BB000C480E /* UIKit.framework */; };
 		6E0741C2159474BB000C480E /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E0741C1159474BB000C480E /* Foundation.framework */; };
 		6E0741C4159474BB000C480E /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E0741C3159474BB000C480E /* CoreGraphics.framework */; };
@@ -48,7 +50,6 @@
 		6E1B81EB15C1B70B006D6C61 /* projects_144x144.png in Resources */ = {isa = PBXBuildFile; fileRef = 6E1B81EA15C1B70B006D6C61 /* projects_144x144.png */; };
 		6E1C63A215A4C78700A5DDF5 /* ShowClassificationTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E1C63A115A4C78700A5DDF5 /* ShowClassificationTableViewController.m */; };
 		6E3935C716D3B90C00E72EB0 /* CharacteristicCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E3935C616D3B90C00E72EB0 /* CharacteristicCell.m */; };
-		6E3935D016D3DA4000E72EB0 /* CodeBeamerModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E3935CF16D3DA4000E72EB0 /* CodeBeamerModel.m */; };
 		6E56D7CA16D2741E00A989AA /* ProjectModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E56D7C916D2741E00A989AA /* ProjectModel.m */; };
 		6E56D7CE16D27D9000A989AA /* ComponentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E56D7CD16D27D9000A989AA /* ComponentModel.m */; };
 		6E5907A415A5AD910064FD93 /* BNColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E5907A115A5AD910064FD93 /* BNColor.m */; };
@@ -80,6 +81,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6E0474E5173A531F006F4558 /* WebServiceConnector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebServiceConnector.h; sourceTree = "<group>"; };
+		6E0474E6173A531F006F4558 /* WebServiceConnector.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebServiceConnector.m; sourceTree = "<group>"; };
+		6E0474E8173A58EE006F4558 /* ProjectPlatformModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectPlatformModel.h; sourceTree = "<group>"; };
+		6E0474E9173A58EE006F4558 /* ProjectPlatformModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectPlatformModel.m; sourceTree = "<group>"; };
 		6E0741BB159474BB000C480E /* SmartSource.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SmartSource.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E0741BF159474BB000C480E /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6E0741C1159474BB000C480E /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -147,8 +152,6 @@
 		6E1C63A115A4C78700A5DDF5 /* ShowClassificationTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShowClassificationTableViewController.m; sourceTree = "<group>"; };
 		6E3935C516D3B90C00E72EB0 /* CharacteristicCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CharacteristicCell.h; sourceTree = "<group>"; };
 		6E3935C616D3B90C00E72EB0 /* CharacteristicCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CharacteristicCell.m; sourceTree = "<group>"; };
-		6E3935CE16D3DA4000E72EB0 /* CodeBeamerModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CodeBeamerModel.h; sourceTree = "<group>"; };
-		6E3935CF16D3DA4000E72EB0 /* CodeBeamerModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CodeBeamerModel.m; sourceTree = "<group>"; };
 		6E56D7C816D2741E00A989AA /* ProjectModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectModel.h; sourceTree = "<group>"; };
 		6E56D7C916D2741E00A989AA /* ProjectModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectModel.m; sourceTree = "<group>"; };
 		6E56D7CC16D27D9000A989AA /* ComponentModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentModel.h; sourceTree = "<group>"; };
@@ -255,6 +258,8 @@
 		6E0741C7159474BB000C480E /* SmartSource */ = {
 			isa = PBXGroup;
 			children = (
+				6E0474E5173A531F006F4558 /* WebServiceConnector.h */,
+				6E0474E6173A531F006F4558 /* WebServiceConnector.m */,
 				6E3E8F0C16E958E800D01CD5 /* Models */,
 				6EAF4B621599C9C3003958E9 /* CoreData */,
 				6E07422015947ED6000C480E /* Main Menu */,
@@ -383,8 +388,8 @@
 			children = (
 				6EAF562316DFDB67004F027F /* ClassificationModel.h */,
 				6EAF562416DFDB67004F027F /* ClassificationModel.m */,
-				6E3935CE16D3DA4000E72EB0 /* CodeBeamerModel.h */,
-				6E3935CF16D3DA4000E72EB0 /* CodeBeamerModel.m */,
+				6E0474E8173A58EE006F4558 /* ProjectPlatformModel.h */,
+				6E0474E9173A58EE006F4558 /* ProjectPlatformModel.m */,
 				6E56D7CC16D27D9000A989AA /* ComponentModel.h */,
 				6E56D7CD16D27D9000A989AA /* ComponentModel.m */,
 				6E56D7C816D2741E00A989AA /* ProjectModel.h */,
@@ -618,8 +623,9 @@
 				6E56D7CA16D2741E00A989AA /* ProjectModel.m in Sources */,
 				6E56D7CE16D27D9000A989AA /* ComponentModel.m in Sources */,
 				6E3935C716D3B90C00E72EB0 /* CharacteristicCell.m in Sources */,
-				6E3935D016D3DA4000E72EB0 /* CodeBeamerModel.m in Sources */,
 				6EAF562516DFDB68004F027F /* ClassificationModel.m in Sources */,
+				6E0474E7173A531F006F4558 /* WebServiceConnector.m in Sources */,
+				6E0474EA173A58EF006F4558 /* ProjectPlatformModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

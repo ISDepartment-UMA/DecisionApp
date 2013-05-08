@@ -10,5 +10,7 @@
 
 @interface Project (Factory)
 + (Project *)addNewProject:(NSString *)projectID toManagedObjectContext:(NSManagedObjectContext *)context withTimestamp:(NSDate *)timestamp;
-+ (Project *)initProjectFromID:(NSString *)projectID toManagedObjectContext:(NSManagedObjectContext *)context;
++ (Project *)getProjectForId:(NSString *)projectID fromManagedObjectContext:(NSManagedObjectContext *)context;
++ (NSArray *)getStoredAllStoredProjectsFromManagedObjectContext:(NSManagedObjectContext *)context;
++ (BOOL)deleteProjectWithID:(NSString *)projectID fromManagedObjectContext:(NSManagedObjectContext *)context;
 @end

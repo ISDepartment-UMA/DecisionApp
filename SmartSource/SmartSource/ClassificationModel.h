@@ -20,7 +20,7 @@
 - (NSString *)getProjectName;
 - (NSArray *)getComponentsForCategory:(NSString *)category;
 - (NSArray *)getColumnsForDecisionTable;
-- (Component *)getComponentForID:(NSString *)componentID;
+- (Component *)getComponentObjectForID:(NSString *)componentID;
 - (NSArray *)getComponentInfoForID:(NSString *)componentID;
 - (NSArray *)getCharsAndValuesArray:(NSString *)componentID;
 

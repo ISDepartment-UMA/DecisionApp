@@ -39,4 +39,17 @@
     
 }
 
++ (NSArray *)getAllAvailableSuperCharacteristicsFromManagedObjectContext:(NSManagedObjectContext *)context
+{
+    //
+    //getting characteristics from core database
+    //get all supercharacteristics
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"AvailableSuperCharacteristic"];
+    NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    request.sortDescriptors = [NSArray arrayWithObject:sortDescription];
+    NSError *error = nil;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    return matches;
+}
+
 @end

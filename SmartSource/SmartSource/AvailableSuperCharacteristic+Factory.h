@@ -10,4 +10,5 @@
 
 @interface AvailableSuperCharacteristic (Factory)
 + (AvailableSuperCharacteristic *)addNewAvailableSuperCharacteristic:(NSString *)name toManagedObjectContext:(NSManagedObjectContext *)context;
++ (NSArray *)getAllAvailableSuperCharacteristicsFromManagedObjectContext:(NSManagedObjectContext *)context;
 @end

@@ -64,6 +64,15 @@
     }
 }
 
+- (void)saveContext
+{
+    if (![self.currentComponent saveContext]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"The Project Rating could not be saved!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
+    
+}
+
 - (void)showRating
 {
     //show at a glance overview in detail screen
@@ -241,7 +250,7 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //the first row of each section should present a supercharacteristik with a slider to weight it
-    if (indexPath.section < [self.Characteristics count]) {
+    if (indexPath.section < [[self.Characteristics objectAtIndex:1] count]) {
         
         
         if (indexPath.row == 0) {

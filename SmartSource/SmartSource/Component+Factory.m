@@ -9,6 +9,7 @@
 #import "Component+Factory.h"
 #import "Project+Factory.h"
 #import "SBJson.h"
+#import "WebServiceConnector.h"
 
 @implementation Component (Factory)
 
@@ -36,7 +37,7 @@
         comp.id = componentID;
         comp.projectID = projectID;
         
-        NSDictionary *componentInfo = [self getComponentForID:componentID];
+        NSDictionary *componentInfo = [WebServiceConnector getComponentForID:componentID];
         comp.name = [componentInfo objectForKey:@"name"];
         comp.descr = [componentInfo objectForKey:@"description"];
         comp.partOf = [Project addNewProject:projectID toManagedObjectContext:context withTimestamp:nil];
@@ -50,36 +51,30 @@ return comp;
                        
 }
 
-//returns an nsdictionary with component info for a given component id
-+ (NSDictionary *)getComponentForID:(NSString *)componentID
++ (Component *)getComponentForId:(NSString *)componentID fromManagedObjectContext:(NSManagedObjectContext *)context
 {
-    //login data
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSArray *loginData = [defaults objectForKey:@"loginData"];
-    NSString *serviceUrl = @"";
-    NSString *login = @"";
-    NSString *password = @"";
-    NSString *javaServiceURL = [defaults objectForKey:@"javaWebserviceConnection"];
+    //retrieving the rating values
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"Component"];
+    request.predicate = [NSPredicate predicateWithFormat:@"id =%@", componentID];
+    NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    request.sortDescriptors = [NSArray arrayWithObject:sortDescription];
+    NSError *error = nil;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    return [matches lastObject];
+}
+
++ (BOOL)saveContext:(NSManagedObjectContext *)context
+{
     
-    if (loginData != nil) {
-        serviceUrl = (__bridge NSString *)CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (__bridge CFStringRef)[loginData objectAtIndex:0], NULL, CFSTR(":/?#[]@!$ &'()*+,;=\"<>%{}|\\^~`"), CFStringConvertNSStringEncodingToEncoding(NSUTF8StringEncoding));
-        login = [loginData objectAtIndex:1];
-        password = [loginData objectAtIndex:2];
+    //save context
+    NSError *error = nil;
+    if (![context save:&error]) {
+        return NO;
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        abort();
     } else {
-        return nil;
+        return YES;
     }
     
-    //JSON request to web service
-    SBJsonParser *parser = [[SBJsonParser alloc] init];
-    
-    NSString *url = [[[[[[[[[javaServiceURL stringByAppendingString:@"DataFetcher/getComponentInfo?url="] stringByAppendingString:serviceUrl] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&componentID="] stringByAppendingString:componentID] stringByAppendingString:@"&response=application/json"];
-    
-    //sending request
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-    NSString *json_string = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
-    NSDictionary *responsedic = [parser objectWithString:json_string error:nil];
-    NSDictionary *returnedObjects = [responsedic objectForKey:@"return"];
-    return returnedObjects;
 }
 @end

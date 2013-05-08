@@ -8,7 +8,6 @@
 
 #import <UIKit/UIKit.h>
 #import "CoreData/CoreData.h"
-#import "CodeBeamerModel.h"
 #import "Protocols/StatusReciever.h"
 
 @interface DetailTableViewController : UITableViewController <UISplitViewControllerDelegate>

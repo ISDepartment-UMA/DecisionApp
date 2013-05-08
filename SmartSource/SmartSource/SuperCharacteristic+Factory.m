@@ -9,6 +9,7 @@
 #import "SuperCharacteristic+Factory.h"
 #import "Component+Factory.h"
 #import "SBJson.h"
+#import "Project.h"
 
 @implementation SuperCharacteristic (Factory)
 
@@ -48,6 +49,36 @@
     
     return superChar;
     
+    
+}
+
++ (void)saveWeight:(NSNumber *)weight forSuperCharacteristic:(NSString *)superChar inProject:(Project *)project andManagedObjectContext:(NSManagedObjectContext *)context
+{
+    //store value
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"SuperCharacteristic"];
+    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"name =%@", superChar];
+    NSPredicate *predicate2 = [NSPredicate predicateWithFormat:@"projectID =%@", project.projectID];
+    NSArray *predicates = [NSArray arrayWithObjects:predicate1, predicate2, nil];
+    request.predicate = [NSCompoundPredicate andPredicateWithSubpredicates:predicates];
+    
+    NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    request.sortDescriptors = [NSArray arrayWithObject:sortDescription];
+    NSError *error = nil;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    
+    //set weight of this supercharacteristic for ALL COMPONENTS of the current project
+    for (SuperCharacteristic *rightSuperCharacteristic in matches) {
+        rightSuperCharacteristic.weight = weight;
+    }
+    
+    
+    if (![context save:&error]) {
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"The Project Rating could not be saved!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+        abort();
+    }
     
 }
 

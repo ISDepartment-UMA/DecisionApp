@@ -7,8 +7,10 @@
 //
 
 #import "SuperCharacteristic.h"
+#import "Project.h"
 
 @interface SuperCharacteristic (Factory)
 
 + (SuperCharacteristic *)addNewSuperCharacteristic:(NSString *)superCharacteristicName withWeight:(NSNumber *)weight toComponent:(NSString *)componentID andProject:(NSString *)projectID andManagedObjectContext:(NSManagedObjectContext *)context;
++ (void)saveWeight:(NSNumber *)weight forSuperCharacteristic:(NSString *)superChar inProject:(Project *)project andManagedObjectContext:(NSManagedObjectContext *)context;
 @end

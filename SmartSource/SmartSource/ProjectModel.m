@@ -12,6 +12,9 @@
 #import "SuperCharacteristic+Factory.h"
 #import "Characteristic+Factory.h"
 #import "SmartSourceAppDelegate.h"
+#import "AvailableCharacteristic+Factory.h"
+#import "AvailableSuperCharacteristic+Factory.h"
+#import "WebServiceConnector.h"
 
 @interface ProjectModel ()
 @property (nonatomic, strong) Project *project;
@@ -35,8 +38,66 @@
     //get context
     SmartSourceAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
     self.managedObjectContext = appDelegate.managedObjectContext;
-    self.project = [Project initProjectFromID:idOfProject toManagedObjectContext:self.managedObjectContext];
+    self.project = [self initializeProjectFromID:idOfProject toManagedObjectContext:self.managedObjectContext];
     return self;
+}
+
+//prepares the core database for the rating of the project and returns a 2 dimensional array
+//1st dimension: - 0 for supercharacteristics names - 1 for subcharacteristics names of supercharacteristic at value of 0
+- (Project *)initializeProjectFromID:(NSString *)projectID toManagedObjectContext:(NSManagedObjectContext *)context
+{
+    NSArray *matches = [AvailableSuperCharacteristic getAllAvailableSuperCharacteristicsFromManagedObjectContext:context];
+
+    
+    //initialize arrays for super- and subcharacteristics
+    NSMutableArray *superchar = [NSMutableArray array];
+    NSMutableArray *subchar = [NSMutableArray array];
+    
+    
+    //iterate through the supercharacteristics
+    AvailableSuperCharacteristic *tmpasc = nil;
+    for (int i=0; i<[matches count]; i++) {
+        tmpasc = [matches objectAtIndex:i];
+        
+        //add name of supercharacteristic to array of supercharacteristics
+        [superchar addObject:tmpasc.name];
+        
+        
+        //prepare array for names of subcharacteristics
+        NSMutableArray *tmp = [NSMutableArray array];
+        
+        //iterate through subcharacteristics
+        NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
+        NSArray *enumerator = [tmpasc.availableSuperCharacteristicOf sortedArrayUsingDescriptors:descriptors];
+        for (int y=0; y<[enumerator count]; y++) {
+            AvailableCharacteristic *tmpcharacteristic = [enumerator objectAtIndex:y];
+            
+            //add name of subcharacteristic to array of subcharacteristics
+            [tmp addObject:tmpcharacteristic.name];
+            
+            
+            //iterate through all components of the project and add this characteristic to it
+            NSArray *componentsOfProject = [WebServiceConnector getAllComponentsForProjectId:projectID];
+            
+            for (int y=0; y<[componentsOfProject count]; y++) {
+                NSString *componentID = [[componentsOfProject objectAtIndex:y] objectAtIndex:0];
+                [Characteristic addNewCharacteristic:tmpcharacteristic.name withValue:[NSNumber numberWithInt:0] toSuperCharacteristic:tmpasc.name withWeight:[NSNumber numberWithInt:3] andComponent:componentID andProject:projectID andManagedObjectContext:context];
+            }
+            
+            
+        }
+        
+        //add array of subcharacteristics to the array of subcharacteristics
+        [subchar addObject:tmp];
+    }
+                        
+    
+    return [Project getProjectForId:projectID fromManagedObjectContext:context];
+    
+    
+    
+
+    
 }
 
 
