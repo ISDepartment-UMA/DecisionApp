@@ -16,7 +16,7 @@
 - (NSArray *)getAvailableProjects;
 - (void)selectProjectWithID:(NSString *)projectID;
 - (void)getProjectsFromWebService;
-- (void)getProjectsFromCoreData;
-@property (strong, nonatomic) UIPopoverController *masterPopoverController;
+- (NSInteger)getProjectsFromCoreDataAndReturnNumber;
+
 
 @end

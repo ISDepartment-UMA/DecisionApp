@@ -23,12 +23,13 @@
 #import "CharacteristicCell.h"
 #import "ProjectModel.h"
 #import "SmartSourceAppDelegate.h"
+#import "SmartSourceSplitViewController.h"
 
 
 @interface RatingTableViewViewController ()
 
 //array of necessary rating characteristics 
-@property (strong, nonatomic) NSArray *Characteristics;
+@property (strong, nonatomic) NSArray *characteristics;
 //split view
 //available components and current component+project
 @property (strong, nonatomic) NSArray *availableComponents;
@@ -41,11 +42,10 @@
 
 @implementation RatingTableViewViewController
 @synthesize currentComponent = _currentComponent;
-@synthesize Characteristics = _Characteristics;
-@synthesize masterPopoverController = _masterPopoverController;
+@synthesize characteristics = _characteristics;
 @synthesize currentProject = _currentProject;
 @synthesize availableComponents = _availableComponents;
-@synthesize indexOfDisplayedComponent = _indexOfDisplayedComponent;
+@synthesize displayedComponent = _displayedComponent;
 
 
 
@@ -82,23 +82,24 @@
 
 
 //sets the component currently displayed in the ratingtableview
-- (void)setComponent:(NSInteger)component
+- (void)setComponent:(Component *)component
 {
     //initialize model for component
-    self.currentComponent = [[ComponentModel alloc] initWithComponent:[self.availableComponents objectAtIndex:component]];
+    self.currentComponent = [[ComponentModel alloc] initWithComponent:component];
     
     //check for completeness
     [self checkForCompleteness];
     
     //get rating characteristics
-    self.Characteristics = [self.currentComponent getCharacteristics];
+    self.characteristics = [self.currentComponent getCharacteristics];
 
     
     [self.tableView reloadData];
     
     //if component has been selected, dismiss popovercontroller
-    [self.masterPopoverController dismissPopoverAnimated:YES];
-    self.indexOfDisplayedComponent = component;
+    SmartSourceSplitViewController *splitVC = (SmartSourceSplitViewController *)self.splitViewController;
+    [splitVC.masterPopoverController dismissPopoverAnimated:YES];
+    self.displayedComponent = component;
     
     
     
@@ -117,7 +118,8 @@
 
     self.availableComponents = [self.currentProject arrayWithComponents];
     
-    [self setComponent:0];
+    [self setComponent:[self.availableComponents objectAtIndex:0]];
+    //[self setComponent:0];
     
     //Notification to reload masterview
     //[[NSNotificationCenter defaultCenter] postNotificationName:@"MasterViewGet" object:self];
@@ -149,6 +151,14 @@
 {
     [super viewWillAppear:animated];
     self.splitViewController.delegate = self;
+    
+    //check if barbuttonitem needs to be presented
+    SmartSourceSplitViewController *splitViewController = (SmartSourceSplitViewController *)self.splitViewController;
+    if (splitViewController.masterPopoverController) {
+        [self splitViewController:splitViewController willHideViewController:nil withBarButtonItem:splitViewController.barButtonItem forPopoverController:splitViewController.masterPopoverController];
+    }
+    
+    
 }
 
 - (void)viewDidLoad
@@ -205,8 +215,10 @@
 {
     barButtonItem.title = NSLocalizedString(@"Components", @"Components");
     [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
-    //self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObject:self.navigationItem.leftBarButtonItem, barButtonItem];
-    self.masterPopoverController = popoverController;
+    //store popoverController and barButtonItem in splitview to make it available for previous/later view controllers
+    SmartSourceSplitViewController *splitViewController = (SmartSourceSplitViewController *)self.splitViewController;
+    [splitViewController setMasterPopoverController:popoverController];
+    [splitViewController setBarButtonItem:barButtonItem];
 }
 
 - (void)splitViewController:(UISplitViewController *)splitController willShowViewController:(UIViewController *)viewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
@@ -214,7 +226,10 @@
     // Called when the view is shown again in the split view, invalidating the button and popover controller.
     //self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObject:self.navigationItem.leftBarButtonItem, barButtonItem];
     [self.navigationItem setLeftBarButtonItem:nil animated:YES];
-    self.masterPopoverController = nil;
+    //reset the splitviewcontroller's properties to nil
+    SmartSourceSplitViewController *splitViewController = (SmartSourceSplitViewController *)self.splitViewController;
+    [splitViewController setMasterPopoverController:nil];
+    [splitViewController setBarButtonItem:nil];
 }
 
 
@@ -224,7 +239,7 @@
 {
     //return number of supercharacteristics +1 section for component info
     if ([self.availableComponents count] > 0) {
-        return 1 + [[self.Characteristics objectAtIndex:0] count];
+        return 1 + [[self.characteristics objectAtIndex:0] count];
     } else {
         return 0;
     }
@@ -236,8 +251,8 @@
 
 
     //return number of characteristics that belong to the supercharacteristic
-    if (section < [[self.Characteristics  objectAtIndex:0] count]) {
-        return 1+ [[[self.Characteristics objectAtIndex:1] objectAtIndex:section] count];
+    if (section < [[self.characteristics  objectAtIndex:0] count]) {
+        return 1+ [[[self.characteristics objectAtIndex:1] objectAtIndex:section] count];
         
     //or return 7 for the component info section
     } else {
@@ -250,12 +265,12 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //the first row of each section should present a supercharacteristik with a slider to weight it
-    if (indexPath.section < [[self.Characteristics objectAtIndex:1] count]) {
+    if (indexPath.section < [[self.characteristics objectAtIndex:1] count]) {
         
         
         if (indexPath.row == 0) {
             
-            SuperCharacteristic *superChar = [[self.Characteristics objectAtIndex:0] objectAtIndex:indexPath.section];
+            SuperCharacteristic *superChar = [[self.characteristics objectAtIndex:0] objectAtIndex:indexPath.section];
             //return cell of supercharacteristic with weight-slider
             //get cell
             static NSString *CellIdentifier = @"superCharacteristicCell";
@@ -281,7 +296,7 @@
             
             //return cell of subcharacteristic
             //get characteristic
-            Characteristic *rightCharacteristic = [[[self.Characteristics objectAtIndex:1] objectAtIndex:indexPath.section] objectAtIndex:indexPath.row-1];
+            Characteristic *rightCharacteristic = [[[self.characteristics objectAtIndex:1] objectAtIndex:indexPath.section] objectAtIndex:indexPath.row-1];
             
             //return cell with characteristic
             return [[CharacteristicCell alloc] initWithCharacteristic:rightCharacteristic andDelegate:self];
@@ -354,15 +369,6 @@
         //pass project id to results screen
         ChartViewController *resOVC = segue.destinationViewController;
         [resOVC initializeClassificationForProject:[self.currentProject getID]];
-        
-        //pass barbuttonitem that hides popover controller to result screen
-        if([self.navigationItem.leftBarButtonItems count] > 0) {
-            UIBarButtonItem *barButtonItem = [self.navigationItem.leftBarButtonItems objectAtIndex:0];
-            barButtonItem.title = NSLocalizedString(@"Result Overview", @"Result Overview");
-            resOVC.navigationItem.leftBarButtonItem = barButtonItem;
-            resOVC.masterPopoverController = self.masterPopoverController;
-            
-        }
        
     }
 }

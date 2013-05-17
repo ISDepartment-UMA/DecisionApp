@@ -16,7 +16,6 @@
 - (NSArray *)getClassificationForCurrentProject;
 - (void)showDecisionTable;
 - (void)showClassification:(NSString *)classification;
-@property (strong, nonatomic) UIPopoverController *masterPopoverController;
 
 
 

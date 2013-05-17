@@ -17,7 +17,7 @@
 @end
 
 @implementation MenuUIViewController
-@synthesize detailScreen = _detailScreen;
+@synthesize detailScreenDelegate = _detailScreenDelegate;
 
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -94,14 +94,24 @@
 
 - (IBAction)selectProjects:(id)sender {
     [self dismissModalViewControllerAnimated:YES];
-    [self.detailScreen getProjectsFromWebService];
+    [self.detailScreenDelegate getProjectsFromWebService];
     //[[NSNotificationCenter defaultCenter] postNotificationName:@"LoadProjectsFromCodebeamer" object:nil];
     
 }
 
 - (IBAction)showRatedProjects:(id)sender {
-    [self dismissModalViewControllerAnimated:YES];
-    [self.detailScreen getProjectsFromCoreData];
+    if ([self.detailScreenDelegate getProjectsFromCoreDataAndReturnNumber] > 0) {
+        [self dismissModalViewControllerAnimated:YES];
+    } else {
+        UIAlertView *disclaimerAgreedAlertView = [[UIAlertView alloc] initWithTitle:@"Error"
+                                                                            message:@"There are no previous ratings stored on the device."
+                                                                           delegate:nil
+                                                                  cancelButtonTitle:nil
+                                                                  otherButtonTitles:@"OK", nil];
+        [disclaimerAgreedAlertView show];
+    }
+    
+    
     //[[NSNotificationCenter defaultCenter] postNotificationName:@"LoadProjectsFromCoreData" object:nil];
 
     

@@ -32,6 +32,7 @@
 @synthesize superChars = _superChars;
 @synthesize chars = _chars;
 @synthesize resultModel = _resultModel;
+@synthesize displayedComponent = _displayedComponent;
 
 
 
@@ -88,6 +89,7 @@
     
     //get characteristics and values for component
     Component *comp = [self.resultModel getComponentObjectForID:componentID];
+    self.displayedComponent = comp;
 
     //initiate arrays of used supercharacteristics and characteristics
     NSMutableArray *usedSuperChars = [NSMutableArray array];
@@ -165,9 +167,11 @@
 //method executed when user wants to rerate the project
 - (void)rateProjectPressed
 {
+    //pop to detail view controller and then segue to rating screen
     UINavigationController *navigation = self.navigationController;
     [navigation popToRootViewControllerAnimated:NO];
-    DetailTableViewController *detail = (DetailTableViewController *)navigation.visibleViewController;
+    DetailTableViewController *detail = [navigation.viewControllers objectAtIndex:0];
+    //(DetailTableViewController *)navigation.visibleViewController;
     [detail performSegueWithIdentifier:@"ratingScreen" sender:self];
     
     //post notification to select the right component

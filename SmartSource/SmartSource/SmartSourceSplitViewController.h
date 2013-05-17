@@ -10,5 +10,8 @@
 
 @interface SmartSourceSplitViewController : UISplitViewController
 
+@property (strong, nonatomic) UIPopoverController *masterPopoverController;
+@property (strong, nonatomic) UIBarButtonItem *barButtonItem;
+
 
 @end

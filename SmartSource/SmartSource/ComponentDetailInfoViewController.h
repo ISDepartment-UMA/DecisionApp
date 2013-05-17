@@ -13,6 +13,7 @@
 
 
 - (void)setComponent:(NSString *)componentID andModel:(ClassificationModel *)model;
+@property (strong, nonatomic) Component *displayedComponent;
 
 
 

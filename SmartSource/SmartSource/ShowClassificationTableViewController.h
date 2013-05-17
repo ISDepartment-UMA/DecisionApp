@@ -13,7 +13,6 @@
 @interface ShowClassificationTableViewController : UITableViewController <UISplitViewControllerDelegate>
 
 - (void)setDisplayedClassification:(NSString *)classification fromModel:(ClassificationModel *)model;
-@property (strong, nonatomic) UIPopoverController *masterPopoverController;
 
 
 @end

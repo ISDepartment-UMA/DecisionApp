@@ -24,6 +24,7 @@
 #import "SmartSourceAppDelegate.h"
 #import "MenuUIViewController.h"
 #import "ProjectPlatformModel.h"
+#import "ComponentDetailInfoViewController.h"
 
 
 @interface DetailTableViewController ()
@@ -50,7 +51,7 @@
 @synthesize projectPlatform = _projectPlatform;
 @synthesize displayedProject = _displayedProject;
 @synthesize availableProjects = _availableProjects;
-@synthesize masterPopoverController = _masterPopoverController;
+
 
 
 
@@ -135,6 +136,12 @@
     //show navigation bar
     self.navigationController.navigationBarHidden = NO;
     
+    //check if barbuttonitem needs to be presented
+    SmartSourceSplitViewController *splitViewController = (SmartSourceSplitViewController *)self.splitViewController;
+    if (splitViewController.masterPopoverController) {
+        [self splitViewController:splitViewController willHideViewController:nil withBarButtonItem:splitViewController.barButtonItem forPopoverController:splitViewController.masterPopoverController];
+    }
+    
     //add button to main menu
     UIBarButtonItem *barbutton = [[UIBarButtonItem alloc] initWithTitle:@"Main Menu" style:UIBarButtonItemStyleBordered target:self action:@selector(mainMenu:)];
     if ([self.navigationItem.leftBarButtonItems count] > 0) {
@@ -154,7 +161,7 @@
 
 
 //option 2 :stored projects from core data
-- (void)getProjectsFromCoreData
+- (NSInteger)getProjectsFromCoreDataAndReturnNumber
 {
     //get stored project from code beamer model
     self.availableProjects = [self.projectPlatform getStoredProjects];
@@ -163,6 +170,8 @@
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"MasterViewGet" object:self];
     //[[NSNotificationCenter defaultCenter] postNotificationName:@"LoadProjectsIntoMasterView" object:self];
+    
+    return [self.availableProjects count];
 }
 
 //option 1: projects from codebeamer
@@ -199,7 +208,8 @@
     [self.navigationController setNavigationBarHidden:NO];
     
     //if project has been selected, dismiss popovercontroller
-    [self.masterPopoverController dismissPopoverAnimated:YES];
+    SmartSourceSplitViewController *splitVC = (SmartSourceSplitViewController *)self.splitViewController;
+    [splitVC.masterPopoverController dismissPopoverAnimated:YES];
     
     //handle buttons
     [self handleRatingButtonsInNavigationBar];
@@ -239,6 +249,9 @@
     }
     
     
+
+    
+    
     //put rating buttons into navigation bar
     [self handleRatingButtonsInNavigationBar];
     
@@ -261,9 +274,7 @@
     //put button to rate the project into the navigationbar
     UIBarButtonItem *rateProject = [[UIBarButtonItem alloc] initWithTitle:@"Rate this Project" style:UIBarButtonItemStyleBordered target:self action:@selector(rateProjectPressed)];
     [self.navigationItem setRightBarButtonItems:[NSArray arrayWithObject:rateProject]];
-    
-   //todo
-    
+        
     
     //if the project has already been completely rated, show alert and button in navigationbar
     if ([self.projectPlatform ratingIsCompleteForProject:[self.displayedProject objectAtIndex:0]]) {
@@ -328,14 +339,21 @@
     } else {
         [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObject:barButtonItem]];
     }
-    self.masterPopoverController = popoverController;
+    //store popoverController and barButtonItem in splitview to make it available for previous/later view controllers
+    SmartSourceSplitViewController *splitViewController = (SmartSourceSplitViewController *)self.splitViewController;
+    [splitViewController setMasterPopoverController:popoverController];
+    [splitViewController setBarButtonItem:barButtonItem];
 }
 
 - (void)splitViewController:(UISplitViewController *)splitController willShowViewController:(UIViewController *)viewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
 {
     // Called when the view is shown again in the split view, invalidating the button and popover controller.
     [self.navigationItem setLeftBarButtonItems:[NSArray arrayWithObject:[self.navigationItem.leftBarButtonItems lastObject]]];
-    self.masterPopoverController = nil;
+    //reset the splitviewcontroller's properties to nil
+    SmartSourceSplitViewController *splitViewController = (SmartSourceSplitViewController *)self.splitViewController;
+    [splitViewController setMasterPopoverController:nil];
+    [splitViewController setBarButtonItem:nil];
+    
 }
 
 
@@ -385,13 +403,9 @@
         RatingTableViewViewController *destination = segue.destinationViewController;
         [destination setProject:[self.displayedProject objectAtIndex:0]];
         
-        //pass barbuttonitem that hides popover controller to rating screen
-        if([self.navigationItem.leftBarButtonItems count] > 1) {
-            UIBarButtonItem *barButtonItem = [self.navigationItem.leftBarButtonItems objectAtIndex:0];
-            barButtonItem.title = NSLocalizedString(@"Components", @"Components");
-            destination.navigationItem.leftBarButtonItem = barButtonItem;
-            destination.masterPopoverController = self.masterPopoverController;
-            
+        if ([sender isKindOfClass:[ComponentDetailInfoViewController class]]) {
+            ComponentDetailInfoViewController *senderCDIVC = (ComponentDetailInfoViewController *)sender;
+            [destination setComponent:senderCDIVC.displayedComponent];
         }
     }
     
@@ -403,20 +417,12 @@
         ChartViewController  *resOVC = segue.destinationViewController;
         [resOVC initializeClassificationForProject:[self.displayedProject objectAtIndex:0]];
         
-        //pass barbuttonitem that hides popover controller to result screen
-        if([self.navigationItem.leftBarButtonItems count] > 1) {
-            UIBarButtonItem *barButtonItem = [self.navigationItem.leftBarButtonItems objectAtIndex:0];
-            barButtonItem.title = NSLocalizedString(@"Result Overview", @"Result Overview");
-            resOVC.navigationItem.leftBarButtonItem = barButtonItem;
-            resOVC.masterPopoverController = self.masterPopoverController;
-            
-        }
     }
     
     if ([segue.identifier isEqualToString:@"mainMenu"]) {
         UINavigationController *navigation = segue.destinationViewController;
         MenuUIViewController *mainMenu = [navigation.viewControllers lastObject];
-        [mainMenu setDetailScreen:self];
+        [mainMenu setDetailScreenDelegate:self];
     }
     
 

@@ -96,9 +96,16 @@
             
         //select the appropriate component that is currently displayed in the rating screen
         } else {
-            NSInteger comp = [self.ratingScreen indexOfDisplayedComponent];
-            NSIndexPath *index = [NSIndexPath indexPathForRow:comp inSection:0];
-            [self.tableView selectRowAtIndexPath:index animated:NO scrollPosition:UITableViewScrollPositionTop];
+            Component *comp = [self.ratingScreen displayedComponent];
+            for (int i=0; i<[self.displayedCells count]; i++) {
+                Component *rightComponent = [self.displayedCells objectAtIndex:i];
+                if ([rightComponent.id isEqualToString:comp.id]) {
+                    NSIndexPath *index = [NSIndexPath indexPathForRow:i inSection:0];
+                    [self.tableView selectRowAtIndexPath:index animated:NO scrollPosition:UITableViewScrollPositionTop];
+                }
+            }
+            
+            
         }
         
     
@@ -309,7 +316,7 @@
         [self.detailScreen selectProjectWithID:[[self.displayedCells objectAtIndex:indexPath.row] objectAtIndex:0]];
     } else if ([self.state isEqualToString:@"components"]) {
         //set the currently displayed component in the rating table view controller
-        [self.ratingScreen setComponent:indexPath.row];
+        [self.ratingScreen setComponent:[self.displayedCells objectAtIndex:indexPath.row]];
     } else if ([self.state isEqualToString:@"results"]) {
         
         [self.resultScreen.navigationController popToViewController:self.resultScreen animated:NO];

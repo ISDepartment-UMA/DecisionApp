@@ -9,6 +9,7 @@
 #import "ShowClassificationTableViewController.h"
 #import "ComponentDetailInfoViewController.h"
 #import "ClassificationModel.h"
+#import "SmartSourceSplitViewController.h"
 
 @interface ShowClassificationTableViewController ()
 
@@ -18,7 +19,6 @@
 @end
 
 @implementation ShowClassificationTableViewController
-@synthesize masterPopoverController = _masterPopoverController;
 @synthesize availableCells = _availableCells;
 @synthesize resultModel = _resultModel;
 
@@ -44,6 +44,11 @@
 {
     [super viewWillAppear:animated];
     [self.splitViewController setDelegate:self];
+    //check if barbuttonitem needs to be presented
+    SmartSourceSplitViewController *splitViewController = (SmartSourceSplitViewController *)self.splitViewController;
+    if (splitViewController.masterPopoverController) {
+        [self splitViewController:splitViewController willHideViewController:nil withBarButtonItem:splitViewController.barButtonItem forPopoverController:splitViewController.masterPopoverController];
+    }
     
 }
 
@@ -79,14 +84,20 @@
 {
     barButtonItem.title = NSLocalizedString(@"Results Overview", @"Results Overview");
     [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
-    self.masterPopoverController = popoverController;
+    //store popoverController and barButtonItem in splitview to make it available for previous/later view controllers
+    SmartSourceSplitViewController *splitViewController = (SmartSourceSplitViewController *)self.splitViewController;
+    [splitViewController setMasterPopoverController:popoverController];
+    [splitViewController setBarButtonItem:barButtonItem];
 }
 
 - (void)splitViewController:(UISplitViewController *)splitController willShowViewController:(UIViewController *)viewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
 {
     // Called when the view is shown again in the split view, invalidating the button and popover controller.
     [self.navigationItem setLeftBarButtonItem:nil animated:YES];
-    self.masterPopoverController = nil;
+    //reset the splitviewcontroller's properties to nil
+    SmartSourceSplitViewController *splitViewController = (SmartSourceSplitViewController *)self.splitViewController;
+    [splitViewController setMasterPopoverController:nil];
+    [splitViewController setBarButtonItem:nil];
 }
 
 #pragma mark - Table view data source

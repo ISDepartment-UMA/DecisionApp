@@ -60,6 +60,10 @@
     
     //get the right value for the characteristic
     NSInteger value = [currentCharacteristic.value integerValue];
+    //if characteristic has not been rated before, change the background color
+    if (value == 0) {
+        self.backgroundColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.05];
+    }
     
     //high
     CGRect HighButtonFrame = CGRectMake(500, 10, 50, 25);
@@ -135,6 +139,11 @@
 //not clean
 - (void)checkboxButton:(UIButton *)button
 {
+    
+    //if first raint, change color of cell
+    if ([self.currentCharacteristic.value isEqualToNumber:[NSNumber numberWithInt:0]]) {
+        [self setBackgroundColor:[UIColor whiteColor]];
+    }
     //store in database
     self.currentCharacteristic.value = [NSNumber numberWithInt:button.tag];
     

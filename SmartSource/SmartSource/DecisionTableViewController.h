@@ -12,7 +12,6 @@
 @interface DecisionTableViewController : UITableViewController <UISplitViewControllerDelegate>
 
 @property (nonatomic, strong) ClassificationModel *resultModel;
-@property (strong, nonatomic) UIPopoverController *masterPopoverController;
 
 
 

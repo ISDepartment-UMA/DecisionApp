@@ -16,6 +16,8 @@
 @end
 
 @implementation SmartSourceSplitViewController
+@synthesize barButtonItem = _barButtonItem;
+@synthesize masterPopoverController = _masterPopoverController;
 
 
 

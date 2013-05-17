@@ -15,6 +15,7 @@
 #import "BNColor.h"
 #import "ClassificationModel.h"
 #import "SmartSourceAppDelegate.h"
+#import "SmartSourceSplitViewController.h"
 
 @interface ChartViewController ()
 
@@ -24,7 +25,6 @@
 @end
 
 @implementation ChartViewController
-@synthesize masterPopoverController = _masterPopoverController;
 @synthesize resultModel = _resultModel;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -46,7 +46,8 @@
 - (void)showDecisionTable
 {
     //if decision table has been selected, dismiss popovercontroller
-    [self.masterPopoverController dismissPopoverAnimated:YES];
+    SmartSourceSplitViewController *splitVC = (SmartSourceSplitViewController *)self.splitViewController;
+    [splitVC.masterPopoverController dismissPopoverAnimated:YES];
     //perform segue
     [self performSegueWithIdentifier:@"decisionTable" sender:self];
 }
@@ -54,7 +55,8 @@
 - (void)showClassification:(NSString *)classification
 {
     //if classification has been selected, dismiss popovercontroller
-    [self.masterPopoverController dismissPopoverAnimated:YES];
+    SmartSourceSplitViewController *splitVC = (SmartSourceSplitViewController *)self.splitViewController;
+    [splitVC.masterPopoverController dismissPopoverAnimated:YES];
     [self performSegueWithIdentifier:@"showClassification" sender:classification];
     
 }
@@ -66,7 +68,8 @@
     [super viewDidAppear:animated];
     [[NSNotificationCenter defaultCenter] postNotificationName:@"MasterViewGet" object:self];
     //if decision table has been selected, dismiss popovercontroller
-    [self.masterPopoverController dismissPopoverAnimated:YES];
+    SmartSourceSplitViewController *splitVC = (SmartSourceSplitViewController *)self.splitViewController;
+    [splitVC.masterPopoverController dismissPopoverAnimated:YES];
     
 }
 
@@ -90,6 +93,12 @@
     self.navigationController.navigationBarHidden = NO;
     [self.splitViewController setDelegate:self];
     [self.navigationItem setHidesBackButton:YES];
+    
+    //check if barbuttonitem needs to be presented
+    SmartSourceSplitViewController *splitViewController = (SmartSourceSplitViewController *)self.splitViewController;
+    if (splitViewController.masterPopoverController) {
+        [self splitViewController:splitViewController willHideViewController:nil withBarButtonItem:splitViewController.barButtonItem forPopoverController:splitViewController.masterPopoverController];
+    }
 
 }
 
@@ -221,14 +230,20 @@
 {
     barButtonItem.title = NSLocalizedString(@"Result Overview", @"Result Overview");
     [self.navigationItem setLeftBarButtonItem:barButtonItem animated:YES];
-    self.masterPopoverController = popoverController;
+    //store popoverController and barButtonItem in splitview to make it available for previous/later view controllers
+    SmartSourceSplitViewController *splitViewController = (SmartSourceSplitViewController *)self.splitViewController;
+    [splitViewController setMasterPopoverController:popoverController];
+    [splitViewController setBarButtonItem:barButtonItem];
 }
 
 - (void)splitViewController:(UISplitViewController *)splitController willShowViewController:(UIViewController *)viewController invalidatingBarButtonItem:(UIBarButtonItem *)barButtonItem
 {
     // Called when the view is shown again in the split view, invalidating the button and popover controller.
     [self.navigationItem setLeftBarButtonItem:nil animated:YES];
-    self.masterPopoverController = nil;
+    //reset the splitviewcontroller's properties to nil
+    SmartSourceSplitViewController *splitViewController = (SmartSourceSplitViewController *)self.splitViewController;
+    [splitViewController setMasterPopoverController:nil];
+    [splitViewController setBarButtonItem:nil];
 }
 
 
@@ -241,12 +256,6 @@
         //pass result model
         DecisionTableViewController *decTVC = segue.destinationViewController;
         decTVC.resultModel = self.resultModel;
-        
-        //pass barbuttonitem that hides popover controller to rating screen
-        if(self.navigationItem.leftBarButtonItem != nil) {
-            decTVC.navigationItem.leftBarButtonItem = self.navigationItem.leftBarButtonItem;
-            decTVC.masterPopoverController = self.masterPopoverController;
-        }
     }
     
     //segue to classification
@@ -255,12 +264,6 @@
         //pass result model
         ShowClassificationTableViewController *scTVC = segue.destinationViewController;
         [scTVC setDisplayedClassification:sender fromModel:self.resultModel];
-        
-        //pass barbuttonitem that hides popover controller to rating screen
-        if(self.navigationItem.leftBarButtonItem != nil) {
-            scTVC.navigationItem.leftBarButtonItem = self.navigationItem.leftBarButtonItem;
-            scTVC.masterPopoverController = self.masterPopoverController;
-        }
     }
 }
 

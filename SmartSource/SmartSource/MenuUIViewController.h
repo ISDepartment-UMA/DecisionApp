@@ -11,7 +11,7 @@
 #import "DetailTableViewController.h"
 
 @interface MenuUIViewController : UIViewController <UIAlertViewDelegate>
-@property DetailTableViewController *detailScreen;
+@property DetailTableViewController *detailScreenDelegate;
 
 
 

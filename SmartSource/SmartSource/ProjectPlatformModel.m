@@ -67,6 +67,7 @@
 
 
 
+
 - (NSArray *)getStoredProjects
 {
     
@@ -126,7 +127,6 @@
             }
         }
     }
-    NSLog(@"hier2");
     
     return YES;
     
@@ -141,30 +141,38 @@
         return false;
     }
     
+    Component *component = [[project.consistsOf objectEnumerator] nextObject];
     
     //availablesupercharacteristics
     for (AvailableSuperCharacteristic *availableSuperChar in availableSuperCharacteristics) {
         
-        //componenten
-        for (Component *component in project.consistsOf) {
-            
-            //available supercharacteristic that has not been used for a component
-            if (![component.ratedBy containsObject:availableSuperChar]) {
-                return YES;
-            }
-            
-            //alle superchars für component benutzt....
-            
-            //available characteristics
-            for (AvailableCharacteristic *availableChar in availableSuperChar.availableSuperCharacteristicOf) {
+        //check if all available supercharacteristics have been used in the component
+        bool foundAvailableSuperChar = false;
+        //iterate used supercharacteristics
+        for (SuperCharacteristic *usedSuperChar in component.ratedBy) {
+            if ([usedSuperChar.name isEqualToString:availableSuperChar.name]) {
+                //found
+                foundAvailableSuperChar = true;
                 
-                //used supercharacteristics
-                for (SuperCharacteristic *usedSuperChar in component.ratedBy) {
-                    if (![usedSuperChar.superCharacteristicOf containsObject:availableChar]) {
-                        return YES;
+                //check if all available characteristics of a used supercharacteristics have been used
+                for (AvailableCharacteristic *availableCharacteristic in availableSuperChar.availableSuperCharacteristicOf) {
+                    bool foundAvailableChar = false;
+                    //iterate 
+                    for (Characteristic *usedCharacteristic in usedSuperChar.superCharacteristicOf) {
+                        if ([usedCharacteristic.name isEqualToString:availableCharacteristic.name]) {
+                            //found
+                            foundAvailableChar = true;
+                        }
+                    }
+                    
+                    if (!foundAvailableChar) {
+                        return true;
                     }
                 }
             }
+        }
+        if (!foundAvailableSuperChar) {
+            return true;
             
         }
     }
