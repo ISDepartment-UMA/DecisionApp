@@ -740,6 +740,9 @@
         
     }
     
+    if ([project.consistsOf count] == 0) {
+        output = NO;
+    }
     return output;
     
 }
