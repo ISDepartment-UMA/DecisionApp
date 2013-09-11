@@ -1,0 +1,26 @@
+//
+//  Project.m
+//  SmartSource
+//
+//  Created by Lorenz on 11.09.13.
+//
+//
+
+#import "Project.h"
+#import "Component.h"
+
+
+@implementation Project
+
+@dynamic category;
+@dynamic creator;
+@dynamic descr;
+@dynamic enddate;
+@dynamic name;
+@dynamic projectID;
+@dynamic startdate;
+@dynamic timestamp;
+@dynamic weightingHasBeenEdited;
+@dynamic consistsOf;
+
+@end
