@@ -44,7 +44,7 @@
 								<reference key="NSNextResponder" ref="588931221"/>
 								<int key="NSvFlags">1314</int>
 								<object class="NSPSMatrix" key="NSFrameMatrix"/>
-								<string key="NSFrame">{{68, 0}, {346, 45}}</string>
+								<string key="NSFrame">{{68, 0}, {346, 35}}</string>
 								<reference key="NSSuperview" ref="588931221"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="744242588"/>
@@ -88,7 +88,7 @@
 								<reference key="NSNextResponder" ref="588931221"/>
 								<int key="NSvFlags">1313</int>
 								<object class="NSPSMatrix" key="NSFrameMatrix"/>
-								<string key="NSFrame">{{437, 0}, {45, 45}}</string>
+								<string key="NSFrame">{{442, 0}, {40, 35}}</string>
 								<reference key="NSSuperview" ref="588931221"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="1027669630"/>
@@ -124,7 +124,7 @@
 								<reference key="NSNextResponder" ref="588931221"/>
 								<int key="NSvFlags">1314</int>
 								<object class="NSPSMatrix" key="NSFrameMatrix"/>
-								<string key="NSFrame">{{0, 45}, {482, 7}}</string>
+								<string key="NSFrame">{{0, 35}, {482, 7}}</string>
 								<reference key="NSSuperview" ref="588931221"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView"/>
@@ -138,7 +138,7 @@
 								<reference key="NSNextResponder" ref="588931221"/>
 								<int key="NSvFlags">1316</int>
 								<object class="NSPSMatrix" key="NSFrameMatrix"/>
-								<string key="NSFrameSize">{45, 45}</string>
+								<string key="NSFrameSize">{46, 35}</string>
 								<reference key="NSSuperview" ref="588931221"/>
 								<reference key="NSWindow"/>
 								<reference key="NSNextKeyView" ref="839563801"/>
@@ -159,7 +159,7 @@
 							</object>
 						</array>
 						<object class="NSPSMatrix" key="NSFrameMatrix"/>
-						<string key="NSFrameSize">{482, 52}</string>
+						<string key="NSFrameSize">{482, 42}</string>
 						<reference key="NSSuperview" ref="191373211"/>
 						<reference key="NSWindow"/>
 						<reference key="NSNextKeyView" ref="277224990"/>
@@ -171,7 +171,7 @@
 						<string key="targetRuntimeIdentifier">IBIPadFramework</string>
 					</object>
 				</array>
-				<string key="NSFrame">{{0, 20}, {482, 52}}</string>
+				<string key="NSFrame">{{0, 20}, {482, 42}}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
 				<reference key="NSNextKeyView" ref="588931221"/>

@@ -142,8 +142,52 @@
     NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
     NSString *json_string = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
     NSArray *responsedic = [parser objectWithString:json_string error:nil];
+    
+
+    
     return responsedic;
 
+}
+
++ (void)checkLoginData
+{
+    NSLog(@"checkLoginData");
+    //login data
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    NSArray *loginData = [defaults objectForKey:@"loginData"];
+    NSString *serviceUrl = @"";
+    NSString *login = @"";
+    NSString *password = @"";
+    NSString *javaServiceURL = [defaults objectForKey:@"javaWebserviceConnection"];
+    
+    if (loginData != nil) {
+        serviceUrl = [loginData objectAtIndex:0];
+        login = [loginData objectAtIndex:1];
+        password = [loginData objectAtIndex:2];
+    }
+    
+    //JSON request to web service
+    
+    SBJsonParser *parser = [[SBJsonParser alloc] init];
+    NSString *url = [[[[[[javaServiceURL stringByAppendingString:@"DataFetcher/checkLoginData?url="] stringByAppendingString:serviceUrl] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password];// stringByAppendingString:@"&response=application/json"];
+    
+    //sending request
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+    NSString *json_string = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
+    NSArray *responsedic = [parser objectWithString:json_string error:nil];
+    
+    
+    if ([responsedic count] > 0) {
+        NSLog([responsedic lastObject]);
+    } else {
+        NSLog([NSString stringWithFormat:@"%d", [responsedic count]]);
+        NSLog(serviceUrl);
+        NSLog(login);
+        NSLog(password);
+        NSLog(javaServiceURL);
+    }
+    
 }
 
 

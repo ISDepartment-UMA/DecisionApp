@@ -14,14 +14,15 @@
 #import "AlertView.h"
 #import "ModalViewPresenterViewController.h"
 #import "ButtonExternalBackground.h"
+#import "WebServiceConnector.h"
 
 @interface SettingsViewController ()
 
 //collaboration platform
 @property (strong, nonatomic) IBOutlet UIView *collaborationPlaformSubview;
 @property (strong, nonatomic) IBOutlet UITextView *collaborationURLTextView;
-@property (strong, nonatomic) IBOutlet UITextField *collaborationUserTextField;
-@property (strong, nonatomic) IBOutlet UITextField *collaborationPasswordTextField;
+@property (strong, nonatomic) IBOutlet UILabel *collaborationUserTextField;
+@property (strong, nonatomic) IBOutlet UILabel *collaborationPasswordTextField;
 
 //webservice
 @property (strong, nonatomic) IBOutlet UIView *webServiceSubview;
@@ -43,8 +44,10 @@
 @property (nonatomic) NSString *nameOfSuperCharacteristicToAddCharacteristic;
 @property (nonatomic, strong) NSString *kindOfPresentedTextView;
 
+//buttons
 @property (strong, nonatomic) IBOutlet ButtonExternalBackground *backButton;
 @property (strong, nonatomic) IBOutlet UIView *backButtonBackground;
+@property (strong, nonatomic) IBOutlet UIButton *addSuperCharButton;
 
 @end
 
@@ -68,9 +71,11 @@
 @synthesize kindOfPresentedTextView = _kindOfPresentedTextView;
 @synthesize backButton = _backButton;
 @synthesize backButtonBackground = _backButtonBackground;
+@synthesize addSuperCharButton = _addSuperCharButton;
 
 
 
+#pragma mark - Inherited Methods
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -93,13 +98,15 @@
     //delegate
     [self.characteristicsTableView setDelegate:self];
     [self.characteristicsTableView setDataSource:self];
-    [self.collaborationUserTextField setDelegate:self];
     [self.collaborationURLTextView setDelegate:self];
-    [self.collaborationPasswordTextField setDelegate:self];
     [self.webServiceURLTextView setDelegate:self];
     
     //back button
     [self.backButton setViewToChangeIfSelected:self.backButtonBackground];
+    //set symbol for entypo
+    [self.addSuperCharButton setTitle:@"\u2795" forState:UIControlStateSelected];
+    [self.addSuperCharButton setTitle:@"\u2795" forState:UIControlStateNormal];
+
     
     //rotation notifications
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
@@ -116,11 +123,9 @@
     [self setTextFieldsFromUserDefaults];
 }
 
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
+
+#pragma mark - Buttons Pressed
+
 
 - (IBAction)restoreDefaultsPressed:(id)sender {
     
@@ -136,13 +141,29 @@
     
 }
 
+- (IBAction)changeLoginDataPressed:(id)sender {
+    
+    //modal segue to show login screen
+    [self performSegueWithIdentifier:@"loginData" sender:self];
+    
+}
+
+
+- (IBAction)changeWebServiceUrlPressed:(id)sender {
+    
+    //modal segue to show web service screen
+    [self performSegueWithIdentifier:@"webServiceUrl" sender:self];
+}
+
 
 //back to main menu
 - (IBAction)backToPreviousViewController:(id)sender {
+    
     [self.navigationController popViewControllerAnimated:YES];
 }
 
 
+#pragma mark - Screen Content
 
 - (void)getRatingCharacteristics
 {
@@ -176,28 +197,13 @@
         }
         [tmp sortUsingSelector:@selector(compare:)];
         [subchar addObject:tmp];
-        
-        
     }
-    
     
     //set arrays
     self.SuperCharacteristics = superchar;
     self.Characteristics = subchar;
-    
-    
 }
 
-
-
-
-- (BOOL)textViewShouldBeginEditing:(UITextView *)textView {
-    
-    self.selectedTextFieldView = textView;
-    self.kindOfPresentedTextView = @"loginData";
-    [self performSegueWithIdentifier:@"textField" sender:self];
-    return YES;
-}
 
 - (void)modalViewControllerDismissedWithView:(UIView *)view
 {
@@ -230,7 +236,7 @@
         //username
         [loginData replaceObjectAtIndex:1 withObject:self.collaborationUserTextField.text];
         //password
-        [loginData replaceObjectAtIndex:2 withObject:self.collaborationPasswordTextField.text];
+        //[loginData replaceObjectAtIndex:2 withObject:self.collaborationPasswordTextField.text];
         
         //save data
         [defaults setObject:[loginData copy] forKey:@"loginData"];
@@ -308,34 +314,6 @@
     }
 }
 
-- (BOOL)textFieldShouldBeginEditing:(UITextField *)textField {
-    //do not perform segue for add superchar textfield
-    if (textField.tag == 35) {
-        return YES;
-    }
-    
-    self.selectedTextFieldView = textField;
-    self.kindOfPresentedTextView = @"loginData";
-    [self performSegueWithIdentifier:@"textField" sender:self];
-    return YES;
-}
-
-
-
-- (BOOL)textFieldShouldReturn:(UITextField *)textField {
-    //to add supercharacteristic
-    if (self.addSuperCharacteristicView) {
-        [self addSuperCharacteristic:nil];
-    }
-    //Terminate editing
-    [textField resignFirstResponder];
-    return YES;
-}
-
-
-
-
-
 - (void)setTextFieldsFromUserDefaults
 {
     NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
@@ -359,6 +337,12 @@
     
 }
 
+
+#pragma mark - Detect Rotation
+
+#define heightOfCollaborationPlatformView 270
+#define heightOfWebServiceInfoView 144
+
 //detect rotation
 - (void)deviceOrientationDidChange:(NSNotification *)notification {
     
@@ -368,17 +352,18 @@
         
         //projectinfo and component info subviews above evaluationsubview+
         //single values
+        CGFloat widthOfCharacteristicsView = self.characteristicsSubView.frame.size.width; //stays the same
+        CGFloat heightOfCharacteristicsView = (self.view.frame.size.height - 75 - heightOfCollaborationPlatformView);
         CGFloat widthOfInfoViews = ((self.view.frame.size.width - 60) / 2);
-        CGFloat heightOfAllViews = ((self.view.frame.size.height- 75)/2);
         
         //rects
-        CGRect projectInfoRect = CGRectMake(20, 55, widthOfInfoViews, heightOfAllViews);
-        CGRect componentInfoRect = CGRectMake((40 + widthOfInfoViews), 55, widthOfInfoViews, heightOfAllViews);
-        CGRect componentEvaluationRect = CGRectMake(20, (65 + heightOfAllViews), (self.view.frame.size.width - 40), heightOfAllViews);
+        CGRect collaborationPlatformRect = CGRectMake(20, 55, widthOfInfoViews, heightOfCollaborationPlatformView);
+        CGRect webServiceRect = CGRectMake((40 + widthOfInfoViews), 55, widthOfInfoViews, heightOfWebServiceInfoView);
+        CGRect characteristicsRect = CGRectMake(20, (65 + heightOfCollaborationPlatformView), widthOfCharacteristicsView, heightOfCharacteristicsView);
         
-        [self.collaborationPlaformSubview setFrame:projectInfoRect];
-        [self.webServiceSubview setFrame:componentInfoRect];
-        [self.characteristicsSubView setFrame:componentEvaluationRect];
+        [self.collaborationPlaformSubview setFrame:collaborationPlatformRect];
+        [self.webServiceSubview setFrame:webServiceRect];
+        [self.characteristicsSubView setFrame:characteristicsRect];
         
         //[self.projectDescriptionLabel sizeToFit];
         
@@ -389,20 +374,16 @@
         //projectinfo and component info subviews left of evaluationsubview
         //single values
         CGFloat widthOfAllViews = ((self.view.frame.size.width - 60) / 2);
-        CGFloat heightOfEvaluationView = (self.view.frame.size.height - 65);
-        CGFloat proportionProjectComponentInfo = 0.59;
-        CGFloat heightOfProjectInfoView = (heightOfEvaluationView * proportionProjectComponentInfo);
-        CGFloat heightOfComponentInfoView = ((heightOfEvaluationView * (1-proportionProjectComponentInfo)) - 10);
-        
+        CGFloat heightOfCharacteristicsView = (self.view.frame.size.height - 65);
         
         //rects
-        CGRect projectInfoRect = CGRectMake(20, 55, widthOfAllViews, heightOfProjectInfoView);
-        CGRect componentInfoRect = CGRectMake(20, (65 + heightOfProjectInfoView), widthOfAllViews, heightOfComponentInfoView);
-        CGRect componentEvaluationRect = CGRectMake((40 + widthOfAllViews), 55, widthOfAllViews, heightOfEvaluationView);
+        CGRect collaborationPlatformRect = CGRectMake(20, 55, widthOfAllViews, heightOfCollaborationPlatformView);
+        CGRect webServiceRect = CGRectMake(20, (65 + heightOfCollaborationPlatformView), widthOfAllViews, heightOfWebServiceInfoView);
+        CGRect characteristicsRect = CGRectMake((40 + widthOfAllViews), 55, widthOfAllViews, heightOfCharacteristicsView);
         
-        [self.collaborationPlaformSubview setFrame:projectInfoRect];
-        [self.webServiceSubview setFrame:componentInfoRect];
-        [self.characteristicsSubView setFrame:componentEvaluationRect];
+        [self.collaborationPlaformSubview setFrame:collaborationPlatformRect];
+        [self.webServiceSubview setFrame:webServiceRect];
+        [self.characteristicsSubView setFrame:characteristicsRect];
         
         //[self.projectDescriptionLabel sizeToFit];
     }
@@ -443,6 +424,9 @@
         
         UIButton *eraseButton = (UIButton *)[contentView viewWithTag:21];
         [eraseButton addTarget:self action:@selector(eraseCharacteristic:) forControlEvents:UIControlEventTouchUpInside];
+        [eraseButton setTitle:@"\u274C" forState:UIControlStateNormal];
+        [eraseButton setTitle:@"\u274C" forState:UIControlStateSelected];
+        
         
         
         
@@ -455,14 +439,17 @@
         
         //return cell of subcharacteristic
         //get cell
-        static NSString *CellIdentifier = @"CharacteristicCell";
+        static NSString *CellIdentifier = @"characteristicCell";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         //add label
-        UILabel *textLabel = (UILabel *)[cell viewWithTag:30];
+        UIView *contentView = [cell viewWithTag:19];
+        UILabel *textLabel = (UILabel *)[contentView viewWithTag:30];
         textLabel.text = [[self.Characteristics objectAtIndex:indexPath.section] objectAtIndex:indexPath.row-1];
         
-        UIButton *eraseButton = (UIButton *)[cell viewWithTag:31];
+        UIButton *eraseButton = (UIButton *)[contentView viewWithTag:31];
         [eraseButton addTarget:self action:@selector(eraseCharacteristic:) forControlEvents:UIControlEventTouchUpInside];
+        [eraseButton setTitle:@"\u274C" forState:UIControlStateNormal];
+        [eraseButton setTitle:@"\u274C" forState:UIControlStateSelected];
         
         return cell;
         
@@ -471,7 +458,11 @@
         static NSString *CellIdentifier = @"addCharacteristicCell";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         
-        UIButton *addButton = (UIButton *)[cell viewWithTag:22];
+        UIView *contentView = [cell viewWithTag:19];
+        UIButton *addButton = (UIButton *)[contentView viewWithTag:22];
+        //set symbol for entypo
+        [addButton setTitle:@"\u2795" forState:UIControlStateSelected];
+        [addButton setTitle:@"\u2795" forState:UIControlStateNormal];
         [addButton addTarget:self action:@selector(addCharacteristicSelected:) forControlEvents:UIControlEventTouchUpInside];
         
         return cell;
@@ -484,16 +475,19 @@
 - (CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (indexPath.row == 0) {
-        return 45;
+        return 39;
+    }
+    if (indexPath.row == ([[self.Characteristics objectAtIndex:indexPath.section] count]+1)) {
+        return 42;
     } else {
-        return 44;
+        return 39;
     }
 }
 
 
 #pragma mark - Show and Hide Views
 
-#define heightOfHeaderView   52
+#define heightOfHeaderView   42
 
 
 - (IBAction)showCellToAddSupercharacteristic:(id)sender {
@@ -555,6 +549,9 @@
 //called when user selects add button of characteristic
 - (void)addCharacteristicSelected:(UIButton *)sender
 {
+    // perform modal segue to add characteristic
+    
+    /*
     //get views
     UIView *superView = (UIView *)sender.superview;
     UITableViewCell *cell = (UITableViewCell *)superView.superview;
@@ -563,7 +560,7 @@
     NSArray *subviewArray = [[NSBundle mainBundle] loadNibNamed:@"AddCharacteristicTextField" owner:self options:nil];
     self.selectedTextFieldView = [subviewArray objectAtIndex:0];
     self.kindOfPresentedTextView = @"addCharacteristic";
-    [self performSegueWithIdentifier:@"textField" sender:cell];
+    [self performSegueWithIdentifier:@"textField" sender:cell];*/
 }
 
 
@@ -604,6 +601,11 @@
 
 - (void)addSuperCharacteristic:(UIButton *)sender
 {
+    //perform modal segue to add characteristic
+    
+    
+    
+    /*
     UITextField *textField = (UITextField *)[self.addSuperCharacteristicView viewWithTag:35];
     
 
@@ -634,7 +636,7 @@
             [self.addSuperCharacteristicButton setHidden:NO];
             
         }];
-    }
+    }*/
 }
 
 #pragma mark - Alert View Delegate

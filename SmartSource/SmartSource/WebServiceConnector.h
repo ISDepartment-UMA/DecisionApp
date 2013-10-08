@@ -14,5 +14,6 @@
 + (NSDictionary *)getComponentForID:(NSString *)componentID;
 + (NSArray *)getAllProjectNames;
 + (NSArray *)getProjectInfoArray:(NSString *)projectID;
++ (void)checkLoginData;
 
 @end

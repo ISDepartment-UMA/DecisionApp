@@ -110,6 +110,9 @@
 		6EA65C8117BE7EA30023F526 /* i.png in Resources */ = {isa = PBXBuildFile; fileRef = 6EA65C8017BE7EA20023F526 /* i.png */; };
 		6EA65C8717BE830F0023F526 /* ButtonExternalBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA65C8617BE830E0023F526 /* ButtonExternalBackground.m */; };
 		6EAF562516DFDB68004F027F /* ClassificationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EAF562416DFDB67004F027F /* ClassificationModel.m */; };
+		6EB2D8E81802E1A10002894D /* EntypoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB2D8E71802E1A10002894D /* EntypoButton.m */; };
+		6EB38955180457CA00D323BA /* LoginDataModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB38954180457CA00D323BA /* LoginDataModalViewController.m */; };
+		6EB3895818045CE500D323BA /* WebServiceModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB3895718045CE500D323BA /* WebServiceModalViewController.m */; };
 		6EBAD30617CE0146009A24E9 /* ModalViewPresenterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EBAD30517CE0146009A24E9 /* ModalViewPresenterViewController.m */; };
 		6EBAD30917CE0DFB009A24E9 /* VeraRomanTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EBAD30817CE0DFB009A24E9 /* VeraRomanTextField.m */; };
 		6EBAD30B17CE10CA009A24E9 /* AddCharacteristicTextField.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6EBAD30A17CE10C9009A24E9 /* AddCharacteristicTextField.xib */; };
@@ -247,7 +250,7 @@
 		6E56D7C816D2741E00A989AA /* ProjectModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectModel.h; sourceTree = "<group>"; };
 		6E56D7C916D2741E00A989AA /* ProjectModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectModel.m; sourceTree = "<group>"; };
 		6E56D7CC16D27D9000A989AA /* ComponentModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentModel.h; sourceTree = "<group>"; };
-		6E56D7CD16D27D9000A989AA /* ComponentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComponentModel.m; sourceTree = "<group>"; };
+		6E56D7CD16D27D9000A989AA /* ComponentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ComponentModel.m; path = SmartSource/ComponentModel.m; sourceTree = "<group>"; };
 		6E5907A015A5AD910064FD93 /* BNColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BNColor.h; sourceTree = "<group>"; };
 		6E5907A115A5AD910064FD93 /* BNColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BNColor.m; sourceTree = "<group>"; };
 		6E5907A215A5AD910064FD93 /* BNPieChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BNPieChart.h; sourceTree = "<group>"; };
@@ -308,6 +311,12 @@
 		6EA65C8617BE830E0023F526 /* ButtonExternalBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ButtonExternalBackground.m; path = SmartSource/ButtonExternalBackground.m; sourceTree = "<group>"; };
 		6EAF562316DFDB67004F027F /* ClassificationModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClassificationModel.h; sourceTree = "<group>"; };
 		6EAF562416DFDB67004F027F /* ClassificationModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClassificationModel.m; sourceTree = "<group>"; };
+		6EB2D8E61802E1A10002894D /* EntypoButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EntypoButton.h; path = SmartSource/EntypoButton.h; sourceTree = "<group>"; };
+		6EB2D8E71802E1A10002894D /* EntypoButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EntypoButton.m; path = SmartSource/EntypoButton.m; sourceTree = "<group>"; };
+		6EB38953180457CA00D323BA /* LoginDataModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginDataModalViewController.h; sourceTree = "<group>"; };
+		6EB38954180457CA00D323BA /* LoginDataModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginDataModalViewController.m; sourceTree = "<group>"; };
+		6EB3895618045CE500D323BA /* WebServiceModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebServiceModalViewController.h; sourceTree = "<group>"; };
+		6EB3895718045CE500D323BA /* WebServiceModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebServiceModalViewController.m; sourceTree = "<group>"; };
 		6EBAD30417CE0146009A24E9 /* ModalViewPresenterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalViewPresenterViewController.h; sourceTree = "<group>"; };
 		6EBAD30517CE0146009A24E9 /* ModalViewPresenterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalViewPresenterViewController.m; sourceTree = "<group>"; };
 		6EBAD30717CE0DFB009A24E9 /* VeraRomanTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VeraRomanTextField.h; path = SmartSource/VeraRomanTextField.h; sourceTree = "<group>"; };
@@ -568,8 +577,10 @@
 			children = (
 				6E11EADC17C43C8800CB10DD /* SettingsViewController.h */,
 				6E11EADD17C43C8800CB10DD /* SettingsViewController.m */,
-				6EBAD30417CE0146009A24E9 /* ModalViewPresenterViewController.h */,
-				6EBAD30517CE0146009A24E9 /* ModalViewPresenterViewController.m */,
+				6EB38953180457CA00D323BA /* LoginDataModalViewController.h */,
+				6EB38954180457CA00D323BA /* LoginDataModalViewController.m */,
+				6EB3895618045CE500D323BA /* WebServiceModalViewController.h */,
+				6EB3895718045CE500D323BA /* WebServiceModalViewController.m */,
 				6EF4375A159BA0D50038091B /* CharacteristicsTableViewController.h */,
 				6EF4375B159BA0D50038091B /* CharacteristicsTableViewController.m */,
 				6E109D6915A1CFAC00D3C9F0 /* SettingsTableViewControllerViewController.h */,
@@ -586,7 +597,6 @@
 				6E0474E8173A58EE006F4558 /* ProjectPlatformModel.h */,
 				6E0474E9173A58EE006F4558 /* ProjectPlatformModel.m */,
 				6E56D7CC16D27D9000A989AA /* ComponentModel.h */,
-				6E56D7CD16D27D9000A989AA /* ComponentModel.m */,
 				6E56D7C816D2741E00A989AA /* ProjectModel.h */,
 				6E56D7C916D2741E00A989AA /* ProjectModel.m */,
 			);
@@ -618,6 +628,7 @@
 		6E475F2017D7AE2B005E3209 /* XIB */ = {
 			isa = PBXGroup;
 			children = (
+				6E56D7CD16D27D9000A989AA /* ComponentModel.m */,
 				6EE16C7217CBD61300BCC7A0 /* EvaluationView.xib */,
 				6ED7362217C280160057C6BA /* SubCharacteristicsView.xib */,
 				6EBAD30A17CE10C9009A24E9 /* AddCharacteristicTextField.xib */,
@@ -656,6 +667,8 @@
 		6E8F470E17B51F8F000DDA7A /* Old */ = {
 			isa = PBXGroup;
 			children = (
+				6EBAD30417CE0146009A24E9 /* ModalViewPresenterViewController.h */,
+				6EBAD30517CE0146009A24E9 /* ModalViewPresenterViewController.m */,
 				6E7CF31E15A78BAD00FEF57A /* ChartViewController.h */,
 				6E7CF31F15A78BAD00FEF57A /* ChartViewController.m */,
 				6E59079F15A5AD7A0064FD93 /* ChartClasses */,
@@ -739,6 +752,8 @@
 				6E4DB46C17C7565900500FBE /* VeraRomanButton.m */,
 				6EBAD30717CE0DFB009A24E9 /* VeraRomanTextField.h */,
 				6EBAD30817CE0DFB009A24E9 /* VeraRomanTextField.m */,
+				6EB2D8E61802E1A10002894D /* EntypoButton.h */,
+				6EB2D8E71802E1A10002894D /* EntypoButton.m */,
 			);
 			name = FontLabels;
 			sourceTree = "<group>";
@@ -981,6 +996,9 @@
 				6E475F4317D7F259005E3209 /* EntypoLabel.m in Sources */,
 				6E1D97A017DD150E0076DD06 /* WeightSuperCharacteristicsViewController.m in Sources */,
 				6E7EDD5C17DFDD7E009D103C /* Project.m in Sources */,
+				6EB2D8E81802E1A10002894D /* EntypoButton.m in Sources */,
+				6EB38955180457CA00D323BA /* LoginDataModalViewController.m in Sources */,
+				6EB3895818045CE500D323BA /* WebServiceModalViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

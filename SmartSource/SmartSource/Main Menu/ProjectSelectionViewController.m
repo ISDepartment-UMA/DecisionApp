@@ -52,6 +52,7 @@
         //do nothing
     }
     
+    
     //in case projects from webservice are empty, start seperate thread that looks for them
     if ([[self.availableCells objectAtIndex:1] count] < 1) {
         [NSThread detachNewThreadSelector:@selector(keepLookingForProjects) toTarget:self withObject:nil];

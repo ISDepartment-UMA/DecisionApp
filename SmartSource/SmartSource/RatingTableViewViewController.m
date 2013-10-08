@@ -456,10 +456,11 @@
             
             //set size and text
             [text setText:self.textDescriptionLabel];
-            //[cell setFrame: CGRectMake(cell.frame.origin.x, cell.frame.origin.y, cell.frame.size.width, (self.heightDescriptionLabel + 40))];
-            //[contentView setFrame:CGRectMake(contentView.frame.origin.x, contentView.frame.origin.y, contentView.frame.size.width, self.heightDescriptionLabel + 40)];
-            //[text setFrame:CGRectMake(20, 9, (contentView.frame.size.width-101), self.heightDescriptionLabel)];
             
+            //put read more button at the end of text view
+            CGRect frameSuperView = moreLessButton.superview.frame;
+            CGRect frameReadMoreButton = CGRectMake((frameSuperView.size.width - moreLessButton.frame.size.width), (frameSuperView.size.height - moreLessButton.frame.size.height), moreLessButton.frame.size.width, moreLessButton.frame.size.height);
+            [moreLessButton setFrame:frameReadMoreButton];
             
             //if text has been shortened
             Component *rightComponent = [self.currentComponent getComponentObject];
