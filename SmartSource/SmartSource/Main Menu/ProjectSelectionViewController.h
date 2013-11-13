@@ -8,9 +8,10 @@
 
 #import <UIKit/UIKit.h>
 #import "ProjectPlatformModel.h"
+#import "ProjectPlatformModelDelegate.h"
 
 
-@interface ProjectSelectionViewController : UIViewController <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate>
+@interface ProjectSelectionViewController : UIViewController <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, ProjectPlatformModelDelegate>
 
 @property (nonatomic, strong) ProjectPlatformModel *platformModel;
 @end

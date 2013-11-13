@@ -13,4 +13,6 @@
 
 + (SuperCharacteristic *)addNewSuperCharacteristic:(NSString *)superCharacteristicName withWeight:(NSNumber *)weight toComponent:(NSString *)componentID andProject:(NSString *)projectID andManagedObjectContext:(NSManagedObjectContext *)context;
 + (void)saveWeight:(NSNumber *)weight forSuperCharacteristic:(NSString *)superChar inProject:(Project *)project andManagedObjectContext:(NSManagedObjectContext *)context;
++ (BOOL)deleteSuperCharacteristicWithName:(NSString *)superCharName fromComponentWithId:(NSString *)componentID andManagedObjectContext:(NSManagedObjectContext *)context;
++ (BOOL)replaceSupercharacteristic:(NSString *)supercharacteristicName withSupercharacteristic:(NSString *)newSupercharacteristicName inEveryProjectinManagedObjectContext:(NSManagedObjectContext *)context;
 @end

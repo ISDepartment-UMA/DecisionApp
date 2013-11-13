@@ -4,6 +4,83 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
     </dependencies>
     <scenes>
+        <!--Modal Alert View Controller-->
+        <scene sceneID="vsj-Wz-Hug">
+            <objects>
+                <viewController storyboardIdentifier="ModalAlertViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="UvD-z1-0bx" customClass="ModalAlertViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="422-VL-vtK">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="748"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" id="wsD-Fw-cVG">
+                                <rect key="frame" x="0.0" y="0.0" width="530" height="200"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="1" green="0.58039215690000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="rAL-Ch-TyE" customClass="VeraRomanButton">
+                                <rect key="frame" x="20" y="140" width="210" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Cancel">
+                                    <color key="titleColor" red="0.98039215690000003" green="0.95294117649999999" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="cancelButtonPressed:" destination="UvD-z1-0bx" eventType="touchUpInside" id="7eU-EE-gjT"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="WyC-Ik-DDX" customClass="VeraRomanButton">
+                                <rect key="frame" x="300" y="140" width="210" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <color key="backgroundColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Acknowledge">
+                                    <color key="titleColor" red="0.98039215690000003" green="0.95294117649999999" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <state key="selected">
+                                    <color key="titleColor" red="0.98039215690000003" green="0.95294117649999999" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="acknowledgeButtonPressed:" destination="UvD-z1-0bx" eventType="touchUpInside" id="o7U-1h-cNO"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Do you really want to delete ..?" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="8cR-DI-Vfy" customClass="VeraRomanLabel">
+                                <rect key="frame" x="20" y="60" width="490" height="63"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" red="0.98039215690000003" green="0.95294117649999999" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Title" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Wc0-7T-sLu" customClass="VeraBoldLabel">
+                                <rect key="frame" x="0.0" y="10" width="530" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                <color key="textColor" red="0.98039215690000003" green="0.95294117649999999" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="acknowledgeButton" destination="WyC-Ik-DDX" id="0Jr-9q-iYg"/>
+                        <outlet property="alertView" destination="wsD-Fw-cVG" id="SiQ-wS-Ctg"/>
+                        <outlet property="cancelButton" destination="rAL-Ch-TyE" id="Svw-9W-Qof"/>
+                        <outlet property="textLabel" destination="8cR-DI-Vfy" id="XTF-se-fbI"/>
+                        <outlet property="titleLabel" destination="Wc0-7T-sLu" id="see-Eu-bPc"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fMW-Dl-Muo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1866" y="-4967"/>
+        </scene>
         <!--Navigation Controller-->
         <scene sceneID="tGt-k9-yrN">
             <objects>
@@ -1145,11 +1222,11 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="bw2-HT-teE">
-                                <rect key="frame" x="0.0" y="0.0" width="530" height="350"/>
+                                <rect key="frame" x="0.0" y="0.0" width="530" height="400"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="COLLABORATION PLATFORM" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="t4g-OO-m8e" customClass="VeraBoldLabel">
-                                        <rect key="frame" x="111" y="20" width="379" height="20"/>
+                                        <rect key="frame" x="73" y="20" width="381" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <color key="textColor" red="0.98039215690000003" green="0.95294117649999999" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
@@ -1195,10 +1272,10 @@
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="1" green="0.8980392157" blue="0.76078431369999999" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
+                                        <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="ep7-Cn-PMt">
-                                        <rect key="frame" x="20" y="300" width="225" height="30"/>
+                                        <rect key="frame" x="20" y="350" width="210" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -1213,7 +1290,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="BYO-5H-RDn">
-                                        <rect key="frame" x="285" y="300" width="225" height="30"/>
+                                        <rect key="frame" x="300" y="350" width="210" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -1227,6 +1304,18 @@
                                             <action selector="saveButtonPressed:" destination="Xot-9R-oou" eventType="touchUpInside" id="9SD-oS-fJC"/>
                                         </connections>
                                     </button>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" style="whiteLarge" id="Im1-gk-opY">
+                                        <rect key="frame" x="245" y="343" width="37" height="37"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </activityIndicatorView>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="dM3-uF-TwD" customClass="VeraRomanLabel">
+                                        <rect key="frame" x="20" y="280" width="490" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.34901960784313724" green="0.34901960784313724" blue="0.34901960784313724" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="0.58039215690000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
@@ -1236,8 +1325,10 @@
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="Im1-gk-opY" id="Jwp-rd-9Zg"/>
                         <outlet property="loginView" destination="bw2-HT-teE" id="f88-Ok-w7v"/>
                         <outlet property="passwordTextField" destination="Th4-Xt-9Jv" id="XIc-5g-pTp"/>
+                        <outlet property="statusLabel" destination="dM3-uF-TwD" id="GSq-Uc-lfr"/>
                         <outlet property="urlTextView" destination="tjy-tJ-43I" id="Seg-YB-pfZ"/>
                         <outlet property="userTextField" destination="Iyj-ew-eQ5" id="UZL-E5-g6v"/>
                         <outlet property="view" destination="5lV-H5-ovi" id="jtU-Gn-4xE"/>
@@ -1259,7 +1350,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="540" height="89"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
-                                    <searchBar contentMode="redraw" barStyle="blackTranslucent" id="IYz-dh-2oT">
+                                    <searchBar contentMode="redraw" barStyle="blackTranslucent" id="IYz-dh-2oT" customClass="ProjectSearchBar">
                                         <rect key="frame" x="0.0" y="45" width="540" height="44"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="1" green="0.58039215690000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
@@ -1383,6 +1474,64 @@
             </objects>
             <point key="canvasLocation" x="689" y="-3733"/>
         </scene>
+        <!--Report Upload View Controller-->
+        <scene sceneID="dHE-ga-ZB4">
+            <objects>
+                <viewController id="VJT-Hs-E2v" customClass="ReportUploadViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="m2g-fq-TSx">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="748"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" id="BSM-hn-o1b">
+                                <rect key="frame" x="10" y="10" width="530" height="231"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Uploading Report to CodeBeamer...." textAlignment="center" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="kbg-Lk-ORH" customClass="VeraBoldLabel">
+                                        <rect key="frame" x="42" y="25" width="419" height="62"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" style="whiteLarge" id="Z4o-UJ-6kY">
+                                        <rect key="frame" x="233" y="95" width="37" height="37"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </activityIndicatorView>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="1LF-fN-Xqi">
+                                        <rect key="frame" x="146" y="168" width="210" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" title="Cancel">
+                                            <color key="titleColor" red="0.98039215690000003" green="0.95294117649999999" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="cancelButton:" destination="VJT-Hs-E2v" eventType="touchUpInside" id="hc9-Fy-8YR"/>
+                                        </connections>
+                                    </button>
+                                </subviews>
+                                <color key="backgroundColor" red="1" green="0.58039215690000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="activityIndicator" destination="Z4o-UJ-6kY" id="XgI-jf-3KF"/>
+                        <outlet property="cancelButton" destination="1LF-fN-Xqi" id="Dkh-NH-oPS"/>
+                        <outlet property="statusLabel" destination="kbg-Lk-ORH" id="aNv-tL-v4D"/>
+                        <outlet property="uploadView" destination="BSM-hn-o1b" id="D2q-05-xdx"/>
+                        <outlet property="view" destination="m2g-fq-TSx" id="foU-WS-9SH"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="pMd-LK-wKe" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1354" y="-3673"/>
+        </scene>
         <!--Results Overview View Controller-->
         <scene sceneID="4KB-dY-UQP">
             <objects>
@@ -1445,6 +1594,26 @@
                                         </subviews>
                                         <color key="backgroundColor" red="0.99215686270000003" green="0.80392156859999997" blue="0.5450980392" alpha="1" colorSpace="calibratedRGB"/>
                                     </view>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="NDF-ck-Bea" customClass="EntypoButton">
+                                        <rect key="frame" x="832" y="1" width="54" height="44"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="57"/>
+                                        <state key="normal" title="1">
+                                            <color key="titleColor" red="0.98039215690000003" green="0.94901960780000005" blue="0.93725490199999995" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="selected">
+                                            <color key="titleColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleShadowColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="shareButtonPressed:" destination="nKy-lr-vNb" eventType="touchUpInside" id="9rN-I5-Z9f"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="0.58039215690000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
@@ -1651,6 +1820,7 @@
                         <outlet property="backButton" destination="TLq-qU-Vb5" id="3tQ-5Z-Zud"/>
                         <outlet property="backButtonBackground" destination="XWa-Oq-jFQ" id="e09-Ov-rrj"/>
                         <outlet property="mainSubView" destination="4Yt-wk-e5F" id="WUL-zP-2k0"/>
+                        <outlet property="shareButton" destination="NDF-ck-Bea" id="T6J-Uy-toA"/>
                         <outlet property="subviewLabelCore" destination="Eet-KM-B0N" id="P2X-7c-kOX"/>
                         <outlet property="subviewLabelIndifferent" destination="eAV-tP-Gjl" id="6Fw-jz-6fu"/>
                         <outlet property="subviewLabelOutsourcing" destination="G1I-2C-n0f" id="cWu-hr-S0z"/>
@@ -1659,6 +1829,7 @@
                         <outlet property="tableViewOutsourcing" destination="Bur-ne-zVj" id="6a5-L7-qPs"/>
                         <segue destination="EVe-5d-wEw" kind="push" identifier="detailInfo" id="nnT-Qc-OVI"/>
                         <segue destination="2wh-do-skf" kind="push" identifier="explanation" id="MT5-MZ-btP"/>
+                        <segue destination="VJT-Hs-E2v" kind="modal" identifier="modalWaitingScreen" modalPresentationStyle="formSheet" id="NZk-dq-33G"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mb7-Jl-t1U" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -2881,6 +3052,90 @@
             </objects>
             <point key="canvasLocation" x="2451" y="-2502"/>
         </scene>
+        <!--Add Edit Characteristic Modal View Controller-->
+        <scene sceneID="od8-pQ-hfi">
+            <objects>
+                <viewController id="vh6-gZ-L2v" customClass="AddEditCharacteristicModalViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="jly-2m-2yE">
+                        <rect key="frame" x="0.0" y="0.0" width="1024" height="748"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" id="5bn-my-fFQ">
+                                <rect key="frame" x="247" y="274" width="530" height="200"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                <subviews>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Communication Complexity" minimumFontSize="17" id="sbh-5d-fus">
+                                        <rect key="frame" x="110" y="85" width="400" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="1" green="0.8980392157" blue="0.76078431369999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                        <textInputTraits key="textInputTraits"/>
+                                    </textField>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="AVM-ct-emb" customClass="VeraRomanButton">
+                                        <rect key="frame" x="20" y="150" width="210" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" title="Cancel">
+                                            <color key="titleColor" red="0.98039215690000003" green="0.95294117649999999" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="cancelButtonPressed:" destination="vh6-gZ-L2v" eventType="touchUpInside" id="6bK-9A-usu"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="0iK-5g-elq" customClass="VeraRomanButton">
+                                        <rect key="frame" x="300" y="150" width="210" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                        <state key="normal" title="Save">
+                                            <color key="titleColor" red="0.98039215690000003" green="0.95294117649999999" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <state key="selected">
+                                            <color key="titleColor" red="0.98039215690000003" green="0.95294117649999999" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <state key="highlighted">
+                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="saveButtonPressed:" destination="vh6-gZ-L2v" eventType="touchUpInside" id="RGO-WL-HtN"/>
+                                        </connections>
+                                    </button>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Name:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="xc5-rZ-tA0" customClass="VeraBoldLabel">
+                                        <rect key="frame" x="20" y="85" width="80" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.98039215690000003" green="0.95294117649999999" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Add Supercharacteristic" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="WZL-fV-JqL" customClass="VeraBoldLabel">
+                                        <rect key="frame" x="0.0" y="20" width="530" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="20"/>
+                                        <color key="textColor" red="0.98039215690000003" green="0.95294117649999999" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="1" green="0.58039215690000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
+                    </view>
+                    <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                    <connections>
+                        <outlet property="addCharacteristicView" destination="5bn-my-fFQ" id="DTl-QC-JmB"/>
+                        <outlet property="characteristicNameTextField" destination="sbh-5d-fus" id="F47-0r-n3w"/>
+                        <outlet property="titleLabel" destination="WZL-fV-JqL" id="GxS-T3-RzT"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="E6c-tK-cJa" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-342" y="-5734"/>
+        </scene>
         <!--Settings View Controller-->
         <scene sceneID="JUA-kT-19n">
             <objects>
@@ -2906,11 +3161,11 @@
                                             </label>
                                             <view contentMode="scaleToFill" id="NIE-Yj-w1d">
                                                 <rect key="frame" x="447" y="0.0" width="35" height="35"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
-                                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="OZG-uq-bn2">
+                                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="OZG-uq-bn2" customClass="EntypoLabel">
                                                         <rect key="frame" x="0.0" y="0.0" width="35" height="35"/>
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="57"/>
                                                         <color key="textColor" red="0.98039215686274506" green="0.95294117647058818" blue="0.94901960784313721" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
@@ -2985,14 +3240,17 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="tgq-Vu-NWC">
                                         <rect key="frame" x="405" y="0.0" width="77" height="71"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.32983070120000002" green="0.80199133830000002" blue="0.12428826279999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                        <state key="normal" title="Button">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        <state key="normal">
+                                            <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <state key="selected">
+                                            <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </state>
                                         <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
                                             <action selector="changeLoginDataPressed:" destination="eDI-VX-xiz" eventType="touchUpInside" id="U71-Kv-BDb"/>
@@ -3029,7 +3287,7 @@
                                                                     <color key="backgroundColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
                                                                 </view>
                                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="30" contentMode="left" text="Super Characteristic" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Kse-6u-ipc" customClass="VeraBoldLabel">
-                                                                    <rect key="frame" x="20" y="0.0" width="324" height="35"/>
+                                                                    <rect key="frame" x="20" y="0.0" width="416" height="35"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                                                     <color key="textColor" red="0.84705882349999995" green="0.84705882349999995" blue="0.84705882349999995" alpha="1" colorSpace="calibratedRGB"/>
@@ -3093,7 +3351,7 @@
                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                             <subviews>
                                                                 <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="30" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="NRu-81-Q0p" customClass="VeraRomanLabel">
-                                                                    <rect key="frame" x="5" y="0.0" width="251" height="35"/>
+                                                                    <rect key="frame" x="5" y="0.0" width="391" height="35"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                     <color key="textColor" red="0.84705882349999995" green="0.84705882349999995" blue="0.84705882349999995" alpha="1" colorSpace="calibratedRGB"/>
@@ -3242,7 +3500,7 @@
                                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 </state>
                                                 <connections>
-                                                    <action selector="showCellToAddSupercharacteristic:" destination="eDI-VX-xiz" eventType="touchUpInside" id="O5r-Mz-9hQ"/>
+                                                    <action selector="addSuperCharacteristicPressed:" destination="eDI-VX-xiz" eventType="touchUpInside" id="Oph-pa-pBn"/>
                                                 </connections>
                                             </button>
                                             <view contentMode="scaleToFill" id="5WZ-A4-vFs">
@@ -3335,11 +3593,11 @@
                                             </label>
                                             <view contentMode="scaleToFill" id="XUw-vr-Bp8">
                                                 <rect key="frame" x="447" y="0.0" width="35" height="35"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                                 <subviews>
-                                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="5KJ-XJ-jJm">
+                                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="1" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="5KJ-XJ-jJm" customClass="EntypoLabel">
                                                         <rect key="frame" x="0.0" y="0.0" width="35" height="35"/>
-                                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="57"/>
                                                         <color key="textColor" red="0.98039215690000003" green="0.95294117649999999" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
@@ -3375,14 +3633,17 @@
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="kht-ls-z5i">
                                         <rect key="frame" x="405" y="0.0" width="77" height="71"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.32983070120000002" green="0.80199133830000002" blue="0.12428826279999999" alpha="1" colorSpace="calibratedRGB"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal" title="Button">
-                                            <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                            <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                         </state>
+                                        <state key="selected">
+                                            <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        </state>
                                         <state key="highlighted">
-                                            <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                            <color key="titleColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                         </state>
                                         <connections>
                                             <action selector="changeWebServiceUrlPressed:" destination="eDI-VX-xiz" eventType="touchUpInside" id="gUf-cd-flW"/>
@@ -3424,9 +3685,13 @@
                         <outlet property="collaborationPlaformSubview" destination="b1w-oI-6mQ" id="4bO-gd-Lrl"/>
                         <outlet property="collaborationURLTextView" destination="lb0-WI-Qmp" id="blJ-fD-AyA"/>
                         <outlet property="collaborationUserTextField" destination="n3h-zc-wq5" id="RmG-uJ-tzJ"/>
+                        <outlet property="editSymbolLabelLogin" destination="OZG-uq-bn2" id="3ME-E8-ScJ"/>
+                        <outlet property="editSymbolLabelWebservice" destination="5KJ-XJ-jJm" id="c9r-Ct-oHc"/>
                         <outlet property="webServiceSubview" destination="m9G-e7-5dF" id="8jq-Iz-6Zb"/>
                         <outlet property="webServiceURLTextView" destination="WYy-4b-UdL" id="MQ9-S8-zSp"/>
                         <segue destination="Xot-9R-oou" kind="modal" identifier="loginData" modalPresentationStyle="formSheet" id="qat-c0-KJw"/>
+                        <segue destination="vh6-gZ-L2v" kind="modal" identifier="addCharacteristic" modalPresentationStyle="formSheet" id="XKm-DA-BCa"/>
+                        <segue destination="UvD-z1-0bx" kind="modal" identifier="modalAlert" modalPresentationStyle="formSheet" id="8eg-xx-WPz"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="MOF-gD-WGn" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -3442,11 +3707,11 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" id="Hus-eb-Gad">
-                                <rect key="frame" x="0.0" y="0.0" width="530" height="250"/>
+                                <rect key="frame" x="0.0" y="0.0" width="530" height="300"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <subviews>
                                     <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Web Service" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="0rV-w0-eAp" customClass="VeraBoldLabel">
-                                        <rect key="frame" x="111" y="20" width="379" height="24"/>
+                                        <rect key="frame" x="130" y="20" width="270" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="20"/>
                                         <color key="textColor" red="0.98039215690000003" green="0.95294117649999999" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
@@ -3466,8 +3731,8 @@
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                     </textView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="zeR-aj-g2h">
-                                        <rect key="frame" x="20" y="200" width="225" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="zeR-aj-g2h" customClass="VeraRomanButton">
+                                        <rect key="frame" x="20" y="250" width="210" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
@@ -3481,12 +3746,15 @@
                                             <action selector="cancelButtonPressed:" destination="v2w-Rq-0zx" eventType="touchUpInside" id="Wj8-id-WC0"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="FWH-Dh-TBZ">
-                                        <rect key="frame" x="285" y="200" width="225" height="30"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="FWH-Dh-TBZ" customClass="VeraRomanButton">
+                                        <rect key="frame" x="300" y="250" width="210" height="30"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <color key="backgroundColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
                                         <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                         <state key="normal" title="Save">
+                                            <color key="titleColor" red="0.98039215690000003" green="0.95294117649999999" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
+                                        </state>
+                                        <state key="selected">
                                             <color key="titleColor" red="0.98039215690000003" green="0.95294117649999999" blue="0.94901960780000005" alpha="1" colorSpace="calibratedRGB"/>
                                         </state>
                                         <state key="highlighted">
@@ -3496,6 +3764,18 @@
                                             <action selector="saveButtonPressed:" destination="v2w-Rq-0zx" eventType="touchUpInside" id="btu-JX-1XI"/>
                                         </connections>
                                     </button>
+                                    <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" style="whiteLarge" id="QRX-Oe-uvm">
+                                        <rect key="frame" x="247" y="246" width="37" height="37"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                    </activityIndicatorView>
+                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="UrX-es-E3b" customClass="VeraRomanLabel">
+                                        <rect key="frame" x="20" y="180" width="490" height="30"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" red="0.34901960780000002" green="0.34901960780000002" blue="0.34901960780000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="0.58039215690000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
@@ -3505,6 +3785,8 @@
                     </view>
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <connections>
+                        <outlet property="activityIndicator" destination="QRX-Oe-uvm" id="sMk-AR-1nn"/>
+                        <outlet property="statusLabel" destination="UrX-es-E3b" id="jbf-n3-Yxa"/>
                         <outlet property="urlTextView" destination="T5u-5o-QjC" id="3hQ-zl-HgM"/>
                         <outlet property="view" destination="PWY-7b-PnQ" id="Tqh-0e-4nX"/>
                         <outlet property="webServiceView" destination="Hus-eb-Gad" id="Qps-Dq-6M3"/>
@@ -3534,6 +3816,14 @@
         <image name="evaluation_pfeil.png" width="23" height="41"/>
     </resources>
     <classes>
+        <class className="AddEditCharacteristicModalViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/AddEditCharacteristicModalViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="addCharacteristicView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="characteristicNameTextField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="titleLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
         <class className="ButtonExternalBackground" superclassName="UIButton">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ButtonExternalBackground.h"/>
         </class>
@@ -3598,8 +3888,10 @@
         <class className="LoginDataModalViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/LoginDataModalViewController.h"/>
             <relationships>
+                <relationship kind="outlet" name="activityIndicator" candidateClass="UIActivityIndicatorView"/>
                 <relationship kind="outlet" name="loginView" candidateClass="UIView"/>
                 <relationship kind="outlet" name="passwordTextField" candidateClass="UITextField"/>
+                <relationship kind="outlet" name="statusLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="urlTextView" candidateClass="UITextView"/>
                 <relationship kind="outlet" name="userTextField" candidateClass="UITextField"/>
             </relationships>
@@ -3616,6 +3908,21 @@
                 <relationship kind="outlet" name="settingsButtonBackground" candidateClass="UIView"/>
                 <relationship kind="outlet" name="settingsLabel" candidateClass="UILabel"/>
             </relationships>
+        </class>
+        <class className="ModalAlertViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ModalAlertViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="acknowledgeButtonPressed:"/>
+                <relationship kind="action" name="cancelButtonPressed:"/>
+                <relationship kind="outlet" name="acknowledgeButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="alertView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="cancelButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="textLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="titleLabel" candidateClass="UILabel"/>
+            </relationships>
+        </class>
+        <class className="ProjectSearchBar" superclassName="UISearchBar">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ProjectSearchBar.h"/>
         </class>
         <class className="ProjectSelectionView" superclassName="UIView">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ProjectSelectionView.h"/>
@@ -3657,6 +3964,15 @@
                 <relationship kind="outlet" name="weightingCompleteLabel" candidateClass="UILabel"/>
             </relationships>
         </class>
+        <class className="ReportUploadViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ReportUploadViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="activityIndicator" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="cancelButton" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="statusLabel" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="uploadView" candidateClass="UIView"/>
+            </relationships>
+        </class>
         <class className="ResultExplanationViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/ResultExplanationViewController.h"/>
             <relationships>
@@ -3694,6 +4010,7 @@
                 <relationship kind="outlet" name="backButton" candidateClass="ButtonExternalBackground"/>
                 <relationship kind="outlet" name="backButtonBackground" candidateClass="UIView"/>
                 <relationship kind="outlet" name="mainSubView" candidateClass="UIView"/>
+                <relationship kind="outlet" name="shareButton" candidateClass="UIButton"/>
                 <relationship kind="outlet" name="subviewLabelCore" candidateClass="UIView"/>
                 <relationship kind="outlet" name="subviewLabelIndifferent" candidateClass="UIView"/>
                 <relationship kind="outlet" name="subviewLabelOutsourcing" candidateClass="UIView"/>
@@ -3718,6 +4035,8 @@
                 <relationship kind="outlet" name="collaborationPlaformSubview" candidateClass="UIView"/>
                 <relationship kind="outlet" name="collaborationURLTextView" candidateClass="UITextView"/>
                 <relationship kind="outlet" name="collaborationUserTextField" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="editSymbolLabelLogin" candidateClass="UILabel"/>
+                <relationship kind="outlet" name="editSymbolLabelWebservice" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="webServiceSubview" candidateClass="UIView"/>
                 <relationship kind="outlet" name="webServiceURLTextView" candidateClass="UITextView"/>
             </relationships>
@@ -3746,6 +4065,8 @@
         <class className="WebServiceModalViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/WebServiceModalViewController.h"/>
             <relationships>
+                <relationship kind="outlet" name="activityIndicator" candidateClass="UIActivityIndicatorView"/>
+                <relationship kind="outlet" name="statusLabel" candidateClass="UILabel"/>
                 <relationship kind="outlet" name="urlTextView" candidateClass="UITextView"/>
                 <relationship kind="outlet" name="webServiceView" candidateClass="UIView"/>
             </relationships>
@@ -3766,6 +4087,6 @@
         <simulatedScreenMetrics key="destination"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="5Oy-LN-PZB"/>
+        <segue reference="fCw-dR-Oa7"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -13,4 +13,5 @@
 + (Project *)getProjectForId:(NSString *)projectID fromManagedObjectContext:(NSManagedObjectContext *)context;
 + (NSArray *)getStoredAllStoredProjectsFromManagedObjectContext:(NSManagedObjectContext *)context;
 + (BOOL)deleteProjectWithID:(NSString *)projectID fromManagedObjectContext:(NSManagedObjectContext *)context;
++ (BOOL)saveContext:(NSManagedObjectContext *)context;
 @end

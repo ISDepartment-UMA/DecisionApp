@@ -10,9 +10,10 @@
 #import "Component+Factory.h"
 #import "Slider.h"
 #import "ProjectModel.h"
+#import "ModalAlertViewControllerDelegate.h"
 
 
-@interface RatingTableViewViewController : UIViewController <UISplitViewControllerDelegate, UITableViewDataSource, UITableViewDataSource>
+@interface RatingTableViewViewController : UIViewController <UISplitViewControllerDelegate, UITableViewDataSource, UITableViewDataSource, ModalAlertViewControllerDelegate>
 
 - (void)setProjectModel:(ProjectModel *)projectModel;
 - (ProjectModel *)getProjectModel;

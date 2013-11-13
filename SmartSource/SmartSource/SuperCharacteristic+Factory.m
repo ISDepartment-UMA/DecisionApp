@@ -33,8 +33,7 @@
     
     if (!matches || ([matches count] > 1)) {
         return nil;
-    } else if ([matches count] == 0) {
-        
+    } else if ([matches count] == 0) {        
         //add new entity of SuperCharacteristic and set the name
         superChar = [NSEntityDescription insertNewObjectForEntityForName:@"SuperCharacteristic" inManagedObjectContext:context];
         superChar.name = superCharacteristicName;
@@ -44,11 +43,7 @@
         superChar.rates = [Component addNewComponent:componentID toProject:projectID andManagedObjectContext:context];
         
         //save context
-        if (![context save:&error]) {
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
-        
+        [SuperCharacteristic saveContext:context];
         
     } else {
         superChar = [matches lastObject];
@@ -77,16 +72,68 @@
     for (SuperCharacteristic *rightSuperCharacteristic in matches) {
         rightSuperCharacteristic.weight = weight;
     }
+    //save context
+    [SuperCharacteristic saveContext:context];
     
+}
+
++ (BOOL)deleteSuperCharacteristicWithName:(NSString *)superCharName fromComponentWithId:(NSString *)componentID andManagedObjectContext:(NSManagedObjectContext *)context
+{
+    SuperCharacteristic *superChar = nil;
     
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"SuperCharacteristic"];
+    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"name =%@", superCharName];
+    NSPredicate *predicate3 = [NSPredicate predicateWithFormat:@"componentID =%@", componentID];
+    NSArray *predicates = [NSArray arrayWithObjects:predicate1, predicate3, nil];
+    request.predicate = [NSCompoundPredicate andPredicateWithSubpredicates:predicates];
+    NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    request.sortDescriptors = [NSArray arrayWithObject:sortDescription];
+    NSError *error = nil;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    
+    if ([matches count] == 1) {
+        superChar = [matches lastObject];
+        [context deleteObject:superChar];
+        return [SuperCharacteristic saveContext:context];
+    } else {
+        return NO;
+    }    
+}
+
++ (BOOL)replaceSupercharacteristic:(NSString *)supercharacteristicName withSupercharacteristic:(NSString *)newSupercharacteristicName inEveryProjectinManagedObjectContext:(NSManagedObjectContext *)context
+{
+    //get all supercharacteristics with the name, no matter which project
+    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"SuperCharacteristic"];
+    NSPredicate *predicate1 = [NSPredicate predicateWithFormat:@"name =%@", supercharacteristicName];
+    NSArray *predicates = [NSArray arrayWithObjects:predicate1, nil];
+    request.predicate = [NSCompoundPredicate andPredicateWithSubpredicates:predicates];
+    NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
+    request.sortDescriptors = [NSArray arrayWithObject:sortDescription];
+    NSError *error = nil;
+    NSArray *matches = [context executeFetchRequest:request error:&error];
+    //rename them and save context
+    if ([matches count] > 0) {
+        for (SuperCharacteristic *charact in matches) {
+            charact.name = newSupercharacteristicName;
+        }
+        return [SuperCharacteristic saveContext:context];
+    } else {
+        return NO;
+    }
+}
+
+//save context in current managed object context
++ (BOOL)saveContext:(NSManagedObjectContext *)context
+{
+    //save context
+    NSError *error = nil;
     if (![context save:&error]) {
-        
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"The Project Rating could not be saved!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
+        return NO;
+    } else  {
+        return YES;
     }
-    
 }
 
 

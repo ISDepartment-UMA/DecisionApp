@@ -82,19 +82,15 @@
 {
     [super viewDidLoad];
     self.platformModel = [[ProjectPlatformModel alloc] init];
-    
+    //entypo buttons
     [self.scrollView setBackgroundColor:[UIColor whiteColor]];
     [self.scrollView setDelegate:self];
     [self.settingsLabel setText:@"\u2699"];
     [self.infoLabel setText:@"\u2139"];
     [self.evaluationView setDelegate:self];
     [self.resultView setDelegate:self];
-    
+    //external background button
     [self.settingsButton setViewToChangeIfSelected:self.settingsButtonBackground];
-    
-    
-
-    
     //rotation notifications
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:   @selector(deviceOrientationDidChange:) name: UIDeviceOrientationDidChangeNotification object: nil];
@@ -196,12 +192,6 @@
     [NSThread detachNewThreadSelector:@selector(startActivityIndicator) toTarget:self.evaluationView withObject:nil];
     [NSThread detachNewThreadSelector:@selector(startActivityIndicator) toTarget:self.resultView withObject:nil];
     
-    
-    
-    
-
-    
-    
     //get selected project from project platform model
     NSArray *project = [self.platformModel getSelectedProject];
     
@@ -214,7 +204,6 @@
         [self reactivateUserInteraction];
         return;
     }
-    
     
     //project model already exists
     if (self.projectModel) {
@@ -314,16 +303,12 @@
         //disappear
         [self dismissModalViewControllerAnimated:YES];
     } else {
-        
-        
         //deactivate all user interaction
         [NSThread detachNewThreadSelector:@selector(deactivateUserInteraction) toTarget:self withObject:nil];
-        
         //put activity indicator
         [NSThread detachNewThreadSelector:@selector(startActivityIndicator) toTarget:self.projectSelectionSubview withObject:nil];
         [NSThread detachNewThreadSelector:@selector(startActivityIndicator) toTarget:self.evaluationView withObject:nil];
         [NSThread detachNewThreadSelector:@selector(startActivityIndicator) toTarget:self.resultView withObject:nil];
-        
         //reload project details from collaboration platform
         [NSThread detachNewThreadSelector:@selector(updateSelectedProject) toTarget:self withObject:nil];
         
@@ -332,13 +317,10 @@
 }
 
 
-
-
 - (void)updateSelectedProject
 {
     //update characteristics
     self.projectModel = [self.projectModel updateCoreDataBaseForProjectID:[self.projectInfo objectAtIndex:0]];
-
     //wait for completion
     while (!self.projectModel) {
         //do nothing
@@ -375,8 +357,6 @@
     }
     
 }
-
-
 
 //method to be called when results button is pressed
 //will segue to results screen
@@ -418,14 +398,6 @@
         [settingsVC setMainMenu:self];
     }
 }
-
-
-
-
-
-
-
-
 
 
 - (void)viewDidUnload {

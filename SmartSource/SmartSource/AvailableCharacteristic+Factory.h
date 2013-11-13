@@ -11,4 +11,7 @@
 @interface AvailableCharacteristic (Factory)
 + (AvailableCharacteristic *)addNewAvailableCharacteristic:(NSString *)name toSuperCharacteristic:(NSString *)name toManagedObjectContext:(NSManagedObjectContext *)context;
 + (BOOL)replaceAvailableCharacteristic:(NSString *)characteristicName withAvailableCharacteristic:(NSString *)newCharacteristicName inManagedObjectContext:(NSManagedObjectContext *)context;
++ (BOOL)deleteAvailableCharacteristicNamed:(NSString *)name fromManagedObjectContext:(NSManagedObjectContext *)context
+;
++ (NSArray *)getAllAvailableSuperCharacteristicsFromManagedObjectContext:(NSManagedObjectContext *)context;
 @end

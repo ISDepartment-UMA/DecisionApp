@@ -17,7 +17,6 @@
 		6E0741CE159474BB000C480E /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E0741CD159474BB000C480E /* main.m */; };
 		6E0741D2159474BB000C480E /* SmartSourceAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E0741D1159474BB000C480E /* SmartSourceAppDelegate.m */; };
 		6E0741D5159474BB000C480E /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6E0741D3159474BB000C480E /* MainStoryboard.storyboard */; };
-		6E0741EA159479E3000C480E /* DetailTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E0741E9159479E3000C480E /* DetailTableViewController.m */; };
 		6E07420515947B8A000C480E /* NSObject+SBJson.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E0741ED15947B8A000C480E /* NSObject+SBJson.m */; };
 		6E07420615947B8A000C480E /* SBJsonParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E0741F015947B8A000C480E /* SBJsonParser.m */; };
 		6E07420715947B8A000C480E /* SBJsonStreamParser.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E0741F215947B8A000C480E /* SBJsonStreamParser.m */; };
@@ -65,9 +64,10 @@
 		6E475F2A17D7DC0B005E3209 /* Component.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E475F2917D7DC0B005E3209 /* Component.m */; };
 		6E475F4017D7F1F7005E3209 /* Entypo.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 6E475F3F17D7F1F7005E3209 /* Entypo.ttf */; };
 		6E475F4317D7F259005E3209 /* EntypoLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E475F4217D7F259005E3209 /* EntypoLabel.m */; };
-		6E4DB46717C7453800500FBE /* AddSuperCharacteristicView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E4DB46617C7453800500FBE /* AddSuperCharacteristicView.xib */; };
 		6E4DB46A17C755F200500FBE /* VeraRomanTextView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4DB46917C755F200500FBE /* VeraRomanTextView.m */; };
 		6E4DB46D17C7565900500FBE /* VeraRomanButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E4DB46C17C7565900500FBE /* VeraRomanButton.m */; };
+		6E538F3318140F4D00F8C8C0 /* AddEditCharacteristicModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E538F3218140F4D00F8C8C0 /* AddEditCharacteristicModalViewController.m */; };
+		6E5517681815529B00A1E09E /* SettingsModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E5517671815529B00A1E09E /* SettingsModel.m */; };
 		6E56D7CA16D2741E00A989AA /* ProjectModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E56D7C916D2741E00A989AA /* ProjectModel.m */; };
 		6E56D7CE16D27D9000A989AA /* ComponentModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E56D7CD16D27D9000A989AA /* ComponentModel.m */; };
 		6E5907A415A5AD910064FD93 /* BNColor.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E5907A115A5AD910064FD93 /* BNColor.m */; };
@@ -89,7 +89,6 @@
 		6E6E278617A9791F008E4120 /* Start_Next_Inactive.png in Resources */ = {isa = PBXBuildFile; fileRef = 6E6E277B17A9791E008E4120 /* Start_Next_Inactive.png */; };
 		6E6E278817A9791F008E4120 /* Start_Result_Inactive.png in Resources */ = {isa = PBXBuildFile; fileRef = 6E6E277D17A9791E008E4120 /* Start_Result_Inactive.png */; };
 		6E6E278917A9791F008E4120 /* Start_Settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6E6E277E17A9791E008E4120 /* Start_Settings.png */; };
-		6E7CF32015A78BAD00FEF57A /* ChartViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E7CF31F15A78BAD00FEF57A /* ChartViewController.m */; };
 		6E7CF34115A7B16300FEF57A /* Characteristic.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E7CF33215A7B16300FEF57A /* Characteristic.m */; };
 		6E7CF34215A7B16300FEF57A /* Characteristic+Factory.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E7CF33415A7B16300FEF57A /* Characteristic+Factory.m */; };
 		6E7CF34415A7B16300FEF57A /* Component+Factory.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E7CF33815A7B16300FEF57A /* Component+Factory.m */; };
@@ -97,7 +96,6 @@
 		6E7CF34815A7B16300FEF57A /* SuperCharacteristic+Factory.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E7CF34015A7B16300FEF57A /* SuperCharacteristic+Factory.m */; };
 		6E7CF35115A7B3C500FEF57A /* CoreDataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 6E7CF34F15A7B3C400FEF57A /* CoreDataModel.xcdatamodeld */; };
 		6E7CF35415A7B3DF00FEF57A /* SuperCharacteristic.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E7CF35315A7B3DF00FEF57A /* SuperCharacteristic.m */; };
-		6E7EDD5C17DFDD7E009D103C /* Project.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E7EDD5B17DFDD7E009D103C /* Project.m */; };
 		6E80892115A605EB00654468 /* AvailableCharacteristic+Factory.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E80891E15A605EB00654468 /* AvailableCharacteristic+Factory.m */; };
 		6E80892215A605EB00654468 /* AvailableSuperCharacteristic+Factory.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E80892015A605EB00654468 /* AvailableSuperCharacteristic+Factory.m */; };
 		6E8BDB6B17C22852001876BF /* ScaleView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6E8BDB6A17C22852001876BF /* ScaleView.xib */; };
@@ -105,17 +103,25 @@
 		6E8F470917B50F9D000DDA7A /* EvaluationView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E8F470817B50F9D000DDA7A /* EvaluationView.m */; };
 		6E8F471217B51FE1000DDA7A /* ProjectSelectionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E8F471117B51FE1000DDA7A /* ProjectSelectionView.m */; };
 		6E95CFDB15BA2A880082B69D /* delete.png in Resources */ = {isa = PBXBuildFile; fileRef = 6E95CFDA15BA2A880082B69D /* delete.png */; };
+		6E9766C018159140006961E0 /* ModalAlertViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E9766BF18159140006961E0 /* ModalAlertViewController.m */; };
+		6E9766C31815CB4B006961E0 /* PDFExporter.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E9766C21815CB4B006961E0 /* PDFExporter.m */; };
+		6E9A060C181FBFB700D37939 /* CFNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E9A060B181FBFB700D37939 /* CFNetwork.framework */; };
+		6E9A06871820121C00D37939 /* Project.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E9A06861820121C00D37939 /* Project.m */; };
+		6E9F81901831325300CB3230 /* ProjectSearchBar.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E9F818F1831325300CB3230 /* ProjectSearchBar.m */; };
+		6EA02AC5182690400059CF07 /* UIColor+SmartSourceColors.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA02AC4182690400059CF07 /* UIColor+SmartSourceColors.m */; };
 		6EA65C7D17BE635A0023F526 /* thumb.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6EA65C7C17BE635A0023F526 /* thumb.jpg */; };
 		6EA65C7F17BE65310023F526 /* Start_Project.png in Resources */ = {isa = PBXBuildFile; fileRef = 6EA65C7E17BE65310023F526 /* Start_Project.png */; };
 		6EA65C8117BE7EA30023F526 /* i.png in Resources */ = {isa = PBXBuildFile; fileRef = 6EA65C8017BE7EA20023F526 /* i.png */; };
 		6EA65C8717BE830F0023F526 /* ButtonExternalBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EA65C8617BE830E0023F526 /* ButtonExternalBackground.m */; };
-		6EAF562516DFDB68004F027F /* ClassificationModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EAF562416DFDB67004F027F /* ClassificationModel.m */; };
+		6EA66614182E71EF0076F4F1 /* search_bar_background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6EA66612182E71EF0076F4F1 /* search_bar_background.jpg */; };
+		6EA66615182E71EF0076F4F1 /* search_bar_textfield.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6EA66613182E71EF0076F4F1 /* search_bar_textfield.jpg */; };
+		6EAC441F182109080083B1CF /* SmartSourcePopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EAC441E182109080083B1CF /* SmartSourcePopoverController.m */; };
+		6EAC442218210BC30083B1CF /* SmartSourcePopoverBackgroundView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EAC442118210BC30083B1CF /* SmartSourcePopoverBackgroundView.m */; };
+		6EAC4425182114750083B1CF /* ReportUploadViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EAC4424182114750083B1CF /* ReportUploadViewController.m */; };
 		6EB2D8E81802E1A10002894D /* EntypoButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB2D8E71802E1A10002894D /* EntypoButton.m */; };
 		6EB38955180457CA00D323BA /* LoginDataModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB38954180457CA00D323BA /* LoginDataModalViewController.m */; };
 		6EB3895818045CE500D323BA /* WebServiceModalViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB3895718045CE500D323BA /* WebServiceModalViewController.m */; };
-		6EBAD30617CE0146009A24E9 /* ModalViewPresenterViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EBAD30517CE0146009A24E9 /* ModalViewPresenterViewController.m */; };
 		6EBAD30917CE0DFB009A24E9 /* VeraRomanTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EBAD30817CE0DFB009A24E9 /* VeraRomanTextField.m */; };
-		6EBAD30B17CE10CA009A24E9 /* AddCharacteristicTextField.xib in Resources */ = {isa = PBXBuildFile; fileRef = 6EBAD30A17CE10C9009A24E9 /* AddCharacteristicTextField.xib */; };
 		6EBC1C6D17C57CB8009A8372 /* hintergrund_textfield_settings.png in Resources */ = {isa = PBXBuildFile; fileRef = 6EBC1C6C17C57CB8009A8372 /* hintergrund_textfield_settings.png */; };
 		6EBC5DC317BECE34008199F1 /* Checkbox-not-Selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 6EBC5DC117BECE34008199F1 /* Checkbox-not-Selected.png */; };
 		6EBC5DC417BECE34008199F1 /* Checkbox-Selected.png in Resources */ = {isa = PBXBuildFile; fileRef = 6EBC5DC217BECE34008199F1 /* Checkbox-Selected.png */; };
@@ -162,8 +168,6 @@
 		6E0741D0159474BB000C480E /* SmartSourceAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = SmartSourceAppDelegate.h; path = SmartSource/SmartSourceAppDelegate.h; sourceTree = "<group>"; };
 		6E0741D1159474BB000C480E /* SmartSourceAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = SmartSourceAppDelegate.m; path = SmartSource/SmartSourceAppDelegate.m; sourceTree = "<group>"; };
 		6E0741D4159474BB000C480E /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
-		6E0741E8159479E3000C480E /* DetailTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailTableViewController.h; sourceTree = "<group>"; };
-		6E0741E9159479E3000C480E /* DetailTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DetailTableViewController.m; sourceTree = "<group>"; };
 		6E0741EC15947B8A000C480E /* NSObject+SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSObject+SBJson.h"; sourceTree = "<group>"; };
 		6E0741ED15947B8A000C480E /* NSObject+SBJson.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSObject+SBJson.m"; sourceTree = "<group>"; };
 		6E0741EE15947B8A000C480E /* SBJson.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SBJson.h; sourceTree = "<group>"; };
@@ -242,15 +246,19 @@
 		6E475F3F17D7F1F7005E3209 /* Entypo.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Entypo.ttf; sourceTree = "<group>"; };
 		6E475F4117D7F259005E3209 /* EntypoLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EntypoLabel.h; path = SmartSource/EntypoLabel.h; sourceTree = "<group>"; };
 		6E475F4217D7F259005E3209 /* EntypoLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EntypoLabel.m; path = SmartSource/EntypoLabel.m; sourceTree = "<group>"; };
-		6E4DB46617C7453800500FBE /* AddSuperCharacteristicView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AddSuperCharacteristicView.xib; path = SmartSource/AddSuperCharacteristicView.xib; sourceTree = "<group>"; };
 		6E4DB46817C755F200500FBE /* VeraRomanTextView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VeraRomanTextView.h; path = SmartSource/VeraRomanTextView.h; sourceTree = "<group>"; };
 		6E4DB46917C755F200500FBE /* VeraRomanTextView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VeraRomanTextView.m; path = SmartSource/VeraRomanTextView.m; sourceTree = "<group>"; };
 		6E4DB46B17C7565900500FBE /* VeraRomanButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VeraRomanButton.h; path = SmartSource/VeraRomanButton.h; sourceTree = "<group>"; };
 		6E4DB46C17C7565900500FBE /* VeraRomanButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VeraRomanButton.m; path = SmartSource/VeraRomanButton.m; sourceTree = "<group>"; };
+		6E538F3118140F4D00F8C8C0 /* AddEditCharacteristicModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddEditCharacteristicModalViewController.h; sourceTree = "<group>"; };
+		6E538F3218140F4D00F8C8C0 /* AddEditCharacteristicModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddEditCharacteristicModalViewController.m; sourceTree = "<group>"; };
+		6E55176518154F6900A1E09E /* AddEditCharacteristicDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = AddEditCharacteristicDelegate.h; path = Protocols/AddEditCharacteristicDelegate.h; sourceTree = "<group>"; };
+		6E5517661815529B00A1E09E /* SettingsModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SettingsModel.h; sourceTree = "<group>"; };
+		6E5517671815529B00A1E09E /* SettingsModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SettingsModel.m; sourceTree = "<group>"; };
 		6E56D7C816D2741E00A989AA /* ProjectModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectModel.h; sourceTree = "<group>"; };
 		6E56D7C916D2741E00A989AA /* ProjectModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectModel.m; sourceTree = "<group>"; };
 		6E56D7CC16D27D9000A989AA /* ComponentModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentModel.h; sourceTree = "<group>"; };
-		6E56D7CD16D27D9000A989AA /* ComponentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ComponentModel.m; path = SmartSource/ComponentModel.m; sourceTree = "<group>"; };
+		6E56D7CD16D27D9000A989AA /* ComponentModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ComponentModel.m; sourceTree = "<group>"; };
 		6E5907A015A5AD910064FD93 /* BNColor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BNColor.h; sourceTree = "<group>"; };
 		6E5907A115A5AD910064FD93 /* BNColor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BNColor.m; sourceTree = "<group>"; };
 		6E5907A215A5AD910064FD93 /* BNPieChart.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BNPieChart.h; sourceTree = "<group>"; };
@@ -274,8 +282,6 @@
 		6E6E277B17A9791E008E4120 /* Start_Next_Inactive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Start_Next_Inactive.png; path = pics/Start_Next_Inactive.png; sourceTree = "<group>"; };
 		6E6E277D17A9791E008E4120 /* Start_Result_Inactive.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Start_Result_Inactive.png; path = pics/Start_Result_Inactive.png; sourceTree = "<group>"; };
 		6E6E277E17A9791E008E4120 /* Start_Settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Start_Settings.png; path = pics/Start_Settings.png; sourceTree = "<group>"; };
-		6E7CF31E15A78BAD00FEF57A /* ChartViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ChartViewController.h; sourceTree = "<group>"; };
-		6E7CF31F15A78BAD00FEF57A /* ChartViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ChartViewController.m; sourceTree = "<group>"; };
 		6E7CF33115A7B16300FEF57A /* Characteristic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Characteristic.h; sourceTree = "<group>"; };
 		6E7CF33215A7B16300FEF57A /* Characteristic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Characteristic.m; sourceTree = "<group>"; };
 		6E7CF33315A7B16300FEF57A /* Characteristic+Factory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Characteristic+Factory.h"; sourceTree = "<group>"; };
@@ -289,8 +295,6 @@
 		6E7CF35015A7B3C500FEF57A /* CoreDataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CoreDataModel.xcdatamodel; sourceTree = "<group>"; };
 		6E7CF35215A7B3DE00FEF57A /* SuperCharacteristic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SuperCharacteristic.h; sourceTree = "<group>"; };
 		6E7CF35315A7B3DF00FEF57A /* SuperCharacteristic.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SuperCharacteristic.m; sourceTree = "<group>"; };
-		6E7EDD5A17DFDD7E009D103C /* Project.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Project.h; sourceTree = "<group>"; };
-		6E7EDD5B17DFDD7E009D103C /* Project.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Project.m; sourceTree = "<group>"; };
 		6E80891D15A605EB00654468 /* AvailableCharacteristic+Factory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AvailableCharacteristic+Factory.h"; sourceTree = "<group>"; };
 		6E80891E15A605EB00654468 /* AvailableCharacteristic+Factory.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AvailableCharacteristic+Factory.m"; sourceTree = "<group>"; };
 		6E80891F15A605EB00654468 /* AvailableSuperCharacteristic+Factory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "AvailableSuperCharacteristic+Factory.h"; sourceTree = "<group>"; };
@@ -304,24 +308,41 @@
 		6E8F471117B51FE1000DDA7A /* ProjectSelectionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectSelectionView.m; sourceTree = "<group>"; };
 		6E8F471317B5339F000DDA7A /* EvaluationViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EvaluationViewDelegate.h; sourceTree = "<group>"; };
 		6E95CFDA15BA2A880082B69D /* delete.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = delete.png; sourceTree = "<group>"; };
+		6E9766BE18159140006961E0 /* ModalAlertViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalAlertViewController.h; sourceTree = "<group>"; };
+		6E9766BF18159140006961E0 /* ModalAlertViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalAlertViewController.m; sourceTree = "<group>"; };
+		6E9766C11815CB4B006961E0 /* PDFExporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PDFExporter.h; sourceTree = "<group>"; };
+		6E9766C21815CB4B006961E0 /* PDFExporter.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PDFExporter.m; sourceTree = "<group>"; };
+		6E9A060B181FBFB700D37939 /* CFNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CFNetwork.framework; path = System/Library/Frameworks/CFNetwork.framework; sourceTree = SDKROOT; };
+		6E9A06851820121C00D37939 /* Project.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Project.h; path = CoreData/Project.h; sourceTree = "<group>"; };
+		6E9A06861820121C00D37939 /* Project.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Project.m; path = CoreData/Project.m; sourceTree = "<group>"; };
+		6E9F818E1831325300CB3230 /* ProjectSearchBar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProjectSearchBar.h; sourceTree = "<group>"; };
+		6E9F818F1831325300CB3230 /* ProjectSearchBar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProjectSearchBar.m; sourceTree = "<group>"; };
+		6E9F819118313B5A00CB3230 /* ModalAlertViewControllerDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ModalAlertViewControllerDelegate.h; path = SmartSource/Protocols/ModalAlertViewControllerDelegate.h; sourceTree = "<group>"; };
+		6EA02AC3182690400059CF07 /* UIColor+SmartSourceColors.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIColor+SmartSourceColors.h"; sourceTree = "<group>"; };
+		6EA02AC4182690400059CF07 /* UIColor+SmartSourceColors.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIColor+SmartSourceColors.m"; sourceTree = "<group>"; };
 		6EA65C7C17BE635A0023F526 /* thumb.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = thumb.jpg; sourceTree = "<group>"; };
 		6EA65C7E17BE65310023F526 /* Start_Project.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Start_Project.png; sourceTree = "<group>"; };
 		6EA65C8017BE7EA20023F526 /* i.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = i.png; sourceTree = "<group>"; };
 		6EA65C8517BE830E0023F526 /* ButtonExternalBackground.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ButtonExternalBackground.h; path = SmartSource/ButtonExternalBackground.h; sourceTree = "<group>"; };
 		6EA65C8617BE830E0023F526 /* ButtonExternalBackground.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ButtonExternalBackground.m; path = SmartSource/ButtonExternalBackground.m; sourceTree = "<group>"; };
-		6EAF562316DFDB67004F027F /* ClassificationModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ClassificationModel.h; sourceTree = "<group>"; };
-		6EAF562416DFDB67004F027F /* ClassificationModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ClassificationModel.m; sourceTree = "<group>"; };
+		6EA66611182E603F0076F4F1 /* ProjectPlatformModelDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ProjectPlatformModelDelegate.h; path = SmartSource/Protocols/ProjectPlatformModelDelegate.h; sourceTree = "<group>"; };
+		6EA66612182E71EF0076F4F1 /* search_bar_background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = search_bar_background.jpg; sourceTree = "<group>"; };
+		6EA66613182E71EF0076F4F1 /* search_bar_textfield.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = search_bar_textfield.jpg; sourceTree = "<group>"; };
+		6EA91D9418216BFC006B01BF /* UploadCompleteHandler.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = UploadCompleteHandler.h; path = SmartSource/UploadCompleteHandler.h; sourceTree = "<group>"; };
+		6EAC441D182109080083B1CF /* SmartSourcePopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmartSourcePopoverController.h; path = SmartSource/SmartSourcePopoverController.h; sourceTree = "<group>"; };
+		6EAC441E182109080083B1CF /* SmartSourcePopoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmartSourcePopoverController.m; path = SmartSource/SmartSourcePopoverController.m; sourceTree = "<group>"; };
+		6EAC442018210BC30083B1CF /* SmartSourcePopoverBackgroundView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SmartSourcePopoverBackgroundView.h; path = SmartSource/SmartSourcePopoverBackgroundView.h; sourceTree = "<group>"; };
+		6EAC442118210BC30083B1CF /* SmartSourcePopoverBackgroundView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SmartSourcePopoverBackgroundView.m; path = SmartSource/SmartSourcePopoverBackgroundView.m; sourceTree = "<group>"; };
+		6EAC4423182114750083B1CF /* ReportUploadViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReportUploadViewController.h; sourceTree = "<group>"; };
+		6EAC4424182114750083B1CF /* ReportUploadViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ReportUploadViewController.m; sourceTree = "<group>"; };
 		6EB2D8E61802E1A10002894D /* EntypoButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = EntypoButton.h; path = SmartSource/EntypoButton.h; sourceTree = "<group>"; };
 		6EB2D8E71802E1A10002894D /* EntypoButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = EntypoButton.m; path = SmartSource/EntypoButton.m; sourceTree = "<group>"; };
 		6EB38953180457CA00D323BA /* LoginDataModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LoginDataModalViewController.h; sourceTree = "<group>"; };
 		6EB38954180457CA00D323BA /* LoginDataModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LoginDataModalViewController.m; sourceTree = "<group>"; };
 		6EB3895618045CE500D323BA /* WebServiceModalViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WebServiceModalViewController.h; sourceTree = "<group>"; };
 		6EB3895718045CE500D323BA /* WebServiceModalViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WebServiceModalViewController.m; sourceTree = "<group>"; };
-		6EBAD30417CE0146009A24E9 /* ModalViewPresenterViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ModalViewPresenterViewController.h; sourceTree = "<group>"; };
-		6EBAD30517CE0146009A24E9 /* ModalViewPresenterViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ModalViewPresenterViewController.m; sourceTree = "<group>"; };
 		6EBAD30717CE0DFB009A24E9 /* VeraRomanTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = VeraRomanTextField.h; path = SmartSource/VeraRomanTextField.h; sourceTree = "<group>"; };
 		6EBAD30817CE0DFB009A24E9 /* VeraRomanTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = VeraRomanTextField.m; path = SmartSource/VeraRomanTextField.m; sourceTree = "<group>"; };
-		6EBAD30A17CE10C9009A24E9 /* AddCharacteristicTextField.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; name = AddCharacteristicTextField.xib; path = SmartSource/AddCharacteristicTextField.xib; sourceTree = "<group>"; };
 		6EBC1C6C17C57CB8009A8372 /* hintergrund_textfield_settings.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = hintergrund_textfield_settings.png; sourceTree = "<group>"; };
 		6EBC5DC117BECE34008199F1 /* Checkbox-not-Selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Checkbox-not-Selected.png"; sourceTree = "<group>"; };
 		6EBC5DC217BECE34008199F1 /* Checkbox-Selected.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Checkbox-Selected.png"; sourceTree = "<group>"; };
@@ -371,6 +392,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6E9A060C181FBFB700D37939 /* CFNetwork.framework in Frameworks */,
 				6E0741C0159474BB000C480E /* UIKit.framework in Frameworks */,
 				6E0741C2159474BB000C480E /* Foundation.framework in Frameworks */,
 				6E0741C4159474BB000C480E /* CoreGraphics.framework in Frameworks */,
@@ -384,6 +406,7 @@
 		6E0741B0159474BB000C480E = {
 			isa = PBXGroup;
 			children = (
+				6E9A060B181FBFB700D37939 /* CFNetwork.framework */,
 				6E0741D1159474BB000C480E /* SmartSourceAppDelegate.m */,
 				6E0741D0159474BB000C480E /* SmartSourceAppDelegate.h */,
 				6E0741D3159474BB000C480E /* MainStoryboard.storyboard */,
@@ -425,6 +448,10 @@
 			children = (
 				6E0474E5173A531F006F4558 /* WebServiceConnector.h */,
 				6E0474E6173A531F006F4558 /* WebServiceConnector.m */,
+				6EA02AC3182690400059CF07 /* UIColor+SmartSourceColors.h */,
+				6EA02AC4182690400059CF07 /* UIColor+SmartSourceColors.m */,
+				6E9766C11815CB4B006961E0 /* PDFExporter.h */,
+				6E9766C21815CB4B006961E0 /* PDFExporter.m */,
 				6EE16C6B17CB8C3900BCC7A0 /* SmartSourceFunctions.h */,
 				6EE16C6C17CB8C3900BCC7A0 /* SmartSourceFunctions.m */,
 				6EAF4B621599C9C3003958E9 /* CoreData */,
@@ -495,6 +522,8 @@
 		6E07421515947DB9000C480E /* Pictures */ = {
 			isa = PBXGroup;
 			children = (
+				6EA66612182E71EF0076F4F1 /* search_bar_background.jpg */,
+				6EA66613182E71EF0076F4F1 /* search_bar_textfield.jpg */,
 				6E3B4D5A179062200099D0A8 /* return-arrow.jpg */,
 				6E2C8E3A17B9090D0077609A /* nothumb.jpg */,
 				6E2750721786F39500211D08 /* green-arrow-up.jpg */,
@@ -548,6 +577,8 @@
 				6E8F470F17B51FB3000DDA7A /* Views */,
 				6EECAC6717822E280007A60F /* ProjectSelectionViewController.h */,
 				6EECAC6817822E280007A60F /* ProjectSelectionViewController.m */,
+				6E9F818E1831325300CB3230 /* ProjectSearchBar.h */,
+				6E9F818F1831325300CB3230 /* ProjectSearchBar.m */,
 				6EECAC6417822D590007A60F /* MainMenuViewController.h */,
 				6EECAC6517822D590007A60F /* MainMenuViewController.m */,
 				6E8F470E17B51F8F000DDA7A /* Old */,
@@ -577,10 +608,7 @@
 			children = (
 				6E11EADC17C43C8800CB10DD /* SettingsViewController.h */,
 				6E11EADD17C43C8800CB10DD /* SettingsViewController.m */,
-				6EB38953180457CA00D323BA /* LoginDataModalViewController.h */,
-				6EB38954180457CA00D323BA /* LoginDataModalViewController.m */,
-				6EB3895618045CE500D323BA /* WebServiceModalViewController.h */,
-				6EB3895718045CE500D323BA /* WebServiceModalViewController.m */,
+				6E538F301814077E00F8C8C0 /* ModalViewControllers */,
 				6EF4375A159BA0D50038091B /* CharacteristicsTableViewController.h */,
 				6EF4375B159BA0D50038091B /* CharacteristicsTableViewController.m */,
 				6E109D6915A1CFAC00D3C9F0 /* SettingsTableViewControllerViewController.h */,
@@ -592,11 +620,12 @@
 		6E3E8F0C16E958E800D01CD5 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				6EAF562316DFDB67004F027F /* ClassificationModel.h */,
-				6EAF562416DFDB67004F027F /* ClassificationModel.m */,
+				6E5517661815529B00A1E09E /* SettingsModel.h */,
+				6E5517671815529B00A1E09E /* SettingsModel.m */,
 				6E0474E8173A58EE006F4558 /* ProjectPlatformModel.h */,
 				6E0474E9173A58EE006F4558 /* ProjectPlatformModel.m */,
 				6E56D7CC16D27D9000A989AA /* ComponentModel.h */,
+				6E56D7CD16D27D9000A989AA /* ComponentModel.m */,
 				6E56D7C816D2741E00A989AA /* ProjectModel.h */,
 				6E56D7C916D2741E00A989AA /* ProjectModel.m */,
 			);
@@ -609,6 +638,10 @@
 			children = (
 				6E6E276817A9584F008E4120 /* SmartSourceTableViewCell.h */,
 				6E6E276917A9584F008E4120 /* SmartSourceTableViewCell.m */,
+				6EAC441D182109080083B1CF /* SmartSourcePopoverController.h */,
+				6EAC441E182109080083B1CF /* SmartSourcePopoverController.m */,
+				6EAC442018210BC30083B1CF /* SmartSourcePopoverBackgroundView.h */,
+				6EAC442118210BC30083B1CF /* SmartSourcePopoverBackgroundView.m */,
 				6EBC5DC717BEDEAE008199F1 /* FontLabels */,
 				6EA65C8517BE830E0023F526 /* ButtonExternalBackground.h */,
 				6EA65C8617BE830E0023F526 /* ButtonExternalBackground.m */,
@@ -620,7 +653,10 @@
 			isa = PBXGroup;
 			children = (
 				6E475F2117D7B053005E3209 /* StatusReciever.h */,
+				6EA91D9418216BFC006B01BF /* UploadCompleteHandler.h */,
+				6EA66611182E603F0076F4F1 /* ProjectPlatformModelDelegate.h */,
 				6EECAC6B17823DFE0007A60F /* ModalViewControllerPresenter.h */,
+				6E9F819118313B5A00CB3230 /* ModalAlertViewControllerDelegate.h */,
 			);
 			name = Protocols;
 			sourceTree = "<group>";
@@ -628,15 +664,28 @@
 		6E475F2017D7AE2B005E3209 /* XIB */ = {
 			isa = PBXGroup;
 			children = (
-				6E56D7CD16D27D9000A989AA /* ComponentModel.m */,
 				6EE16C7217CBD61300BCC7A0 /* EvaluationView.xib */,
 				6ED7362217C280160057C6BA /* SubCharacteristicsView.xib */,
-				6EBAD30A17CE10C9009A24E9 /* AddCharacteristicTextField.xib */,
-				6E4DB46617C7453800500FBE /* AddSuperCharacteristicView.xib */,
 				6E8BDB6A17C22852001876BF /* ScaleView.xib */,
 				6E67E1ED17DE5FE500F40E12 /* ScaleViewABC.xib */,
 			);
 			name = XIB;
+			sourceTree = "<group>";
+		};
+		6E538F301814077E00F8C8C0 /* ModalViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				6E538F3118140F4D00F8C8C0 /* AddEditCharacteristicModalViewController.h */,
+				6E538F3218140F4D00F8C8C0 /* AddEditCharacteristicModalViewController.m */,
+				6EB38953180457CA00D323BA /* LoginDataModalViewController.h */,
+				6EB38954180457CA00D323BA /* LoginDataModalViewController.m */,
+				6E9766BE18159140006961E0 /* ModalAlertViewController.h */,
+				6E9766BF18159140006961E0 /* ModalAlertViewController.m */,
+				6EB3895618045CE500D323BA /* WebServiceModalViewController.h */,
+				6EB3895718045CE500D323BA /* WebServiceModalViewController.m */,
+				6E55176518154F6900A1E09E /* AddEditCharacteristicDelegate.h */,
+			);
+			name = ModalViewControllers;
 			sourceTree = "<group>";
 		};
 		6E59079F15A5AD7A0064FD93 /* ChartClasses */ = {
@@ -667,10 +716,6 @@
 		6E8F470E17B51F8F000DDA7A /* Old */ = {
 			isa = PBXGroup;
 			children = (
-				6EBAD30417CE0146009A24E9 /* ModalViewPresenterViewController.h */,
-				6EBAD30517CE0146009A24E9 /* ModalViewPresenterViewController.m */,
-				6E7CF31E15A78BAD00FEF57A /* ChartViewController.h */,
-				6E7CF31F15A78BAD00FEF57A /* ChartViewController.m */,
 				6E59079F15A5AD7A0064FD93 /* ChartClasses */,
 				6E109D6615A1C0A700D3C9F0 /* AlertView.h */,
 				6E109D6715A1C0A700D3C9F0 /* AlertView.m */,
@@ -720,9 +765,9 @@
 				6E7CF35215A7B3DE00FEF57A /* SuperCharacteristic.h */,
 				6E7CF35315A7B3DF00FEF57A /* SuperCharacteristic.m */,
 				6E7CF34F15A7B3C400FEF57A /* CoreDataModel.xcdatamodeld */,
+				6E9A06851820121C00D37939 /* Project.h */,
+				6E9A06861820121C00D37939 /* Project.m */,
 				6E475F2817D7DC0B005E3209 /* Component.h */,
-				6E7EDD5A17DFDD7E009D103C /* Project.h */,
-				6E7EDD5B17DFDD7E009D103C /* Project.m */,
 				6E475F2917D7DC0B005E3209 /* Component.m */,
 				6E7CF33115A7B16300FEF57A /* Characteristic.h */,
 				6E7CF33215A7B16300FEF57A /* Characteristic.m */,
@@ -763,6 +808,8 @@
 			children = (
 				6ECB3229179C89F000990880 /* ComponentInfoViewController.h */,
 				6ECB322A179C89F000990880 /* ComponentInfoViewController.m */,
+				6EAC4423182114750083B1CF /* ReportUploadViewController.h */,
+				6EAC4424182114750083B1CF /* ReportUploadViewController.m */,
 				6E8E3CE8179B4E210002691D /* ResultsOverviewViewController.h */,
 				6E8E3CE9179B4E210002691D /* ResultsOverviewViewController.m */,
 				6E18BDB717BA68B3005932B2 /* ResultScreenCell.h */,
@@ -789,8 +836,6 @@
 		6ECDF42B159B926B00EA4590 /* Detail */ = {
 			isa = PBXGroup;
 			children = (
-				6E0741E8159479E3000C480E /* DetailTableViewController.h */,
-				6E0741E9159479E3000C480E /* DetailTableViewController.m */,
 				6EC9203715A45E0D0020F3C0 /* ResultScreen */,
 				6E0742271594889E000C480E /* RatingScreen */,
 			);
@@ -901,18 +946,18 @@
 				6E8BDB6B17C22852001876BF /* ScaleView.xib in Resources */,
 				6ED7362317C280160057C6BA /* SubCharacteristicsView.xib in Resources */,
 				6EBC1C6D17C57CB8009A8372 /* hintergrund_textfield_settings.png in Resources */,
-				6E4DB46717C7453800500FBE /* AddSuperCharacteristicView.xib in Resources */,
 				6EE16C6F17CBB80C00BCC7A0 /* components.png in Resources */,
 				6EE16C7117CBC36D00BCC7A0 /* Pfeil.png in Resources */,
 				6EE16C7317CBD61300BCC7A0 /* EvaluationView.xib in Resources */,
 				6EE16C7517CC01BD00BCC7A0 /* Search_Bar_Background.png in Resources */,
-				6EBAD30B17CE10CA009A24E9 /* AddCharacteristicTextField.xib in Resources */,
 				6E475F1B17D79551005E3209 /* Start_Result_Active.png in Resources */,
 				6E475F1D17D7A701005E3209 /* Settings_TextField_Background.png in Resources */,
 				6E475F4017D7F1F7005E3209 /* Entypo.ttf in Resources */,
 				6E1D979C17DD11540076DD06 /* Components_Button_Selected.png in Resources */,
 				6E1D979D17DD11540076DD06 /* Components_Button_Unselected.png in Resources */,
 				6E67E1EE17DE5FE500F40E12 /* ScaleViewABC.xib in Resources */,
+				6EA66614182E71EF0076F4F1 /* search_bar_background.jpg in Resources */,
+				6EA66615182E71EF0076F4F1 /* search_bar_textfield.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -925,7 +970,6 @@
 			files = (
 				6E0741CE159474BB000C480E /* main.m in Sources */,
 				6E0741D2159474BB000C480E /* SmartSourceAppDelegate.m in Sources */,
-				6E0741EA159479E3000C480E /* DetailTableViewController.m in Sources */,
 				6E07420515947B8A000C480E /* NSObject+SBJson.m in Sources */,
 				6E07420615947B8A000C480E /* SBJsonParser.m in Sources */,
 				6E07420715947B8A000C480E /* SBJsonStreamParser.m in Sources */,
@@ -953,7 +997,6 @@
 				6EF435FA15A6008F00A64201 /* AvailableSuperCharacteristic.m in Sources */,
 				6E80892115A605EB00654468 /* AvailableCharacteristic+Factory.m in Sources */,
 				6E80892215A605EB00654468 /* AvailableSuperCharacteristic+Factory.m in Sources */,
-				6E7CF32015A78BAD00FEF57A /* ChartViewController.m in Sources */,
 				6E7CF34115A7B16300FEF57A /* Characteristic.m in Sources */,
 				6E7CF34215A7B16300FEF57A /* Characteristic+Factory.m in Sources */,
 				6E7CF34415A7B16300FEF57A /* Component+Factory.m in Sources */,
@@ -965,7 +1008,6 @@
 				6E56D7CA16D2741E00A989AA /* ProjectModel.m in Sources */,
 				6E56D7CE16D27D9000A989AA /* ComponentModel.m in Sources */,
 				6E3935C716D3B90C00E72EB0 /* CharacteristicCell.m in Sources */,
-				6EAF562516DFDB68004F027F /* ClassificationModel.m in Sources */,
 				6E0474E7173A531F006F4558 /* WebServiceConnector.m in Sources */,
 				6E0474EA173A58EF006F4558 /* ProjectPlatformModel.m in Sources */,
 				6EECAC6617822D590007A60F /* MainMenuViewController.m in Sources */,
@@ -989,16 +1031,24 @@
 				6E4DB46A17C755F200500FBE /* VeraRomanTextView.m in Sources */,
 				6E4DB46D17C7565900500FBE /* VeraRomanButton.m in Sources */,
 				6EE16C6D17CB8C3900BCC7A0 /* SmartSourceFunctions.m in Sources */,
-				6EBAD30617CE0146009A24E9 /* ModalViewPresenterViewController.m in Sources */,
 				6EBAD30917CE0DFB009A24E9 /* VeraRomanTextField.m in Sources */,
 				6E475F2417D7B4BC005E3209 /* UIImageView+PermanentScroller.m in Sources */,
 				6E475F2A17D7DC0B005E3209 /* Component.m in Sources */,
 				6E475F4317D7F259005E3209 /* EntypoLabel.m in Sources */,
 				6E1D97A017DD150E0076DD06 /* WeightSuperCharacteristicsViewController.m in Sources */,
-				6E7EDD5C17DFDD7E009D103C /* Project.m in Sources */,
 				6EB2D8E81802E1A10002894D /* EntypoButton.m in Sources */,
 				6EB38955180457CA00D323BA /* LoginDataModalViewController.m in Sources */,
 				6EB3895818045CE500D323BA /* WebServiceModalViewController.m in Sources */,
+				6E538F3318140F4D00F8C8C0 /* AddEditCharacteristicModalViewController.m in Sources */,
+				6E5517681815529B00A1E09E /* SettingsModel.m in Sources */,
+				6E9766C018159140006961E0 /* ModalAlertViewController.m in Sources */,
+				6E9766C31815CB4B006961E0 /* PDFExporter.m in Sources */,
+				6E9A06871820121C00D37939 /* Project.m in Sources */,
+				6EAC441F182109080083B1CF /* SmartSourcePopoverController.m in Sources */,
+				6EAC442218210BC30083B1CF /* SmartSourcePopoverBackgroundView.m in Sources */,
+				6EAC4425182114750083B1CF /* ReportUploadViewController.m in Sources */,
+				6EA02AC5182690400059CF07 /* UIColor+SmartSourceColors.m in Sources */,
+				6E9F81901831325300CB3230 /* ProjectSearchBar.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

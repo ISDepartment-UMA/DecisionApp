@@ -83,7 +83,7 @@
 
 - (void)markComponentAsSelected:(Component *)component
 {
-    self.componentModel = [[ComponentModel alloc] initWithComponent:component];
+    self.componentModel = [[ComponentModel alloc] initWithComponentId:component.componentID];
     NSMutableDictionary *superCharValueDic = [[self.componentModel getDictionaryWithSuperCharValues] mutableCopy];
     NSEnumerator *superCharNameEnumerator = [superCharValueDic keyEnumerator];
     NSString *superCharName;

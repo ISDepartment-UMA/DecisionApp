@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "MainMenuViewController.h"
+#import "ModalAlertViewControllerDelegate.h"
 
-@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UITextViewDelegate>
+
+@interface SettingsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UITextFieldDelegate, UITextViewDelegate, ModalAlertViewControllerDelegate>
 
 @property (nonatomic, strong) MainMenuViewController *mainMenu;
-- (void)modalViewControllerDismissedWithView:(UIView *)view;
+- (void)modalViewControllerHasBeenDismissedWithInput:(NSString *)input;
 @end

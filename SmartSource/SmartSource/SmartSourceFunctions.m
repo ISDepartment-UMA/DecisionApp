@@ -101,4 +101,30 @@
     }
 }
 
++ (NSString *)getOutIndCoreStringForWeightedAverageValue:(CGFloat)weightedAverage
+{
+    if (weightedAverage < 1.67) {
+        return @"OUTSOURCING";
+    } else if (weightedAverage < 2.34) {
+        return @"INDIFFERENT";
+    } else if (weightedAverage <= 3.0) {
+        return @"CORE";
+    } else {
+        return nil;
+    }
+}
+
++ (UIImage *)getImageForWeightedAverageValue:(CGFloat)weightedAverage
+{
+    if (weightedAverage < 1.67) {
+        return [UIImage imageNamed:@"Result_Out.png"];
+    } else if (weightedAverage < 2.34) {
+        return [UIImage imageNamed:@"Result_Un.png"];
+    } else if (weightedAverage <= 3.0) {
+        return [UIImage imageNamed:@"Result_In.png"];
+    } else {
+        return nil;
+    }
+}
+
 @end

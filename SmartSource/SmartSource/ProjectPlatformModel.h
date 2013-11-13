@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "ProjectPlatformModelDelegate.h"
 
 @interface ProjectPlatformModel : NSObject
 
@@ -20,6 +21,7 @@
 - (NSArray *)getSelectedProject;
 - (void)setSelectedProject:(NSArray *)projectID;
 - (BOOL)ratingCharacteristicsHaveChangedForProject:(NSString *)projectID;
+- (NSArray *)getAllProjectsNamesAndSetDelegate:(id<ProjectPlatformModelDelegate>)delegate;
 
 
 @end

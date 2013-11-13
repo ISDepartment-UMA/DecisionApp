@@ -13,11 +13,14 @@
 
 @interface ComponentModel : NSObject
 
-- (ComponentModel *)initWithComponent:(Component *)component;
+- (ComponentModel *)initWithComponentId:(NSString *)componentId;
 - (NSArray *)getCharacteristics;
 - (NSArray *)getComponentInfo;
 - (BOOL)saveContext;
 - (Component *)getComponentObject;
 - (NSDictionary *)getDictionaryWithSuperCharValues;
+- (CGFloat)getTotalWeightOfSuperCharacteristics;
+- (NSDictionary *)calculateDetailedResults;
+- (NSArray *)getCharsAndValuesArray;
 
 @end

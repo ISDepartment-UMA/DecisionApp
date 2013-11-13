@@ -7,12 +7,14 @@
 //
 
 #import "SmartSourceAppDelegate.h"
-#import "DetailTableViewController.h"
 #import "SmartSourceSplitViewController.h"
+#import "Component+Factory.h"
 
 //unneceario if characteristics don't need to be in there
 #import "AvailableCharacteristic+Factory.h"
 #import "AvailableSuperCharacteristic+Factory.h"
+#import "SuperCharacteristic+Factory.h"
+#import "Characteristic+Factory.h"
 
 @implementation SmartSourceAppDelegate
 
@@ -25,8 +27,41 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
-    NSArray *fontFamilyNames = [UIFont familyNames];
+    //in first startup insert default characteristics and login data
+    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
+    if (![defaults objectForKey:@"loginData"]) {
+        //login data
+        [defaults setObject:[NSArray arrayWithObjects:@"http://wifo1-54.bwl.uni-mannheim.de:8080/cb/remote-api", @"rtoermer", @"meinpasswort99", nil] forKey:@"loginData"];
+        [defaults synchronize];
+        [defaults setObject:@"http://wifo1-52.bwl.uni-mannheim.de:8085/SmartSourceWebService/" forKey:@"javaWebserviceConnection"];
+        //characteristics
+        NSManagedObjectContext *context = self.managedObjectContext;
+        //insert root rating characteristics
+        [AvailableSuperCharacteristic addNewAvailableSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:context];
+        [AvailableSuperCharacteristic addNewAvailableSuperCharacteristic:@"Knowledge Specificity" toManagedObjectContext:context];
+        
+        [AvailableCharacteristic addNewAvailableCharacteristic:@"Software Object Communication" toSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:context];
+        [AvailableCharacteristic addNewAvailableCharacteristic:@"Communication of Requirements" toSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:context];
+        [AvailableCharacteristic addNewAvailableCharacteristic:@"Communication among Developers" toSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:context];
+        
+        [AvailableCharacteristic addNewAvailableCharacteristic:@"Business Process Specificity" toSuperCharacteristic:@"Knowledge Specificity" toManagedObjectContext:context];
+        [AvailableCharacteristic addNewAvailableCharacteristic:@"Functional Specificity" toSuperCharacteristic:@"Knowledge Specificity" toManagedObjectContext:context];
+        [AvailableCharacteristic addNewAvailableCharacteristic:@"Technical Specificity" toSuperCharacteristic:@"Knowledge Specificity" toManagedObjectContext:context];
+        
+        //save context
+        NSError *error = nil;
+        if (![context save:&error]) {
+            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
+            abort();
+        } else {
+            NSLog(@"Initialized with default settings");
+        }
+        
+    }
     
+    /*
+    //Log all available fonts
+    NSArray *fontFamilyNames = [UIFont familyNames];
     for (NSString *familyName in fontFamilyNames)
     {
         // font names under family
@@ -34,41 +69,7 @@
         {
             NSLog(@"Font Name = %@", fontName);
         }
-    }
-    
-
-    NSManagedObjectContext *context = self.managedObjectContext;
-    //insert root rating characteristics
-    [AvailableSuperCharacteristic addNewAvailableSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:context];
-    [AvailableSuperCharacteristic addNewAvailableSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:context];
-    
-    [AvailableCharacteristic addNewAvailableCharacteristic:@"Software Object Communication" toSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:context];
-    [AvailableCharacteristic addNewAvailableCharacteristic:@"Communication of Requirements" toSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:context];
-    [AvailableCharacteristic addNewAvailableCharacteristic:@"Communication among Developers" toSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:context];
-    
-    [AvailableCharacteristic addNewAvailableCharacteristic:@"Business Process Specifity" toSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:context];
-    [AvailableCharacteristic addNewAvailableCharacteristic:@"Functional Specifity" toSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:context];
-    [AvailableCharacteristic addNewAvailableCharacteristic:@"Technical Specifity" toSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:context];
-    
-    
-    //save context
-    NSError *error = nil;
-    if (![context save:&error]) {
-        NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-        abort();
-    }
-    
-    
-    
-    
-    //set default login data
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    //[defaults setObject:[NSArray arrayWithObjects:@"http://79.125.4.182/remote-api", @"", @"", nil] forKey:@"loginData"];
-    //[defaults setObject:[NSArray arrayWithObjects:@"http://79.125.4.182/remote-api", @"rtoermer", @"hundhund", nil] forKey:@"loginData"];
-    [defaults setObject:[NSArray arrayWithObjects:@"http://wifo1-54.bwl.uni-mannheim.de:8080/cb/remote-api", @"rtoermer", @"meinpasswort99", nil] forKey:@"loginData"];
-    [defaults synchronize];
-    [defaults setObject:@"http://wifo1-52.bwl.uni-mannheim.de:8085/SmartSourceWebService/" forKey:@"javaWebserviceConnection"];
-    
+    }*/
     
     return YES;
 }

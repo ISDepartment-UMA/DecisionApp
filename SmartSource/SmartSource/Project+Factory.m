@@ -48,11 +48,7 @@
         pro.timestamp = timestamp;
         
         //save context
-        if (![context save:&error]) {
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
-        
+        [Project saveContext:context];
         
     } else {
         pro = [matches lastObject];
@@ -111,27 +107,22 @@
     [context deleteObject:[matches objectAtIndex:0]];
     
     //save context
+    return [Project saveContext:context];
+}
+
++ (BOOL)saveContext:(NSManagedObjectContext *)context
+{
+    
+    //save context
+    NSError *error = nil;
     if (![context save:&error]) {
+        return NO;
         NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
         abort();
-        return NO;
     } else {
         return YES;
     }
+    
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 @end

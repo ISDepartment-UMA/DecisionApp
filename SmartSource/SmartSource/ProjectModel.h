@@ -26,7 +26,6 @@
 - (NSArray *)getComponentsForCategory:(NSString *)category;
 - (BOOL)ratingCharacteristicsHaveBeenAdded;
 - (BOOL)ratingCharacteristicsHaveBeenDeleted;
-- (NSArray *)getCharsAndValuesArray:(NSString *)componentID;
 - (Component *)getComponentObjectForID:(NSString *)componentID;
 - (ProjectModel *)updateCoreDataBaseForProjectID:(NSString *)projectID;
 - (NSArray *)getSuperCharacteristics;
@@ -34,5 +33,7 @@
 - (BOOL)saveContext;
 - (BOOL)getProjectHasBeenWeighted;
 - (void)setProjectHasBeenWeightedTrue;
+- (BOOL)uploadPdfToCollaborationPlatformNewCreationNecessary:(BOOL)necessary;
+- (NSString *)createReportPdfAndReturnPathPrinterFriendly:(BOOL)printerFriendly;
 
 @end

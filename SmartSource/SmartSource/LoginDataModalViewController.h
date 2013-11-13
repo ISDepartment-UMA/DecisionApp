@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SettingsModel.h"
+@interface LoginDataModalViewController : UIViewController <UITextFieldDelegate, UITextViewDelegate>
 
-@interface LoginDataModalViewController : UIViewController
+
+- (void)setSettingsModel:(SettingsModel *)settingsModel;
 
 @end

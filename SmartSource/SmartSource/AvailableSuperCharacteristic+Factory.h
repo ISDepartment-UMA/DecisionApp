@@ -12,4 +12,5 @@
 + (AvailableSuperCharacteristic *)addNewAvailableSuperCharacteristic:(NSString *)name toManagedObjectContext:(NSManagedObjectContext *)context;
 + (NSArray *)getAllAvailableSuperCharacteristicsFromManagedObjectContext:(NSManagedObjectContext *)context;
 + (BOOL)replaceAvailableSuperCharacteristic:(NSString *)supercharacteristicName withAvailableCharacteristic:(NSString *)newSupercharacteristicName inManagedObjectContext:(NSManagedObjectContext *)context;
++ (BOOL)deleteAvailableSuperCharacteristicNamed:(NSString *)name fromManagedObjectContext:(NSManagedObjectContext *)context;
 @end

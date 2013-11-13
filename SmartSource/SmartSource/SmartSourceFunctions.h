@@ -13,5 +13,7 @@
 + (UIColor *)getColorForFloatRatingValue:(CGFloat)value;
 + (UIColor *)getColorForStringRatingValue:(NSString *)stringValue;
 + (NSString *)getSmallHighMediumLowStringForFloatValue:(CGFloat)value;
-
++ (NSString *)getOutIndCoreStringForWeightedAverageValue:(CGFloat)weightedAverage;
++ (UIImage *)getImageForWeightedAverageValue:(CGFloat)weightedAverage;
++ (NSString *)getHighMediumLowStringForIntValue:(NSInteger)value;
 @end

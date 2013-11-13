@@ -7,7 +7,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "SettingsModel.h"
 
-@interface WebServiceModalViewController : UIViewController
+@interface WebServiceModalViewController : UIViewController <UITextViewDelegate>
+
+- (void)setSettingsModel:(SettingsModel *)settingsModel;
 
 @end

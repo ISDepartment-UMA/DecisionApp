@@ -15,7 +15,6 @@
 #import "SuperCharacteristic+Factory.h"
 #import "DecisionTableViewController.h"
 #import "Project+Factory.h"
-#import "ChartViewController.h"
 #import "ComponentModel.h"
 #import "CharacteristicCell.h"
 #import "SmartSourceAppDelegate.h"
@@ -23,6 +22,7 @@
 #import "UIImageView+PermanentScroller.h"
 #import "ComponentSelectionTableViewController.h"
 #import "WeightSuperCharacteristicsViewController.h"
+#import "ModalAlertViewController.h"
 
 
 @interface RatingTableViewViewController ()
@@ -53,6 +53,7 @@
 @property (nonatomic, strong) NSString *textDescriptionLabel;
 @property (strong, nonatomic) IBOutlet UILabel *componentRatingCompleteLabel;
 @property (strong, nonatomic) IBOutlet UILabel *weightingCompleteLabel;
+@property (nonatomic) BOOL shouldReturnToMainMenuImmediately;
 
 
 
@@ -79,23 +80,13 @@
 @synthesize componentRatingIsComplete = _componentRatingIsComplete;
 @synthesize weightingIsComplete = _weightingIsComplete;
 @synthesize screenTitleLabel = _screenTitleLabel;
+@synthesize shouldReturnToMainMenuImmediately = _shouldReturnToMainMenuImmediately;
 
 
-//methods to implement:
-
-//check for completeness
 
 - (void)checkForCompleteness
 {
-    NSLog(@"checked for completeness");
     if ([self.currentProject ratingIsComplete]) {
-        //show alert view that rating is complete
-        //show allert that will ask for acknoledgement
-        /*
-        NSString *message = @"The rating is now complete. You can access your results via the Main Menu";
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Rating Complete" message:message delegate:self cancelButtonTitle:nil otherButtonTitles:@"OK", nil];
-        [alert show];*/
-        
         [self setComponentRatingIsComplete:YES];
     }
     
@@ -153,16 +144,11 @@
 - (void)setComponent:(Component *)component
 {
     self.tableViewShowsFullComponentDescription = NO;
-    
     //initialize model for component
-    self.currentComponent = [[ComponentModel alloc] initWithComponent:component];
-    
+    self.currentComponent = [[ComponentModel alloc] initWithComponentId:component.componentID];
     //get rating characteristics
     self.characteristics = [self.currentComponent getCharacteristics];
-
-    
     [self.tableView reloadData];
-    
     //if component has been selected, dismiss popovercontroller
     SmartSourceSplitViewController *splitVC = (SmartSourceSplitViewController *)self.splitViewController;
     [splitVC.masterPopoverController dismissPopoverAnimated:YES];
@@ -198,25 +184,36 @@
     return self.currentProject;
 }
 
+
 - (IBAction)backToMainMenu:(id)sender {
+    
     
     //if weighting has not been edited, ask for acknowledgement
     if (!self.weightingIsComplete) {
-        //show alert
-         NSString *message = @"You did not weight the Supercharacteristics. Please do so by taping the weighting button in the bottom bar. Do you want to return with the same weight for every Supercharacteristic?";
-         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Warning" message:message delegate:self cancelButtonTitle:@"NO" otherButtonTitles:@"YES", nil];
-         [alert show];
+        
+        //show alert to ask for acknowledgement to return with 50:50 weighting
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+        ModalAlertViewController *modalAVC = (ModalAlertViewController *)[storyboard instantiateViewControllerWithIdentifier:@"ModalAlertViewController"];
+        modalAVC.modalPresentationStyle = UIModalPresentationFormSheet;
+        [modalAVC setStringForacknowledgeButton:@"YES"];
+        [modalAVC setStringForcancelButton:@"NO"];
+        [modalAVC setStringForTextLabel:@"You did not weight the Supercharacteristics. Please do so by taping the weighting button in the bottom bar. Do you want to return with the same weight for every Supercharacteristic?"];
+        [modalAVC setStringForTitleLabel:@"Alert"];
+        [modalAVC setDelegate:self];
+        [self presentModalViewController:modalAVC animated:YES];
+    
     } else {
+        
+        //return to main menu
         [self.splitViewController performSegueWithIdentifier:@"mainMenu" sender:self];
     }
-    
 }
 
-
-- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    if (buttonIndex == 1) {
-        [self.splitViewController performSegueWithIdentifier:@"mainMenu" sender:self];
-    }
+//if modal view controller talks back (acknowledgement button has been klicked)
+- (void)modalViewControllerHasBeenDismissedWithInput:(NSString *)input
+{
+    //return to main menu
+    [self.splitViewController performSegueWithIdentifier:@"mainMenu" sender:self];
 }
 
 - (void)returnToMainMenu
@@ -323,7 +320,7 @@
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
+
     //show scrollers once and they won't disappear
     [self.tableView flashScrollIndicators];
     
@@ -428,7 +425,6 @@
     if (indexPath.section == 0) {
         
         UITableViewCell *cell = nil;
-        
         //row 0 - componentInfoHeaderCell
         if (indexPath.row == 0) {
             
@@ -658,17 +654,6 @@
     //empty
 }
 
-- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
-{
-    
-    //segue to results screen
-    if ([segue.identifier isEqualToString:@"atAGlance"]) {
-        
-        //pass project id to results screen
-        ChartViewController *resOVC = segue.destinationViewController;
-        [resOVC initializeClassificationForProject:[self.currentProject getProjectID]];
-    }
-}
 
 
 @end

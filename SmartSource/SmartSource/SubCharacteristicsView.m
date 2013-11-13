@@ -8,6 +8,7 @@
 
 #import "SubCharacteristicsView.h"
 #import "VeraRomanLabel.h"
+#import "SmartSourceFunctions.h"
 
 @implementation SubCharacteristicsView
 @synthesize characteristicsSubView = _characteristicsSubView;
@@ -62,17 +63,10 @@
         VeraRomanLabel *characteristicsRatingLabel = [self.characteristicsValueLabel copy];
         [characteristicsRatingLabel setFrame:CGRectMake(self.characteristicsNameLabel.frame.origin.x, (20 + 30*i), self.characteristicsNameLabel.frame.size.width, self.characteristicsNameLabel.frame.size.height)];
         
+        
         //set evaluation label - high, medium low
-        if (value == 1) {
-            [characteristicsRatingLabel setText:@"LOW"];
-            [characteristicsRatingLabel setTextColor:[UIColor colorWithRed:0.13 green:1.0 blue:0.45 alpha:1.0]];
-        } else if (value == 2) {
-            [characteristicsRatingLabel setText:@"MEDIUM"];
-            [characteristicsRatingLabel setTextColor:[UIColor colorWithRed:1.0 green:1.0 blue:0.52 alpha:1.0]];
-        } else if (value == 3) {
-            [characteristicsRatingLabel setText:@"HIGH"];
-            [characteristicsRatingLabel setTextColor:[UIColor colorWithRed:1.0 green:0.56 blue:0.56 alpha:1.0]];
-        }
+        [characteristicsNameLabel setText:[SmartSourceFunctions getHighMediumLowStringForIntValue:value]];
+        [characteristicsNameLabel setTextColor:[SmartSourceFunctions getColorForStringRatingValue:characteristicsNameLabel.text]];
         [self.ratingSubView addSubview:characteristicsRatingLabel];
     }
     

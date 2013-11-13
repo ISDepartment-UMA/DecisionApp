@@ -7,14 +7,15 @@
 //
 
 #import "SettingsViewController.h"
-#import "SmartSourceAppDelegate.h"
 #import "AvailableCharacteristic+Factory.h"
 #import "AvailableSuperCharacteristic+Factory.h"
 #import "Characteristic+Factory.h"
-#import "AlertView.h"
-#import "ModalViewPresenterViewController.h"
+#import "AddEditCharacteristicModalViewController.h"
 #import "ButtonExternalBackground.h"
-#import "WebServiceConnector.h"
+#import "SettingsModel.h"
+#import "ModalAlertViewController.h"
+#import "LoginDataModalViewController.h"
+#import "WebServiceModalViewController.h"
 
 @interface SettingsViewController ()
 
@@ -23,10 +24,12 @@
 @property (strong, nonatomic) IBOutlet UITextView *collaborationURLTextView;
 @property (strong, nonatomic) IBOutlet UILabel *collaborationUserTextField;
 @property (strong, nonatomic) IBOutlet UILabel *collaborationPasswordTextField;
+@property (strong, nonatomic) IBOutlet UILabel *editSymbolLabelLogin;
 
 //webservice
 @property (strong, nonatomic) IBOutlet UIView *webServiceSubview;
 @property (strong, nonatomic) IBOutlet UITextView *webServiceURLTextView;
+@property (strong, nonatomic) IBOutlet UILabel *editSymbolLabelWebservice;
 
 //characteristics
 @property (strong, nonatomic) IBOutlet UIView *characteristicsSubView;
@@ -38,11 +41,12 @@
 @property (nonatomic, strong) NSArray *Characteristics;
 
 
-@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
+@property (strong, nonatomic) SettingsModel *settingsModel;
 
-@property (strong, nonatomic) UIView *selectedTextFieldView;
-@property (nonatomic) NSString *nameOfSuperCharacteristicToAddCharacteristic;
-@property (nonatomic, strong) NSString *kindOfPresentedTextView;
+@property (nonatomic, strong) NSString *nameOfSuperCharacteristicToAddCharacteristic;
+@property (nonatomic, strong) NSString *nameOfCharacteristicToChange;
+//characteristic state: 1--> add superchar, 2--> add char, 3-->modify superchar, 4-->modify char, 5-->delete superchar, 6-->delete char, 7-->restoredefaults
+@property (nonatomic) NSInteger characteristicState;
 
 //buttons
 @property (strong, nonatomic) IBOutlet ButtonExternalBackground *backButton;
@@ -50,7 +54,6 @@
 @property (strong, nonatomic) IBOutlet UIButton *addSuperCharButton;
 
 @end
-
 @implementation SettingsViewController
 @synthesize collaborationPlaformSubview = _collaborationPlaformSubview;
 @synthesize webServiceSubview = _webServiceSubview;
@@ -58,7 +61,7 @@
 @synthesize characteristicsTableView = _characteristicsTableView;
 @synthesize SuperCharacteristics = _SuperCharacteristics;
 @synthesize Characteristics = _Characteristics;
-@synthesize managedObjectContext = _managedObjectContext;
+@synthesize settingsModel = _settingsModel;
 @synthesize collaborationURLTextView = _collaborationURLTextView;
 @synthesize collaborationUserTextField = _collaborationUserTextField;
 @synthesize collaborationPasswordTextField = _collaborationPasswordTextField;
@@ -66,34 +69,25 @@
 @synthesize addSuperCharacteristicView = _addSuperCharacteristicView;
 @synthesize addSuperCharacteristicButton = _addSuperCharacteristicButton;
 @synthesize mainMenu = _mainMenu;
-@synthesize selectedTextFieldView = _selectedTextFieldView;
 @synthesize nameOfSuperCharacteristicToAddCharacteristic = _nameOfSuperCharacteristicToAddCharacteristic;
-@synthesize kindOfPresentedTextView = _kindOfPresentedTextView;
 @synthesize backButton = _backButton;
 @synthesize backButtonBackground = _backButtonBackground;
 @synthesize addSuperCharButton = _addSuperCharButton;
+@synthesize characteristicState = _characteristicState;
+@synthesize editSymbolLabelLogin = _editSymbolLabelLogin;
+@synthesize editSymbolLabelWebservice = _editSymbolLabelWebservice;
 
 
 
 #pragma mark - Inherited Methods
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
     
-    
-    //get context
-    SmartSourceAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    self.managedObjectContext = appDelegate.managedObjectContext;
+    //initialize settings mdoel
+    self.settingsModel = [[SettingsModel alloc] init];
     
     //delegate
     [self.characteristicsTableView setDelegate:self];
@@ -106,21 +100,36 @@
     //set symbol for entypo
     [self.addSuperCharButton setTitle:@"\u2795" forState:UIControlStateSelected];
     [self.addSuperCharButton setTitle:@"\u2795" forState:UIControlStateNormal];
+    [self.editSymbolLabelLogin setText:@"\u270E"];
+    [self.editSymbolLabelWebservice setText:@"\u270E"];
 
-    
     //rotation notifications
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name: UIDeviceOrientationDidChangeNotification object: nil];
     UIInterfaceOrientation deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    
     //if device orientation is portrait, handle it
     if (UIInterfaceOrientationIsPortrait(deviceOrientation)) {
         [self deviceOrientationDidChange:nil];
     }
     
     //getcharacteristics
-    [self getRatingCharacteristics];
-    [self setTextFieldsFromUserDefaults];
+    NSArray *ratingCharacteristics = [self.settingsModel getSuperCharacteristicsAndCharacteristics];
+    self.SuperCharacteristics = [ratingCharacteristics objectAtIndex:0];
+    self.Characteristics = [ratingCharacteristics objectAtIndex:1];
+    //put logindata into screen
+    [self setTextFieldsFromModel];
+}
+
+- (void)viewDidUnload {
+    
+    [self setCollaborationURLTextView:nil];
+    [self setCollaborationUserTextField:nil];
+    [self setCollaborationPasswordTextField:nil];
+    [self setAddSuperCharacteristicButton:nil];
+    [self setBackButton:nil];
+    [self setBackButtonBackground:nil];
+    [self setEditSymbolLabelLogin:nil];
+    [super viewDidUnload];
 }
 
 
@@ -129,16 +138,9 @@
 
 - (IBAction)restoreDefaultsPressed:(id)sender {
     
-    //show allert that will ask for acknoledgement
-    NSString *message1 = @"Do you really want to reset the settings to default?";
-    NSString *message2 = @"This will delete all ratings and additional rating characteristics stored on the device. The login data will be conserved.";
-    NSString *message = [NSString stringWithFormat:@"%@ \n%@", message1, message2];
-    AlertView * alert = [[AlertView alloc] initWithTitle:@"Reset" message:message delegate:self cancelButtonTitle:@"Delete" otherButtonTitles:@"Cancel", nil];
-    alert.identifier = @"reset";
-    alert.alertViewStyle = UIAlertViewStyleDefault;
-    
-    [alert show];
-    
+    self.characteristicState = 7;
+    //show modal alert to ask for acknowledgement
+    [self performSegueWithIdentifier:@"modalAlert" sender:self];    
 }
 
 - (IBAction)changeLoginDataPressed:(id)sender {
@@ -165,176 +167,24 @@
 
 #pragma mark - Screen Content
 
-- (void)getRatingCharacteristics
+- (void)setTextFieldsFromModel
 {
-    //getting characteristics from core database
-    //get all supercharacteristics
-    NSFetchRequest *request = [NSFetchRequest fetchRequestWithEntityName:@"AvailableSuperCharacteristic"];
-    NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-    request.sortDescriptors = [NSArray arrayWithObject:sortDescription];
-    NSError *error = nil;
-    NSArray *matches = [self.managedObjectContext executeFetchRequest:request error:&error];
+    //get data from model
+    NSArray *loginData = [SettingsModel getLoginData];
+    NSString *javaWebServiceUrl = [SettingsModel getWebServiceUrl];
     
-    //initialize arrays for super- and subcharacteristics
-    NSMutableArray *superchar = [NSMutableArray array];
-    NSMutableArray *subchar = [NSMutableArray array];
-    
-    //iterate through the supercharacteristics
-    AvailableSuperCharacteristic *tmpasc = nil;
-    for (int i=0; i<[matches count]; i++) {
-        tmpasc = [matches objectAtIndex:i];
-        
-        //add supercharacteristics name to array
-        [superchar addObject:tmpasc.name];
-        
-        //add all subcharacteristics names to array
-        NSMutableArray *tmp = [NSMutableArray array];
-        NSArray *enumerator = [NSArray arrayWithArray:[tmpasc.availableSuperCharacteristicOf allObjects]];
-        for (int y=0; y<[enumerator count]; y++) {
-            AvailableCharacteristic *tmpcharacteristic = [enumerator objectAtIndex:y];
-            [tmp addObject:tmpcharacteristic.name];
-            
-        }
-        [tmp sortUsingSelector:@selector(compare:)];
-        [subchar addObject:tmp];
-    }
-    
-    //set arrays
-    self.SuperCharacteristics = superchar;
-    self.Characteristics = subchar;
-}
-
-
-- (void)modalViewControllerDismissedWithView:(UIView *)view
-{
-    //abort clicked
-    if (!view) {
-        return;
-    }
-    
-    if ([self.kindOfPresentedTextView isEqualToString:@"loginData"]) {
-        
-        NSString *input = ((UITextField *)view).text;
-        [((UITextField *)self.selectedTextFieldView) setText:input];
-        
-        NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-        
-        //if last character is not /, then append /
-        NSString *newServiceURL = self.webServiceURLTextView.text;
-        NSString *lastChar = [newServiceURL substringFromIndex:([newServiceURL length]-1)];
-        if (![lastChar isEqualToString:@"/"]) {
-            newServiceURL = [newServiceURL stringByAppendingString:@"/"];
-        }
-        [defaults setObject:newServiceURL forKey:@"javaWebserviceConnection"];
-        
-        
-        NSMutableArray *loginData = [[defaults objectForKey:@"loginData"] mutableCopy];
-        
-        //url from text field
-        [loginData replaceObjectAtIndex:0 withObject:self.collaborationURLTextView.text];
-        
-        //username
-        [loginData replaceObjectAtIndex:1 withObject:self.collaborationUserTextField.text];
-        //password
-        //[loginData replaceObjectAtIndex:2 withObject:self.collaborationPasswordTextField.text];
-        
-        //save data
-        [defaults setObject:[loginData copy] forKey:@"loginData"];
-        [defaults synchronize];
-        
-        [self setTextFieldsFromUserDefaults];
-        
-    } else if ([self.kindOfPresentedTextView isEqualToString:@"addCharacteristic"]) {
-        if (self.nameOfSuperCharacteristicToAddCharacteristic) {
-            //add characteristic
-            NSString *input = ((UITextField *)view).text;
-            
-            //do not add characteristic for standard text
-            if (![input isEqualToString:@"Enter Name of Characteristic to add..."] && ![input isEqualToString:@""]) {
-                //then insert the new supercharacteristic
-                [AvailableCharacteristic addNewAvailableCharacteristic:input toSuperCharacteristic:self.nameOfSuperCharacteristicToAddCharacteristic toManagedObjectContext:self.managedObjectContext];
-                //save context
-                NSError *error = nil;
-                if (![self.managedObjectContext save:&error]) {
-                    NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-                    abort();
-                }
-                
-                [self getRatingCharacteristics];
-                [self.characteristicsTableView reloadData];
-                self.nameOfSuperCharacteristicToAddCharacteristic = nil;
-                
-            } else {
-                
-                self.nameOfSuperCharacteristicToAddCharacteristic = nil;
-            }
-            
-        }
-        
-    } else if ([self.kindOfPresentedTextView isEqualToString:@"modifyCharacteristic"]) {
-        
-        //get names
-        NSString *oldNameOfCharacteristic = ((UITextField *)self.selectedTextFieldView).text;
-        NSString *newNameOfCharacteristic = ((UITextField *)view).text;
-        
-        //replace
-        [AvailableCharacteristic replaceAvailableCharacteristic:oldNameOfCharacteristic withAvailableCharacteristic:newNameOfCharacteristic inManagedObjectContext:self.managedObjectContext];
-        //save context
-        //save context
-        NSError *error = nil;
-        if (![self.managedObjectContext save:&error]) {
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
-        
-        [self getRatingCharacteristics];
-        [self.characteristicsTableView reloadData];
-        
-    } else if ([self.kindOfPresentedTextView isEqualToString:@"modifySuperCharacteristic"]) {
-        
-        //get names
-        
-        NSString *oldname = ((UITextField *)self.selectedTextFieldView).text;
-        
-        UITextField *textFieldNew = (UITextField *)[view viewWithTag:35];
-        NSString *newname = textFieldNew.text;
-        
-        [AvailableSuperCharacteristic replaceAvailableSuperCharacteristic:oldname withAvailableCharacteristic:newname inManagedObjectContext:self.managedObjectContext];
-        
-        NSError *error = nil;
-        if (![self.managedObjectContext save:&error]) {
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
-        [self getRatingCharacteristics];
-        [self.characteristicsTableView reloadData];
-        
-        
-        
-    }
-}
-
-- (void)setTextFieldsFromUserDefaults
-{
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    
-    //web service url
-    NSString *webServiceURL = [defaults objectForKey:@"javaWebserviceConnection"];
-    [self.webServiceURLTextView setText:webServiceURL];
-    
+    //set text fields
+    //web service
+    [self.webServiceURLTextView setText:javaWebServiceUrl];
     //user credentials
-    NSArray *loginData = [defaults objectForKey:@"loginData"];
-    NSString *url = [loginData objectAtIndex:0];
-    [self.collaborationURLTextView setText:url];
-    NSString *username = [loginData objectAtIndex:1];
-    [self.collaborationUserTextField setText:username];
+    [self.collaborationURLTextView setText:[loginData objectAtIndex:0]];
+    [self.collaborationUserTextField setText:[loginData objectAtIndex:1]];
     NSString *password = [loginData objectAtIndex:2];
     NSString *dotpassword =@"";
     for (int i=1; i<password.length ; i++) {
         dotpassword = [dotpassword stringByAppendingString:@"●"];
     }
     [self.collaborationPasswordTextField setText:dotpassword];
-    
 }
 
 
@@ -426,12 +276,7 @@
         [eraseButton addTarget:self action:@selector(eraseCharacteristic:) forControlEvents:UIControlEventTouchUpInside];
         [eraseButton setTitle:@"\u274C" forState:UIControlStateNormal];
         [eraseButton setTitle:@"\u274C" forState:UIControlStateSelected];
-        
-        
-        
-        
-        
-        
+
         return cell;
         
         //beginning with the second row of each section, show the subcharacteristics
@@ -484,359 +329,228 @@
     }
 }
 
-
-#pragma mark - Show and Hide Views
-
-#define heightOfHeaderView   42
-
-
-- (IBAction)showCellToAddSupercharacteristic:(id)sender {
-    
-    NSArray *subviewArray = [[NSBundle mainBundle] loadNibNamed:@"AddSuperCharacteristicView" owner:self options:nil];
-    self.addSuperCharacteristicView = [subviewArray objectAtIndex:0];
-    
-    UIButton *addButton = (UIButton *)[self.addSuperCharacteristicView viewWithTag:22];
-    UIButton *abortButton = (UIButton *)[self.addSuperCharacteristicView viewWithTag:23];
-    UITextField *textField = (UITextField *)[self.addSuperCharacteristicView viewWithTag:35];
-    [textField setDelegate:self];
-    [addButton addTarget:self action:@selector(addSuperCharacteristic:) forControlEvents:UIControlEventTouchUpInside];
-    [abortButton addTarget:self action:@selector(hideViewToAddSuperCharacteristic:) forControlEvents:UIControlEventTouchUpInside];
-    
-    [self.addSuperCharacteristicView setFrame:CGRectMake(0, 0, self.characteristicsSubView.frame.size.width, heightOfHeaderView)];
-    [self.characteristicsSubView addSubview:self.addSuperCharacteristicView];
-    [self.addSuperCharacteristicButton setHidden:YES];
-    
-    [UIView animateWithDuration:0.2 animations:^{
-        
-        [self.addSuperCharacteristicView setFrame:CGRectMake(0, (heightOfHeaderView), self.characteristicsSubView.frame.size.width, heightOfHeaderView)];
-        [self.characteristicsTableView setFrame:CGRectMake(self.characteristicsTableView.frame.origin.x, (self.characteristicsTableView.frame.origin.y + heightOfHeaderView), self.characteristicsTableView.frame.size.width, (self.characteristicsTableView.frame.size.height - heightOfHeaderView))];
-        
-    
-    } completion:^(BOOL finished) {
-        
-        [textField becomeFirstResponder];
-        self.addSuperCharacteristicView = self.addSuperCharacteristicView;
-        
-    }];
-    
-
-}
-
-
-
-- (void)hideViewToAddSuperCharacteristic:(UIButton *)sender
-{
-    [UIView animateWithDuration:0.2 animations:^{
-        
-        [self.addSuperCharacteristicView setFrame:CGRectMake(0, 0, self.addSuperCharacteristicView.frame.size.width, self.addSuperCharacteristicView.frame.size.height)];
-        [self.characteristicsTableView setFrame:CGRectMake(self.characteristicsTableView.frame.origin.x, (self.characteristicsTableView.frame.origin.y - heightOfHeaderView), self.characteristicsTableView.frame.size.width, (self.characteristicsTableView.frame.size.height + heightOfHeaderView))];
-        
-        
-    } completion:^(BOOL finished) {
-        
-        [self.addSuperCharacteristicView removeFromSuperview];
-        self.addSuperCharacteristicView = nil;
-        [self getRatingCharacteristics];
-        [self.characteristicsTableView reloadData];
-        [self.addSuperCharacteristicButton setHidden:NO];
-        
-    }];
-}
-
-
-#pragma mark - Add delete characteristic
+#pragma mark - Add and Delete characteristic
 
 //called when user selects add button of characteristic
 - (void)addCharacteristicSelected:(UIButton *)sender
 {
+    //get first superview of sender that is a UITableViewCell
+    UITableViewCell *cell;
+    UIView *currentView = sender;
+    while (YES) {
+        if ([currentView isKindOfClass:[UITableViewCell class]]) {
+            cell = (UITableViewCell *)currentView;
+            break;
+        } else {
+            currentView = currentView.superview;
+        }
+    }
+    NSIndexPath *indexPath = [self.characteristicsTableView indexPathForCell:cell];
+    self.nameOfSuperCharacteristicToAddCharacteristic = [self.SuperCharacteristics objectAtIndex:indexPath.section];
+    self.characteristicState = 2;
     // perform modal segue to add characteristic
-    
-    /*
-    //get views
-    UIView *superView = (UIView *)sender.superview;
-    UITableViewCell *cell = (UITableViewCell *)superView.superview;
-    self.nameOfSuperCharacteristicToAddCharacteristic = [self.SuperCharacteristics objectAtIndex:[self.characteristicsTableView indexPathForCell:cell].section];
-    
-    NSArray *subviewArray = [[NSBundle mainBundle] loadNibNamed:@"AddCharacteristicTextField" owner:self options:nil];
-    self.selectedTextFieldView = [subviewArray objectAtIndex:0];
-    self.kindOfPresentedTextView = @"addCharacteristic";
-    [self performSegueWithIdentifier:@"textField" sender:cell];*/
+    [self performSegueWithIdentifier:@"addCharacteristic" sender:self];
 }
 
 
+- (IBAction)addSuperCharacteristicPressed:(UIButton *)sender {
+    
+    self.characteristicState = 1;
+    // perform modal segue to add characteristic
+    [self performSegueWithIdentifier:@"addCharacteristic" sender:self];
+    
+}
 
 //called when erase button is pushed in cell
 - (void)eraseCharacteristic:(UIButton *)sender
 {
-    //get the views
-    UIView *superView = (UIView *)sender.superview;
-    UITableViewCell *cell = (UITableViewCell *)superView.superview;
-    UILabel *textLabel = (UILabel *)[cell viewWithTag:30];
-    
+    //get first superview of sender that is a UITableViewCell
+    UITableViewCell *cell;
+    UIView *currentView = sender;
+    while (YES) {
+        if ([currentView isKindOfClass:[UITableViewCell class]]) {
+            cell = (UITableViewCell *)currentView;
+            break;
+        } else {
+            currentView = currentView.superview;
+        }
+    }
+    UIView *contentView = [cell viewWithTag:19];
+    UILabel *textLabel = (UILabel *)[contentView viewWithTag:30];
     //get index path of cell
     NSIndexPath *indexPath = [self.characteristicsTableView indexPathForCell:cell];
     
-    //find out if it's a supercharacteristic or subcharacteristic
-    NSString *characteristicType = @"Characteristic?";
+    self.nameOfCharacteristicToChange = textLabel.text;
+    self.characteristicState = 6;
     if (indexPath.row == 0) {
-        characteristicType = @"Super Characteristic?";
-        //for superchar get views again -- different cell structure
-        cell = (UITableViewCell *)superView.superview.superview;
-        textLabel = (UILabel *)[superView viewWithTag:30];
+        self.characteristicState = 5;
     }
-    
-    
-    //show allert that will ask for name of new characteristic
-    NSString *message = [@"Do you really want to delete this " stringByAppendingString:characteristicType];
-    AlertView * alert = [[AlertView alloc] initWithTitle:textLabel.text message:message delegate:self cancelButtonTitle:@"Delete" otherButtonTitles:@"Cancel", nil];
-    alert.objectToPass = cell;
-    alert.identifier = @"delete";
-    alert.alertViewStyle = UIAlertViewStyleDefault;
-    
-    [alert show];
+    //show modal alert view to ask for acknowledgement
+    [self performSegueWithIdentifier:@"modalAlert" sender:self];
 }
 
-
-
-
-- (void)addSuperCharacteristic:(UIButton *)sender
-{
-    //perform modal segue to add characteristic
-    
-    
-    
-    /*
-    UITextField *textField = (UITextField *)[self.addSuperCharacteristicView viewWithTag:35];
-    
-
-    if (![textField.text isEqualToString:@"Enter Name of Supercharacteristic to add..."] && ![textField.text isEqualToString:@""]) {
-        //then insert the new supercharacteristic
-        [AvailableSuperCharacteristic addNewAvailableSuperCharacteristic:textField.text toManagedObjectContext:self.managedObjectContext];
-        
-        //save context
-        NSError *error = nil;
-        if (![self.managedObjectContext save:&error]) {
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
-        
-        
-        [UIView animateWithDuration:0.2 animations:^{
-            
-            [self.addSuperCharacteristicView setFrame:CGRectMake(0, 0, self.addSuperCharacteristicView.frame.size.width, self.addSuperCharacteristicView.frame.size.height)];
-            [self.characteristicsTableView setFrame:CGRectMake(self.characteristicsTableView.frame.origin.x, (self.characteristicsTableView.frame.origin.y - heightOfHeaderView), self.characteristicsTableView.frame.size.width, (self.characteristicsTableView.frame.size.height + heightOfHeaderView))];
-            
-            
-        } completion:^(BOOL finished) {
-            
-            [self.addSuperCharacteristicView removeFromSuperview];
-            self.addSuperCharacteristicView = nil;
-            [self getRatingCharacteristics];
-            [self.characteristicsTableView reloadData];
-            [self.addSuperCharacteristicButton setHidden:NO];
-            
-        }];
-    }*/
-}
-
-#pragma mark - Alert View Delegate
-
-- (void)alertView:(AlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex{
-    
-    
-    if ([alertView.identifier isEqualToString:@"delete"]) {
-        
-        //if delete button was pressed
-        if (buttonIndex == 0) {
-            
-            UITableViewCell *cell = (UITableViewCell *)alertView.objectToPass;
-            NSIndexPath *indexPath = [self.characteristicsTableView indexPathForCell:cell];
-            NSFetchRequest *request;
-            
-            
-            //characteristic to delete is supercharacteristic
-            if (indexPath.row == 0) {
-                request = [NSFetchRequest fetchRequestWithEntityName:@"AvailableSuperCharacteristic"];
-            } else {
-                request = [NSFetchRequest fetchRequestWithEntityName:@"AvailableCharacteristic"];
-            }
-            
-            //look for
-            request.predicate = [NSPredicate predicateWithFormat:@"name =%@", alertView.title];
-            NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-            request.sortDescriptors = [NSArray arrayWithObject:sortDescription];
-            NSError *error = nil;
-            NSArray *matches = [self.managedObjectContext executeFetchRequest:request error:&error];
-            
-            //delete characteristic -- if it's a supercharacteristic, cascade will delete all characteristics that belong to it
-            [self.managedObjectContext deleteObject:[matches objectAtIndex:0]];
-            
-            //save context
-            if (![self.managedObjectContext save:&error]) {
-                NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-                abort();
-            }
-            
-            [self getRatingCharacteristics];
-            [self.characteristicsTableView reloadData];
-        }
-        
-        
-        
-    //restore defaults
-    } else if (([alertView.identifier isEqualToString:@"reset"]) && (buttonIndex == 0)) {
-        
-        
-        //getContext
-        //get context
-        SmartSourceAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-        NSManagedObjectContext *context = appDelegate.managedObjectContext;
-        
-        //delete all supercharacteristics
-        NSFetchRequest *request1 = [NSFetchRequest fetchRequestWithEntityName:@"AvailableSuperCharacteristic"];
-        NSSortDescriptor *sortDescription = [NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES];
-        request1.sortDescriptors = [NSArray arrayWithObject:sortDescription];
-        NSError *error = nil;
-        NSArray *matches1 = [context executeFetchRequest:request1 error:&error];
-        
-        for (int i=0; i<[matches1 count]; i++) {
-            //delete supercharacteristic, cascade will delete all characteristics that belong to it
-            [context deleteObject:[matches1 objectAtIndex:i]];
-        }
-        
-        //delete all projects
-        NSFetchRequest *request2 = [NSFetchRequest fetchRequestWithEntityName:@"Project"];
-        request2.sortDescriptors = [NSArray arrayWithObject:sortDescription];
-        NSArray *matches2 = [context executeFetchRequest:request2 error:&error];
-        
-        for (int i=0; i<[matches2 count]; i++) {
-            //delete supercharacteristic, cascade will delete all characteristics that belong to it
-            [context deleteObject:[matches2 objectAtIndex:i]];
-        }
-        
-        
-        
-        //insert root rating characteristics
-        [AvailableSuperCharacteristic addNewAvailableSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:context];
-        [AvailableSuperCharacteristic addNewAvailableSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:context];
-        
-        [AvailableCharacteristic addNewAvailableCharacteristic:@"Software Object Communication" toSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:context];
-        [AvailableCharacteristic addNewAvailableCharacteristic:@"Communication of Requirements" toSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:context];
-        [AvailableCharacteristic addNewAvailableCharacteristic:@"Communication among Developers" toSuperCharacteristic:@"Communication Complexity" toManagedObjectContext:context];
-        
-        [AvailableCharacteristic addNewAvailableCharacteristic:@"Business Process Specifity" toSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:context];
-        [AvailableCharacteristic addNewAvailableCharacteristic:@"Functional Specifity" toSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:context];
-        [AvailableCharacteristic addNewAvailableCharacteristic:@"Technical Specifity" toSuperCharacteristic:@"Knowledge Specifity" toManagedObjectContext:context];
-        
-        
-        //save context
-        if (![context save:&error]) {
-            NSLog(@"Unresolved error %@, %@", error, [error userInfo]);
-            abort();
-        }
-        [self getRatingCharacteristics];
-        [self.characteristicsTableView reloadData];
-        [self.mainMenu resetProjectModel];
-        
-    }
-}
-
-
-
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    NSLog(@"touched cell");
-    
-}
 
 - (IBAction)characteristicCellClicked:(UIButton *)sender {
     //start to edit characteristic
-    //get views
-    UITableViewCell *cell = (UITableViewCell *)sender.superview.superview;
+    //get first superview of sender that is a UITableViewCell
+    UITableViewCell *cell;
+    UIView *currentView = sender;
+    while (YES) {
+        if ([currentView isKindOfClass:[UITableViewCell class]]) {
+            cell = (UITableViewCell *)currentView;
+            break;
+        } else {
+            currentView = currentView.superview;
+        }
+    }
+    //get cell's index path
     NSIndexPath *indexPath = [self.characteristicsTableView indexPathForCell:cell];
-    
-    //get right characteristic
     NSString *nameOfCharacteristic = [[self.Characteristics objectAtIndex:indexPath.section] objectAtIndex:indexPath.row-1];
-    
-    //build view to edit characteristic
-    NSArray *subviewArray = [[NSBundle mainBundle] loadNibNamed:@"AddCharacteristicTextField" owner:self options:nil];
-    UITextField *textField = [subviewArray objectAtIndex:0];
-    [textField setText:nameOfCharacteristic];
-    self.selectedTextFieldView = textField;
-    self.kindOfPresentedTextView = @"modifyCharacteristic";
-    [self performSegueWithIdentifier:@"textField" sender:nil];
-    
-    
+    self.nameOfCharacteristicToChange = nameOfCharacteristic;
+    self.characteristicState = 4;
+    //perform modal segue to edit characteristic
+    [self performSegueWithIdentifier:@"addCharacteristic" sender:self]; 
 }
 
 - (IBAction)superCharacteristicCellClicked:(UIButton *)sender {
     //start to edit characteristic
     //get views
     UITableViewCell *cell = (UITableViewCell *)sender.superview.superview;
-    //NSIndexPath *indexPath = [self.characteristicsTableView indexPathForCell:cell];
-    
     UIView *contentView = [cell viewWithTag:19];
     UILabel *textLabel = (UILabel *)[contentView viewWithTag:30];
-    
     //get right characteristic
     NSString *nameOfCharacteristic = textLabel.text;
+    self.nameOfCharacteristicToChange = nameOfCharacteristic;
+    self.characteristicState = 3;
+    //perform modal segue
+    [self performSegueWithIdentifier:@"addCharacteristic" sender:self];
+}
+
+- (void)modalViewControllerHasBeenDismissedWithInput:(NSString *)input
+{
     
-    //build view to edit characteristic
-    NSArray *subviewArray = [[NSBundle mainBundle] loadNibNamed:@"AddSuperCharacteristicView" owner:self options:nil];
-    UIView *addSuperCharView = [subviewArray objectAtIndex:0];
-    [addSuperCharView setFrame:CGRectMake(0, 0, addSuperCharView.frame.size.width, (addSuperCharView.frame.size.height-7))];
-    UITextField *textField = (UITextField *)[addSuperCharView viewWithTag:35];
-    [textField setClearsOnBeginEditing:NO];
-    [textField setText:nameOfCharacteristic];
-    UIButton *button = (UIButton *)[addSuperCharView viewWithTag:22];
-    [button setTitle:@"change" forState:UIControlStateNormal];
-    self.selectedTextFieldView = addSuperCharView;
-    self.kindOfPresentedTextView = @"modifySuperCharacteristic";
-    [self performSegueWithIdentifier:@"textField" sender:nil];
+    switch (self.characteristicState) {
+        case 1:
+            //add input as new supercharacteristic
+            [self.settingsModel addNewSuperCharacteristicWithName:input];
+            break;
+            
+        case 2:
+            //add input as new characteristic to selected supercharacteristic
+            [self.settingsModel addNewCharacteristicWithName:input toSuperCharacteristicNamed:self.nameOfSuperCharacteristicToAddCharacteristic];
+            break;
+        case 3:
+            //change name of supercharacteristic to input
+            [self.settingsModel changeNameOfSuperCharacteristicFrom:self.nameOfCharacteristicToChange to:input];
+            break;
+        case 4:
+            //change name of characteristic to input
+            [self.settingsModel changeNameOfCharacteristicFrom:self.nameOfCharacteristicToChange to:input];
+            break;
+            
+        case 5:
+            //delete supercharacteristic
+            [self.settingsModel deleteSuperCharacteristicNamed:self.nameOfCharacteristicToChange];
+            break;
+            
+        case 6:
+            //delete characteristic
+            [self.settingsModel deleteCharacteristicNamed:self.nameOfCharacteristicToChange];
+            break;
+            
+        case 7:
+            //restore defautls
+            [self.settingsModel restoreDefaultSettings];
+            [self.mainMenu resetProjectModel];
+            break;
+            
+        default:
+            break;
+    }
+    
+    self.nameOfCharacteristicToChange = nil;
+    self.nameOfSuperCharacteristicToAddCharacteristic = nil;
+    
+    //reload characteristics and table view
+    NSArray *ratingCharacteristics = [self.settingsModel getSuperCharacteristicsAndCharacteristics];
+    self.SuperCharacteristics = [ratingCharacteristics objectAtIndex:0];
+    self.Characteristics = [ratingCharacteristics objectAtIndex:1];
+    [self.characteristicsTableView reloadData];
+}
+
+
+#pragma mark - Table view delegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //NSLog(@"touched cell");
     
 }
 
-- (void)viewDidUnload {
-    
-    [self setCollaborationURLTextView:nil];
-    [self setCollaborationUserTextField:nil];
-    [self setCollaborationPasswordTextField:nil];
-    [self setAddSuperCharacteristicButton:nil];
-    [self setBackButton:nil];
-    [self setBackButtonBackground:nil];
-    [super viewDidUnload];
-}
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
-    if ([segue.identifier isEqualToString:@"textField"]) {
-        ModalViewPresenterViewController *modalPresenter = (ModalViewPresenterViewController *)segue.destinationViewController;
-        [modalPresenter setDelegate:self];
+    if ([segue.identifier isEqualToString:@"addCharacteristic"]) {
+        //pass name of supercharacteristic to modal view controller
+        AddEditCharacteristicModalViewController *aCMVC = (AddEditCharacteristicModalViewController *)segue.destinationViewController;
+        [aCMVC setSettingsDelegate:self];
         
-        if ([self.kindOfPresentedTextView isEqualToString:@"loginData"]) {
-            UITextView *sle = (UITextView *)[self.selectedTextFieldView copy];
-            [modalPresenter setAppendAbortAndEnterButton:YES];
-            [modalPresenter setViewToPresent:sle];
+        switch (self.characteristicState) {
+            case 1:
+                [aCMVC setStringForTitleLabel:@"Add Supercharacteristic"];
+                [aCMVC setStringForTextField:@""];
+                break;
             
-        } else if ([self.kindOfPresentedTextView isEqualToString:@"addCharacteristic"]) {
-            UITextView *sle = (UITextView *)[self.selectedTextFieldView copy];
-            [modalPresenter setAppendAbortAndEnterButton:YES];
-            [((UITextField *)sle) setText:@""];
-            [modalPresenter setViewToPresent:sle];
-            
-        } else if ([self.kindOfPresentedTextView isEqualToString:@"modifyCharacteristic"]) {
-            UITextView *sle = (UITextView *)[self.selectedTextFieldView copy];
-            [modalPresenter setAppendAbortAndEnterButton:YES];
-            [modalPresenter setViewToPresent:sle];
-        } else if ([self.kindOfPresentedTextView isEqualToString:@"modifySuperCharacteristic"]) {
-            UITextView *sle = (UITextView *)self.selectedTextFieldView;
-            self.selectedTextFieldView = [[self.selectedTextFieldView viewWithTag:35] copy];
-            [modalPresenter setAppendAbortAndEnterButton:NO];
-            [modalPresenter setViewToPresent:sle];
+            case 2:
+                [aCMVC setStringForTitleLabel:@"Add Characteristic"];
+                [aCMVC setStringForTextField:@""];
+                break;
+            case 3:
+                [aCMVC setStringForTitleLabel:@"Change Supercharacteristic"];
+                [aCMVC setStringForTextField:self.nameOfCharacteristicToChange];
+                break;
+            case 4:
+                [aCMVC setStringForTitleLabel:@"Change Characteristic"];
+                [aCMVC setStringForTextField:self.nameOfCharacteristicToChange];
+                break;
+                
+            default:
+                break;
         }
-        
+    } else if ([segue.identifier isEqualToString:@"modalAlert"]) {
+        ModalAlertViewController *mAVC = (ModalAlertViewController *)segue.destinationViewController;
+        NSLog(@"before");
+        [mAVC setDelegate:self];
+        NSLog(@"after");
+        switch (self.characteristicState) {
+            case 5:
+                //delete superchar
+                [mAVC setStringForacknowledgeButton:@"Delete"];
+                [mAVC setStringForTextLabel:@"Are you sure to delete this Supercharacteristic?"];
+                [mAVC setStringForTitleLabel:self.nameOfCharacteristicToChange];
+                break;
+            case 6:
+                //delete char
+                [mAVC setStringForacknowledgeButton:@"Delete"];
+                [mAVC setStringForTextLabel:@"Are you sure to delete this Characteristic?"];
+                [mAVC setStringForTitleLabel:self.nameOfCharacteristicToChange];
+                break;
+            case 7:
+                //restore defaults
+                [mAVC setStringForacknowledgeButton:@"Restore Defaults"];
+                [mAVC setStringForTextLabel:@"The Characteristics will be restored to default and all projects will be deleted. Login data will be retained?"];
+                [mAVC setStringForTitleLabel:@"Restore Defaults"];
+                break;
+                
+            default:
+                break;
+        }
+    } else if ([segue.identifier isEqualToString:@"webServiceUrl"]) {
+        WebServiceModalViewController *wSMVC = (WebServiceModalViewController *)segue.destinationViewController;
+        [wSMVC setSettingsModel:self.settingsModel];
+    } else if ([segue.identifier isEqualToString:@"loginData"]) {
+        LoginDataModalViewController *lDMVC = (LoginDataModalViewController *)segue.destinationViewController;
+        [lDMVC setSettingsModel:self.settingsModel];
     }
 }
 

@@ -12,7 +12,9 @@
 #import "DecisionTableViewController.h"
 #import "VeraRomanButton.h"
 #import "ButtonExternalBackground.h"
-
+#import "PDFExporter.h"
+#import "SmartSourcePopoverController.h"
+#import "UploadCompleteHandler.h"
 
 @interface ResultsOverviewViewController ()
 
@@ -39,8 +41,11 @@
 @property (strong, nonatomic) NSIndexPath *selectedIndexPath;
 @property (strong, nonatomic) UITableView *selectedTableView;
 
+@property (strong, nonatomic) IBOutlet UIButton *shareButton;
 @property (strong, nonatomic) IBOutlet ButtonExternalBackground *backButton;
 @property (strong, nonatomic) IBOutlet UIView *backButtonBackground;
+
+@property (nonatomic, strong) UIDocumentInteractionController *documentController;
 
 
 @end
@@ -60,21 +65,135 @@
 @synthesize passComponentToDecisionTable = _passComponentToDecisionTable;
 @synthesize backButton = _backButton;
 @synthesize backButtonBackground = _backButtonBackground;
+@synthesize documentController = _documentController;
 
 //new
 @synthesize selectedIndexPath = _selectedIndexPath;
 @synthesize selectedTableView = _selectedTableView;
+@synthesize shareButton = _shareButton;
 
 
 
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
+//uses the project model to build a new report and shows it
+- (void)buildReportPdfAndShowItUserFriendly:(UIButton *)sender
 {
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
+    //check if printer friendly or not
+    if ([sender.titleLabel.text isEqualToString:@"Create Report"]) {
+        [self.projectModel createReportPdfAndReturnPathPrinterFriendly:NO];
+    } else {
+        [self.projectModel createReportPdfAndReturnPathPrinterFriendly:YES];
     }
-    return self;
+    NSURL *url = [NSURL fileURLWithPath:[self.projectModel getProjectObject].pathReportPdf];
+    UIDocumentInteractionController *controller = [UIDocumentInteractionController interactionControllerWithURL:url];
+    controller.delegate = self;
+    [self.popOver dismissPopoverAnimated:NO];
+    self.popOver = nil;
+    [controller presentPreviewAnimated:YES];
 }
+
+//triggers modalWaitingSegue which starts uploadthread
+- (void)uploadReport
+{
+    //dismiss view controller
+    [self.popOver dismissPopoverAnimated:YES];
+    self.popOver = nil;
+    //show waiting popup which will automatically start the upload thread -->prepare for segue
+    [self performSegueWithIdentifier:@"modalWaitingScreen" sender:self];
+}
+
+/*
+ method to be executed in a seperate thread to upload report either creating
+ a new one or using a previously created one. Notifies the passed handler once
+ upload is complete or upload has failed.
+ */
+- (void)uploadReportAndNotifyViewController:(id<UploadCompleteHandler>)handler
+{
+    BOOL reportNecessary = ([self.projectModel getProjectObject].pathReportPdf == nil);
+    BOOL success = [self.projectModel uploadPdfToCollaborationPlatformNewCreationNecessary:reportNecessary];
+    while (![handler ableToRespond]) {
+        //wait
+    }
+    if (success) {
+        [handler uploadComplete];
+    } else {
+        [handler uploadFailed];
+    }
+}
+
+
+
+- (IBAction)shareButtonPressed:(UIButton *)sender {
+    
+    //show popup to create new report, upload report directly or show old report if there is one
+    if (self.popOver == nil) {
+        
+        //view controller
+        UIViewController *viewC = [[UIViewController alloc] init];
+        //three buttons
+        CGFloat heightOfView = 150;
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 280, heightOfView)];
+        [view setBackgroundColor:[UIColor whiteColor]];
+        //color for all button titles
+        UIColor *colorForAllTitles = [UIColor colorWithRed:0.53 green:0.53 blue:0.53 alpha:1.0];
+        //font for all button titles
+        UIFont *fontForAllTitles = [UIFont fontWithName:@"BitstreamVeraSans-Roman" size:15.0];
+        //button1
+        UIButton *createReportButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [createReportButton setFrame:CGRectMake(0, 0, 280, 50)];
+        [createReportButton.titleLabel setFont:fontForAllTitles];
+        [createReportButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [createReportButton setTitleColor:colorForAllTitles forState:UIControlStateNormal];
+        [createReportButton setTitle:@"Create Report" forState:UIControlStateNormal];
+        [createReportButton addTarget:self action:@selector(buildReportPdfAndShowItUserFriendly:) forControlEvents:UIControlEventTouchUpInside];
+        [view addSubview:createReportButton];
+        //button2
+        UIButton *createReportPrinterButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [createReportPrinterButton setFrame:CGRectMake(0, 50, 280, 50)];
+        [createReportPrinterButton.titleLabel setFont:fontForAllTitles];
+        [createReportPrinterButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [createReportPrinterButton setTitleColor:colorForAllTitles forState:UIControlStateNormal];
+        [createReportPrinterButton setTitle:@"Create printer friendly Report" forState:UIControlStateNormal];
+        [createReportPrinterButton addTarget:self action:@selector(buildReportPdfAndShowItUserFriendly:) forControlEvents:UIControlEventTouchUpInside];
+        [view addSubview:createReportPrinterButton];
+        //button3
+        UIButton *exportButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [exportButton setFrame:CGRectMake(0, 100, 280, 50)];
+        [exportButton.titleLabel setFont:fontForAllTitles];
+        [exportButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [exportButton setTitleColor:colorForAllTitles forState:UIControlStateNormal];
+        [exportButton setTitle:@"Export to CodeBeamer" forState:UIControlStateNormal];
+        [exportButton addTarget:self action:@selector(uploadReport) forControlEvents:UIControlEventTouchUpInside];
+        [view addSubview:exportButton];
+        
+    
+        [viewC setView:view];
+        
+        //UIPopoverController *popover = [[UIPopoverController alloc] initWithContentViewController:viewC];
+        SmartSourcePopoverController *popover = [[SmartSourcePopoverController alloc] initWithContentViewController:viewC andTintColor:[UIColor colorWithRed:1.0 green:0.53 blue:0.0 alpha:1.0]];
+        popover.delegate = self;
+        popover.popoverContentSize=CGSizeMake(280.0, heightOfView);
+        
+        self.popOver = popover;
+        [self.popOver presentPopoverFromRect:sender.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+        
+    }
+}
+
+
+#pragma mark UIDocumentInteractionControllerDelegate methods
+
+- (UIViewController*)documentInteractionControllerViewControllerForPreview:(UIDocumentInteractionController *)controller
+{
+    UIViewController *viewController = [[UIViewController alloc] init];
+    [self.navigationController pushViewController:viewController animated:YES];
+    return viewController;
+}
+
+- (void)documentInteractionControllerDidEndPreview:(UIDocumentInteractionController *)controller
+{
+    [self.navigationController popViewControllerAnimated:YES];
+}
+
 
 - (IBAction)backToMainMenu:(id)sender {
     
@@ -95,7 +214,8 @@
     
     //backbutton
     [self.backButton setViewToChangeIfSelected:self.backButtonBackground];
-    
+    //entypo
+    [self.shareButton setTitle:@"\uE715" forState:UIControlStateNormal];
     
 	// Do any additional setup after loading the view.
     [NSThread detachNewThreadSelector:@selector(tellModelToCalculateResults) toTarget:self withObject:nil];
@@ -121,7 +241,8 @@
 - (void)deviceOrientationDidChange:(NSNotification *)notification {
     
     //get orientation
-    UIInterfaceOrientation deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];//[[UIDevice currentDevice] orientation];
+    UIInterfaceOrientation deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    
     
     //show/hide detail project info based on orientation
     if (UIInterfaceOrientationIsPortrait(deviceOrientation)) {
@@ -157,21 +278,7 @@
         [self.tableViewCore reloadData];
         [self.tableViewOutsourcing reloadData];
         
-        //show popover from right cell
-        if (self.popOver && self.isViewLoaded && self.view.window) {
-            NSLog(@"in device change method");
-            [self.popOver dismissPopoverAnimated:NO];
-            UITableViewCell *cell = [self.selectedTableView cellForRowAtIndexPath:self.selectedIndexPath];
-            CGRect rect = CGRectMake((cell.contentView.frame.origin.x + cell.frame.size.width - 10), cell.contentView.frame.origin.y, 10, 10);
-            [self.popOver presentPopoverFromRect:rect inView:cell.contentView permittedArrowDirections:(UIPopoverArrowDirectionDown | UIPopoverArrowDirectionUp) animated:YES];
-        }
-        
-        
-        
     } else {
-        
-        CGFloat heightOfTableViews = self.mainSubView.frame.size.height - (60 + self.subviewLabelCore.frame.size.height);
-        
         //fit view for landscape mode
         //move labels
         [self.subviewLabelCore setFrame:CGRectMake(20, 20, 314, 267)];
@@ -184,34 +291,17 @@
         [self.tableViewIndifferent setFrame:CGRectMake(688, 307, 314, 360)];
         
     
-        //show popover from right cell
-        if (self.popOver && self.isViewLoaded && self.view.window) {
-            NSLog(@"in device change method");
-            [self.popOver dismissPopoverAnimated:NO];
-            UITableViewCell *cell = [self.selectedTableView cellForRowAtIndexPath:self.selectedIndexPath];
-            CGRect rect = CGRectMake((cell.contentView.frame.origin.x + cell.frame.size.width - 10), cell.contentView.frame.origin.y, 10, 10);
-            [self.popOver presentPopoverFromRect:rect inView:cell.contentView permittedArrowDirections:(UIPopoverArrowDirectionDown | UIPopoverArrowDirectionUp) animated:YES];
-        }
-        
-        
-        
     }
+    
+    //show popover from right frame
+    if (self.popOver) {
+        [self.popOver presentPopoverFromRect:self.shareButton.frame inView:self.view permittedArrowDirections:UIPopoverArrowDirectionUp animated:NO];
+    }
+    
 }
 
 
-- (void)viewDidAppear:(BOOL)animated
-{
-    [super viewDidAppear:animated];
-    
-    
-    self.passComponentToDecisionTable = NO;
-    
-    if (self.popOver && self.isViewLoaded && self.view.window) {
-        UITableViewCell *cell = [self.selectedTableView cellForRowAtIndexPath:self.selectedIndexPath];
-        CGRect rect = CGRectMake((cell.contentView.frame.origin.x + cell.frame.size.width - 10), cell.contentView.frame.origin.y, 10, 10);
-        [self.popOver presentPopoverFromRect:rect inView:cell.contentView permittedArrowDirections:(UIPopoverArrowDirectionDown | UIPopoverArrowDirectionUp) animated:YES];
-    }
-}
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -228,6 +318,7 @@
     [self setTableViewCore:nil];
     [self setTableViewOutsourcing:nil];
     [self setTableViewIndifferent:nil];
+    [self setShareButton:nil];
     [super viewDidUnload];
 }
 
@@ -236,7 +327,7 @@
 - (void)tellModelToCalculateResults
 {
     self.classificationResult = [self.projectModel calculateResults];
-    [self.tableViewCore reloadData];
+    [self.tableViewCore reloadData]; 
     [self.tableViewIndifferent reloadData];
     [self.tableViewOutsourcing reloadData];
 }
@@ -481,6 +572,9 @@
             [decTVC markComponentAsSelected:self.lastComponentSelected];
         }
     
+    } else if ([segue.identifier isEqualToString:@"modalWaitingScreen"]) {
+        //start upload thread
+        [NSThread detachNewThreadSelector:@selector(uploadReportAndNotifyViewController:) toTarget:self withObject:segue.destinationViewController];
     }
 }
 

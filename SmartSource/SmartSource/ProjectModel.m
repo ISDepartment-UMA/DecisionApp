@@ -13,6 +13,7 @@
 #import "AvailableCharacteristic+Factory.h"
 #import "AvailableSuperCharacteristic+Factory.h"
 #import "WebServiceConnector.h"
+#import "PDFExporter.h"
 
 @interface ProjectModel ()
 @property (nonatomic, strong) Project *project;
@@ -58,8 +59,6 @@
     
 }
 
-
-
 //public method to get the project
 - (Project *)getProjectObject
 {
@@ -84,21 +83,9 @@
 }
 
 
-
 //method that calculates the results of the evaluation
 - (NSArray *)calculateResults
 {
-    
-    //calculate results again every time
-    //if it already exiists, just return
-    /*
-    if (self.classificationResult) {
-        return self.classificationResult;
-    }*/
-    
-    //otherwise calculate....
-    
-    
     //iterate through components
     NSEnumerator *componentEnumerator = [self.project.consistsOf objectEnumerator];
     NSArray *classification = [NSArray arrayWithObjects:[NSMutableArray array], [NSMutableArray array], [NSMutableArray array], nil];
@@ -170,84 +157,15 @@
 }
 
 
+
+
+
 - (Component *)getComponentObjectForID:(NSString *)componentID
 {
     return [Component getComponentForId:componentID fromManagedObjectContext:self.managedObjectContext];
 }
 
-/*returns used characteristics and rating values of a component in a three-dimensional array
- 
- first dimension:
- 0 --> superchars with values
- 1 --> chars with values
- 
- second dimension:
- 0 --> char
- 1 --> value/weight
- 
- */
-- (NSArray *)getCharsAndValuesArray:(NSString *)componentID
-{
-    
-    Component *comp = [Component getComponentForId:componentID fromManagedObjectContext:self.managedObjectContext];
-    
-    
-    
-    //initiate arrays of used supercharacteristics and characteristics
-    NSMutableArray *usedSuperChars = [NSMutableArray array];
-    NSMutableArray *usedChars = [NSMutableArray array];
-    
-    //initiate arrays for values
-    NSMutableArray *valueSuperChars = [NSMutableArray array];
-    NSMutableArray *valueChars = [NSMutableArray array];
-    
-    
-    //iterate through all supercharacteristics
-    SuperCharacteristic *superChar;
-    
-    //sort supercharacteristics
-    NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
-    NSEnumerator *superCharEnumerator = [[comp.ratedBy sortedArrayUsingDescriptors:descriptors] objectEnumerator];
-    
-    while ((superChar = [superCharEnumerator nextObject]) != nil) {
-        
-        //add supercharacteristic to used supercharacteristic array
-        [usedSuperChars addObject:superChar.name];
-        
-        
-        //add weight to array of supercharacteristic's values
-        [valueSuperChars addObject:superChar.weight];
-        
-        //iterate through all characteristics of supercharacteristic
-        Characteristic *characteristic;
-        
-        NSMutableArray *characteristicsOfSuperchar = [NSMutableArray array];
-        NSMutableArray *valueOfCharacteristics = [NSMutableArray array];
-        
-        NSArray *descriptors = [NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]];
-        NSEnumerator *charEnumerator = [[superChar.superCharacteristicOf sortedArrayUsingDescriptors:descriptors] objectEnumerator];
-        
-        while ((characteristic = [charEnumerator nextObject]) != nil) {
-            
-            //add characteristic to characteristic array
-            [characteristicsOfSuperchar addObject:characteristic.name];
-            
-            //add characteristic value to array
-            [valueOfCharacteristics addObject:characteristic.value];
-        }
-        
-        //add array of characteristics to characteristics array
-        [usedChars addObject:characteristicsOfSuperchar];
-        [valueChars addObject:valueOfCharacteristics];
-        
-        
-    }
-    
-    NSArray *output = [NSArray arrayWithObjects:[NSArray arrayWithObjects:[usedSuperChars copy], [valueSuperChars copy], nil], [NSArray arrayWithObjects:[usedChars copy], [valueChars copy], nil], nil];
-    
-    return output;
-    
-}
+
 
 - (BOOL)ratingCharacteristicsHaveBeenAdded
 {
@@ -493,6 +411,10 @@
 
 #pragma mark - Core Data Methods
 
+- (BOOL)saveContext
+{
+    return [Project saveContext:self.managedObjectContext];
+}
 
 //constructor that initializes the projectmodel and prepares the core database for the rating
 - (ProjectModel *)initWithProjectID:(NSString *)idOfProject
@@ -517,11 +439,8 @@
             //write project into database without any components
             self.project = [Project addNewProject:idOfProject toManagedObjectContext:self.managedObjectContext withTimestamp:nil];
         }
-        
-        
         return self;
     }
-    
 }
 
 
@@ -529,17 +448,14 @@
 {
     //additional characteristics
     if ([self ratingCharacteristicsHaveBeenAdded]) {
-        
         //if there is a characteristic to add, supercharacteristic will be added automatically
         //a supercharacteristic without subcharacteristics is not relevant for rating
         NSMutableSet *characteristicsToAdd = [NSMutableSet set];
         
         NSArray *availableSuperCharacteristics = [AvailableSuperCharacteristic getAllAvailableSuperCharacteristicsFromManagedObjectContext:self.managedObjectContext];
         Component *component = [[self.project.consistsOf objectEnumerator] nextObject];
-        
         //availablesupercharacteristics
         for (AvailableSuperCharacteristic *availableSuperChar in availableSuperCharacteristics) {
-            
             //check if all available supercharacteristics have been used in the component
             bool foundAvailableSuperChar = false;
             //iterate used supercharacteristics
@@ -547,7 +463,6 @@
                 if ([usedSuperChar.name isEqualToString:availableSuperChar.name]) {
                     //found
                     foundAvailableSuperChar = true;
-                    
                     //check if all available characteristics of a used supercharacteristics have been used
                     for (AvailableCharacteristic *availableCharacteristic in availableSuperChar.availableSuperCharacteristicOf) {
                         bool foundAvailableChar = false;
@@ -558,14 +473,12 @@
                                 foundAvailableChar = true;
                             }
                         }
-                        
                         if (!foundAvailableChar) {
                             [characteristicsToAdd addObject:availableCharacteristic];
                         }
                     }
                 }
             }
-            
             //if supercharacteristic has not been found, then add all subcharacteristics to project
             if (!foundAvailableSuperChar) {
                 for (AvailableCharacteristic *subCharOfSuperCharToAdd in availableSuperChar.availableSuperCharacteristicOf) {
@@ -578,26 +491,22 @@
         NSSet *charsToAdd = [characteristicsToAdd copy];
         //add additional characteristics to all components of the project
         for (Component *componentOfProject in self.project.consistsOf) {
+            //characteristics - supercharacteristics will be created automatically
             for (AvailableCharacteristic *charToAdd in charsToAdd) {
                 //if database already contains 
                 [Characteristic addNewCharacteristic:charToAdd.name withValue:[NSNumber numberWithInt:0] toSuperCharacteristic:charToAdd.hasAvailableSuperCharacteristic.name withWeight:[NSNumber numberWithInt:3] andComponent:componentOfProject.componentID andProject:self.project.projectID andManagedObjectContext:self.managedObjectContext];
             }
         }
-        
-    
-
-
     }
 
     //characteristics do remove
     if ([self ratingCharacteristicsHaveBeenDeleted]) {
-        
+        //initialize sets to collect
         NSMutableSet *characteristicsToDelete = [NSMutableSet set];
         NSMutableSet *superCharacteristicsToDelete = [NSMutableSet set];
-        
+        //get available characteristics
         NSArray *availableSuperCharacteristics = [AvailableSuperCharacteristic getAllAvailableSuperCharacteristicsFromManagedObjectContext:self.managedObjectContext];
-        
-        
+        //one component to check
         Component *component = [[self.project.consistsOf objectEnumerator] nextObject];
         for (SuperCharacteristic *usedSuperChar in component.ratedBy) {
             BOOL foundSuperChar = false;
@@ -614,48 +523,38 @@
                         }
                         
                         if (!foundChar) {
-                            [characteristicsToDelete addObject:usedChar];
+                            [characteristicsToDelete addObject:usedChar.name];
                         }
                     }
                 }
             }
             if (!foundSuperChar) {
-                [superCharacteristicsToDelete addObject:usedSuperChar];
+                [superCharacteristicsToDelete addObject:usedSuperChar.name];
             }
         }
-        
+        //collection of chars to remove
         NSSet *charsToDelete = [characteristicsToDelete copy];
         NSSet *superCharsToDelete = [superCharacteristicsToDelete copy];
-        
         //delete
         for (Component *componentOfProject in self.project.consistsOf) {
-            
             //delete supercharacteristics
-            for (SuperCharacteristic *superChar in superCharsToDelete) {
-                [Component removeSuperCharacteristicWithName:superChar.name fromComponentWithId:componentOfProject.componentID andManagedObjectContext:self.managedObjectContext];
+            for (NSString *superChar in superCharsToDelete) {
+                [SuperCharacteristic deleteSuperCharacteristicWithName:superChar fromComponentWithId:componentOfProject.componentID andManagedObjectContext:self.managedObjectContext];
             }
-            
             //delete characteristics
-            for (Characteristic *charToDelete in charsToDelete) {
-                [Component removeCharacteristicWithName:charToDelete.name andSuperCharName:charToDelete.hasSuperCharacteristic.name fromComponentWithId:component.componentID andManagedObjectContext:self.managedObjectContext];
+            for (NSString *charToDelete in charsToDelete) {
+                [Characteristic deleteCharacteristicWithName:charToDelete fromComponentWithId:componentOfProject.componentID andManagedObjectContext:self.managedObjectContext];
             }
-            
             //delete superchars that do not have any chars any more
             for (SuperCharacteristic *usedSC in component.ratedBy) {
                 if ([usedSC.superCharacteristicOf count] < 1) {
-                    [Component removeSuperCharacteristicWithName:usedSC.name fromComponentWithId:component.componentID andManagedObjectContext:self.managedObjectContext];
+                    [SuperCharacteristic deleteSuperCharacteristicWithName:usedSC.name fromComponentWithId:componentOfProject.componentID andManagedObjectContext:self.managedObjectContext];
                 }
             }
-            
-            
         }
     
     }
-    
-    
     return self;
-    
-    
 }
 
 
@@ -695,7 +594,7 @@
 - (void)setProjectHasBeenWeightedTrue
 {
     [self.project setWeightingHasBeenEdited:[NSNumber numberWithBool:YES]];
-    [self saveContext];
+    [Project saveContext:self.managedObjectContext];
 }
 
 
@@ -707,19 +606,14 @@
     BOOL output = YES;
     Project *project = self.project;
     NSEnumerator *componentEnumerator = [project.consistsOf objectEnumerator];
-    
     //iterate through components
     Component *comp;
     while ((comp = [componentEnumerator nextObject]) != nil) {
-        
         BOOL componentComplete = YES;
-        
         //iterate through all supercharacteristics
         SuperCharacteristic *superCharacteristic;
         NSEnumerator *superCharacteristicEnumerator = [comp.ratedBy objectEnumerator];
-        
         while ((superCharacteristic = [superCharacteristicEnumerator nextObject]) != nil) {
-            
             //iterate through all characteristics and check if one of them hasn't been rated yet (value == 0)
             Characteristic *characteristic;
             NSEnumerator *charEnumerator = [superCharacteristic.superCharacteristicOf objectEnumerator];
@@ -731,27 +625,41 @@
                 }
             }
         }
-        
-        
+        //mark component in core database as completely rated or not rated
         if (componentComplete) {
             [comp setRatingComplete:[NSNumber numberWithBool:YES]];
+        } else {
+            [comp setRatingComplete:[NSNumber numberWithBool:NO]];
         }
-        
-        
     }
-    
     if ([project.consistsOf count] == 0) {
         output = NO;
     }
     return output;
-    
 }
 
-- (BOOL)saveContext
+#pragma mark ReportGeneration
+
+- (NSString *)createReportPdfAndReturnPathPrinterFriendly:(BOOL)printerFriendly
 {
-    return [Component saveContext:self.managedObjectContext];
+    // create document
+    PDFExporter *exporter = [[PDFExporter alloc] initWithProjectModel:self];
+    NSString *fileName = [exporter generatePdfPrinterFriendly:printerFriendly];
+    self.project.pathReportPdf = fileName;
+    [self saveContext];
+    return fileName;
 }
 
+
+- (BOOL)uploadPdfToCollaborationPlatformNewCreationNecessary:(BOOL)necessary
+{
+    //check if document already present
+    if (necessary) {
+        [self createReportPdfAndReturnPathPrinterFriendly:NO];
+    }
+     NSString *fileName = [[@"SmartSourcer Results - " stringByAppendingString:[self getProjectName]] stringByAppendingString:@".pdf"];
+    return [WebServiceConnector uploadFileWithPath:self.project.pathReportPdf withName:fileName toProject:self.project.projectID];
+}
 
 
 

@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "ProjectModel.h"
 
-@interface ResultsOverviewViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIPopoverControllerDelegate>
+@interface ResultsOverviewViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIPopoverControllerDelegate, UIDocumentInteractionControllerDelegate>
 
 @property (strong, nonatomic) ProjectModel *projectModel;
 

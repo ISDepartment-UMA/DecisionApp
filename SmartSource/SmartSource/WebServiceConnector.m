@@ -9,72 +9,69 @@
 #import "WebServiceConnector.h"
 #import "SBJson.h"
 #import "Project+Factory.h"
-
+#import "SettingsModel.h"
 @implementation WebServiceConnector
 
-//import all components of a project from the webservice
-+ (NSArray *)getAllComponentsForProjectId:(NSString *)projectID
+//static login variables
+static NSString *serviceUrl;
+static NSString *login;
+static NSString *password;
+static NSString *javaServiceURL;
+
+#pragma mark helper methods to perform requests
+
+/*
+ fills the static login variables of this class with the crendentials
+ stored in nsuser defaults
+ */
++ (BOOL)getUserCredentials
 {
-    
     //login data
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSArray *loginData = [defaults objectForKey:@"loginData"];
-    NSString *serviceUrl = @"";
-    NSString *login = @"";
-    NSString *password = @"";
-    NSString *javaServiceURL = [defaults objectForKey:@"javaWebserviceConnection"];
-    
-    if (loginData != nil) {
+    NSArray *loginData = [SettingsModel getLoginData];
+    javaServiceURL = [SettingsModel getWebServiceUrl];
+    if (!javaServiceURL) {
+        return NO;
+    }
+    if (loginData) {
         serviceUrl = [loginData objectAtIndex:0];
         login = [loginData objectAtIndex:1];
         password = [loginData objectAtIndex:2];
+        return YES;
     } else {
-        return nil;
+        return NO;
     }
-    
-    
+}
+
+
+/*
+ performs the request specified in the passed url, parses the returned
+ json string to an id object and returns it
+ */
++ (id)performRequestWithUrl:(NSString *)url andTimeOutInterval:(CGFloat)numberOfSeconds
+{
     //JSON request to web service
     SBJsonParser *parser = [[SBJsonParser alloc] init];
-    
-    //building the url
-    NSString *url = [[[[[[[[javaServiceURL stringByAppendingString:@"DataFetcher/getAllComponentsForProject?url="] stringByAppendingString:serviceUrl] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&projectID="] stringByAppendingString:projectID];
-    
-    
     //sending request
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
+    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url] cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:numberOfSeconds];
     NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
     NSString *json_string = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
     id responsedic = [parser objectWithString:json_string error:nil];
     return responsedic;
-    
-    /*
-    //if the project has just one component, return it
-    if ([components isKindOfClass:[NSDictionary class]]) {
-        NSString *id = [NSString stringWithFormat:@"%d", [[components objectForKey:@"id"] integerValue]];
-        NSString *name = [components objectForKey:@"name"];
-        NSString *descr = [components objectForKey:@"description"];
-        return [NSArray arrayWithObject:[NSArray arrayWithObjects:id, name, descr, nil]];
-        
-        //else it consists of more than one component --> NSDictionaries inside an NSArray
-    } else {
-        NSEnumerator *enumerator = [components objectEnumerator];
-        NSMutableArray *output = [NSMutableArray arrayWithCapacity:1];
-        
-        NSDictionary *temp;
-        while ((temp = [enumerator nextObject]) != nil) {
-            NSString *id = [NSString stringWithFormat:@"%d", [[temp objectForKey:@"id"] integerValue]];
-            NSString *name = [temp objectForKey:@"name"];
-            NSString *description = [temp objectForKey:@"description"];
-            [output addObject:[NSArray arrayWithObjects:id, name, description, nil]];
-        }
-        return output;
-    }*/
-    
-    
-    
 }
 
 
+#pragma mark public retrieval methods
+
+//import all components of a project from the webservice
++ (NSArray *)getAllComponentsForProjectId:(NSString *)projectID
+{
+    if (![WebServiceConnector getUserCredentials]) {
+        return nil;
+    }
+    //building the url
+    NSString *url = [NSString stringWithFormat:@"%@DataFetcher/getAllComponentsForProject?url=%@&login=%@&password=%@&projectID=%@", javaServiceURL, serviceUrl, login, password, projectID];
+    return [WebServiceConnector performRequestWithUrl:url andTimeOutInterval:10.0];
+}
 
 
 
@@ -82,33 +79,14 @@
 + (NSDictionary *)getComponentForID:(NSString *)componentID
 {
     //login data
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSArray *loginData = [defaults objectForKey:@"loginData"];
-    NSString *serviceUrl = @"";
-    NSString *login = @"";
-    NSString *password = @"";
-    NSString *javaServiceURL = [defaults objectForKey:@"javaWebserviceConnection"];
-    
-    if (loginData != nil) {
-        serviceUrl = [loginData objectAtIndex:0];
-        login = [loginData objectAtIndex:1];
-        password = [loginData objectAtIndex:2];
-    } else {
+    if (![WebServiceConnector getUserCredentials]) {
         return nil;
     }
-    
-    //JSON request to web service
-    SBJsonParser *parser = [[SBJsonParser alloc] init];
-    
-    NSString *url = [[[[[[[[javaServiceURL stringByAppendingString:@"DataFetcher/getComponentInfo?url="] stringByAppendingString:serviceUrl] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&componentID="] stringByAppendingString:componentID];
-    
+    NSString *url = [NSString stringWithFormat:@"%@DataFetcher/getComponentInfo?url=%@&login=%@&password=%@&componentID=%@", javaServiceURL, serviceUrl, login, password, componentID];
     //sending request
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-    NSString *json_string = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
-    NSDictionary *responsedic = [parser objectWithString:json_string error:nil];
-    return responsedic;
+    return (NSDictionary *)[WebServiceConnector performRequestWithUrl:url andTimeOutInterval:5.0];
 }
+
 
 // JSON query to get all project ids, names and descriptions
 //@return: two dimensional array
@@ -117,79 +95,13 @@
 + (NSArray *)getAllProjectNames
 {
     //login data
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSArray *loginData = [defaults objectForKey:@"loginData"];
-    NSString *serviceUrl = @"";
-    NSString *login = @"";
-    NSString *password = @"";
-    NSString *javaServiceURL = [defaults objectForKey:@"javaWebserviceConnection"];
-    
-    if (loginData != nil) {
-        serviceUrl = [loginData objectAtIndex:0];
-        login = [loginData objectAtIndex:1];
-        password = [loginData objectAtIndex:2];
-    } else {
+    if (![WebServiceConnector getUserCredentials]) {
         return nil;
     }
-    
-    //JSON request to web service
-    
-    SBJsonParser *parser = [[SBJsonParser alloc] init];
-    NSString *url = [[[[[[javaServiceURL stringByAppendingString:@"DataFetcher/getAllProjects?url="] stringByAppendingString:serviceUrl] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password];// stringByAppendingString:@"&response=application/json"];
-    
+    NSString *url = [NSString stringWithFormat:@"%@DataFetcher/getAllProjects?url=%@&login=%@&password=%@", javaServiceURL, serviceUrl, login, password];
     //sending request
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-    NSString *json_string = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
-    NSArray *responsedic = [parser objectWithString:json_string error:nil];
-    
-
-    
-    return responsedic;
-
+    return (NSArray *)[WebServiceConnector performRequestWithUrl:url andTimeOutInterval:10.0];
 }
-
-+ (void)checkLoginData
-{
-    NSLog(@"checkLoginData");
-    //login data
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSArray *loginData = [defaults objectForKey:@"loginData"];
-    NSString *serviceUrl = @"";
-    NSString *login = @"";
-    NSString *password = @"";
-    NSString *javaServiceURL = [defaults objectForKey:@"javaWebserviceConnection"];
-    
-    if (loginData != nil) {
-        serviceUrl = [loginData objectAtIndex:0];
-        login = [loginData objectAtIndex:1];
-        password = [loginData objectAtIndex:2];
-    }
-    
-    //JSON request to web service
-    
-    SBJsonParser *parser = [[SBJsonParser alloc] init];
-    NSString *url = [[[[[[javaServiceURL stringByAppendingString:@"DataFetcher/checkLoginData?url="] stringByAppendingString:serviceUrl] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password];// stringByAppendingString:@"&response=application/json"];
-    
-    //sending request
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-    NSString *json_string = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
-    NSArray *responsedic = [parser objectWithString:json_string error:nil];
-    
-    
-    if ([responsedic count] > 0) {
-        NSLog([responsedic lastObject]);
-    } else {
-        NSLog([NSString stringWithFormat:@"%d", [responsedic count]]);
-        NSLog(serviceUrl);
-        NSLog(login);
-        NSLog(password);
-        NSLog(javaServiceURL);
-    }
-    
-}
-
 
 
 //retrieves project Information for a passed projectID
@@ -204,38 +116,79 @@
 + (NSDictionary *)getProjectInfoDictionary:(NSString *)projectID
 {
     //login data
-    NSUserDefaults *defaults = [NSUserDefaults standardUserDefaults];
-    NSArray *loginData = [defaults objectForKey:@"loginData"];
-    NSString *serviceUrl = @"";
-    NSString *login = @"";
-    NSString *password = @"";
-    NSString *javaServiceURL = [defaults objectForKey:@"javaWebserviceConnection"];
-    
-    if (loginData != nil) {
-        serviceUrl = [loginData objectAtIndex:0];
-        login = [loginData objectAtIndex:1];
-        password = [loginData objectAtIndex:2];
+    if (![WebServiceConnector getUserCredentials]) {
+        return nil;
+    }
+    NSString *url = [NSString stringWithFormat:@"%@DataFetcher/getInfoForProjectObject?url=%@&login=%@&password=%@&projectID=%@", javaServiceURL, serviceUrl, login, password, projectID];
+    //sending request
+    return (NSDictionary *)[WebServiceConnector performRequestWithUrl:url andTimeOutInterval:5.0];
+}
+
+//checks the passed login data for the passed javaServiceURL
++ (NSString *)checkLoginData:(NSArray *)loginData withServiceUrl:(NSString *)javaServiceURL
+{
+    NSString *url = [NSString stringWithFormat:@"%@DataFetcher/checkLoginData?url=%@&login=%@&password=%@", javaServiceURL, [loginData objectAtIndex:0], [loginData objectAtIndex:1], [loginData objectAtIndex:2]];
+    //sending request
+    id responsedic = [self performRequestWithUrl:url andTimeOutInterval:2.0];
+    if (!responsedic) {
+        return @"timeoutError";
     } else {
+        return [(NSArray *)responsedic lastObject];
+    }
+}
+
+//checks connection to webserice
++ (BOOL)checkConnectionToWebService:(NSString *)javaWebServiceUrl
+{
+    NSString *url = [NSString stringWithFormat:@"%@DataFetcher/clientHello", javaWebServiceUrl];
+    //sending request
+    NSArray *responsedic = [WebServiceConnector performRequestWithUrl:url andTimeOutInterval:2.0];
+    //if server hello received, return true
+    if (([responsedic count] > 0) && ([[responsedic lastObject] isEqualToString:@"serverHello"])) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+
++ (BOOL)uploadFileWithPath:(NSString *)filePath withName:(NSString *)fileName toProject:(NSString *)projectID
+{
+    //login data
+    if (![WebServiceConnector getUserCredentials]) {
         return nil;
     }
     
     //JSON request to web service
     SBJsonParser *parser = [[SBJsonParser alloc] init];
     
+    //NSURL *url = [NSURL URLWithString:[javaServiceURL stringByAppendingString:@"DataPoster/pdfUpload"]];
+    NSString *urlString = [[[[[[[[javaServiceURL stringByAppendingString:@"DataPoster/pdfUpload?url="] stringByAppendingString:serviceUrl] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&projectID="] stringByAppendingString:projectID];
+    NSMutableURLRequest *request= [[NSMutableURLRequest alloc] init];
     
-    NSString *url = [[[[[[[[javaServiceURL stringByAppendingString:@"DataFetcher/getInfoForProjectObject?url="] stringByAppendingString:serviceUrl] stringByAppendingString:@"&login="] stringByAppendingString:login] stringByAppendingString:@"&password="] stringByAppendingString:password] stringByAppendingString:@"&projectID="] stringByAppendingString:projectID];
+    [request setURL:[NSURL URLWithString:urlString]];
+    [request setHTTPMethod:@"POST"];
+    NSString *boundary = @"---------------------------14737809831466499882746641449";
+    NSString *contentType = [NSString stringWithFormat:@"multipart/form-data; boundary=%@",boundary];
+    [request addValue:contentType forHTTPHeaderField: @"Content-Type"];
     
-    //sending request
-    NSURLRequest *request = [NSURLRequest requestWithURL:[NSURL URLWithString:url]];
-    NSData *response = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
-    NSString *json_string = [[NSString alloc] initWithData:response encoding:NSUTF8StringEncoding];
-    NSDictionary *responsedic = [parser objectWithString:json_string error:nil];
-    return responsedic;
-    
-    
+    NSMutableData *body = [NSMutableData data];
+	[body appendData:[[NSString stringWithFormat:@"\r\n--%@\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+	[body appendData:[[NSString stringWithFormat:@"Content-Disposition: form-data; name=\"file\"; filename=\"%@\"\r\n", fileName] dataUsingEncoding:NSUTF8StringEncoding]];
+	[body appendData:[@"Content-Type: application/octet-stream\r\n\r\n" dataUsingEncoding:NSUTF8StringEncoding]];
+	[body appendData:[NSData dataWithData:[[NSData alloc] initWithContentsOfFile:filePath]]];
+	[body appendData:[[NSString stringWithFormat:@"\r\n--%@--\r\n",boundary] dataUsingEncoding:NSUTF8StringEncoding]];
+	// setting the body of the post to the reqeust
+	[request setHTTPBody:body];
+        
+    NSData *returnData = [NSURLConnection sendSynchronousRequest:request returningResponse:nil error:nil];
+    NSString *returnString = [[NSString alloc] initWithData:returnData encoding:NSUTF8StringEncoding];
+    NSArray *responsedic = [parser objectWithString:returnString error:nil];
+    if ([[responsedic lastObject] isEqualToString:@"Success"]) {
+        return YES;
+    } else {
+        return NO;
+    }
 }
-
-
-
 
 @end

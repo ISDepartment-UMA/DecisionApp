@@ -18,13 +18,13 @@
 #import "Characteristic+Factory.h"
 #import "SuperCharacteristic+Factory.h"
 
+
 @interface ProjectPlatformModel()
 
 @property (strong, nonatomic) NSArray *selectedProject;
 @property (strong, nonatomic) NSArray *availableProjects;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic) BOOL timerHasStoped;
-@property (strong, nonatomic)NSArray *projectsFromWebService;
 
 @end
 
@@ -32,7 +32,6 @@
 @synthesize selectedProject = _selectedProject;
 @synthesize managedObjectContext = _managedObjectContext;
 @synthesize availableProjects = _availableProjects;
-@synthesize projectsFromWebService = _projectsFromWebService;
 @synthesize timerHasStoped = _timerHasStoped;
 
 - (NSArray *)getSelectedProject
@@ -56,39 +55,63 @@
 }
 
 
+
+
 #pragma mark - WebService Methods
 
-
-//returns a two dimensional array with all project's id, names and descriptions
-- (NSArray *)getAllProjectNames
+- (NSArray *)getAllProjectsNamesAndSetDelegate:(id<ProjectPlatformModelDelegate>)delegate
 {
+    //get projects from core database
+    NSArray *storedProjects = [self getStoredProjects];
+    //get projects from webservice
+    NSArray *webServiceProjects = [WebServiceConnector getAllProjectNames];
     
-    self.projectsFromWebService = [WebServiceConnector getAllProjectNames];
-    NSMutableArray *mutableArray = [self.projectsFromWebService mutableCopy];
-    
+    //timeout occurred or not
+    if (!webServiceProjects) {
+        //keep trying and return stored projects
+        [NSThread detachNewThreadSelector:@selector(retryConnectionToWebServiceAndAlertDelegate:) toTarget:self withObject:delegate];
+        NSArray *output = [NSArray arrayWithObjects:storedProjects, [NSArray array], nil];
+        return output;
+        
+    } else {
+        //merge stored projects and projects from webservice
+        return [self mergeProjectsFromWebService:webServiceProjects andCoreDatabase:storedProjects];
+    }
+}
+
+- (NSArray *)mergeProjectsFromWebService:(NSArray *)pWebService andCoreDatabase:(NSArray *)pCoreData
+{
+    NSMutableArray *mutableArray = [pWebService mutableCopy];
     //eliminate projects that are already stored on the device
-    for (NSArray *project in self.projectsFromWebService) {
+    for (NSArray *project in pWebService) {
         if ([Project getProjectForId:[project objectAtIndex:0] fromManagedObjectContext:self.managedObjectContext]) {
             [mutableArray removeObject:project];
         }
     }
-    
-    
     //combine arrays and return
-    self.projectsFromWebService = [mutableArray copy];
-    
-    //if array with projects from webservice is nil, initialize empty array
-    if (!self.projectsFromWebService) {
-        self.projectsFromWebService = [NSArray array];
-    }
-    
-    NSArray *storedProjects = [self getStoredProjects];
-    NSArray *output = [NSArray arrayWithObjects:storedProjects, self.projectsFromWebService, nil];
+    pWebService = [mutableArray copy];
+    NSArray *output = [NSArray arrayWithObjects:pCoreData, pWebService, nil];
     return output;
-    
 }
 
-
+/*
+ permenantly looks for a connection to retrieve projects from the webservice
+ until projects have been found or the delegate is does not need them any more
+ if connection works, the delegate is alerted
+ */
+- (void)retryConnectionToWebServiceAndAlertDelegate:(id<ProjectPlatformModelDelegate>)delegate
+{
+    NSArray *webServiceProjects = nil;
+    while (([delegate projectPlatformModelShouldKeepRetryingConnection]) && !webServiceProjects) {
+        webServiceProjects = [WebServiceConnector getAllProjectNames];
+        if (webServiceProjects) {
+            //get projects from core database
+            NSArray *storedProjects = [self getStoredProjects];
+            NSArray *output = [self mergeProjectsFromWebService:webServiceProjects andCoreDatabase:storedProjects];
+            [delegate projectArrayDidChange:output];
+        }
+    }
+}
 
 
 
@@ -96,8 +119,6 @@
 
 - (NSArray *)getStoredProjects
 {
-    
-    
     NSArray *matches = [Project getStoredAllStoredProjectsFromManagedObjectContext:self.managedObjectContext];
     
     //initiate array of available projects

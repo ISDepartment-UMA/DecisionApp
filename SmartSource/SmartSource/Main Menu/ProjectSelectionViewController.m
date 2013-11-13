@@ -37,7 +37,11 @@
 
 
 
-
+#pragma mark inherited methods
+/*
+ as soon as view appears, it triggers a seperate thread that uses the model
+ to retrieve all projects available from webservice and internal database
+ */
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
@@ -46,19 +50,6 @@
     self.availableCells = nil;
     self.displayedCells = nil;
     [NSThread detachNewThreadSelector:@selector(getProjects) toTarget:self withObject:nil];
-    
-    //while thread is running, wait
-    while (!self.displayedCells) {
-        //do nothing
-    }
-    
-    
-    //in case projects from webservice are empty, start seperate thread that looks for them
-    if ([[self.availableCells objectAtIndex:1] count] < 1) {
-        [NSThread detachNewThreadSelector:@selector(keepLookingForProjects) toTarget:self withObject:nil];
-    }
-    
-    [self.tableView reloadData];
 }
 
 
@@ -70,6 +61,11 @@
     self.didNotUnload = YES;
     self.projectSearchBar.delegate = self;
     self.projectSearchBar.hidden = NO;
+    /*
+    [self.projectSearchBar setBackgroundImage:[UIImage imageNamed:@"search_bar_background.jpg"]];
+    [self.projectSearchBar setSearchFieldBackgroundImage:[UIImage imageNamed:@"search_bar_textfield.jpg"] forState:UIControlStateNormal];*/
+    
+    [self.projectSearchBar setTranslucent:YES];
     self.availableCells = nil;
     self.displayedCells = nil;
     
@@ -79,46 +75,36 @@
 }
 
 
-//method to be called in seperate thread that keeps looking for projects from the webservice
-- (void)keepLookingForProjects
-{
-    //keep looking for projects
-    while (([[self.availableCells objectAtIndex:1] count] < 1) && self.didNotUnload) {
-
-        NSThread *thread = [[NSThread alloc] initWithTarget:self selector:@selector(getProjects) object:nil];
-        [thread start];
-        
-        while ([thread isExecuting]) {
-            //do nothing
-        }
-    }
-    
-    self.displayedCells = [self.availableCells copy];
-    [self.tableView reloadData];
-}
-
 - (IBAction)backButtonPressed:(id)sender {
     //make modal view controller disappear
     [self dismissModalViewControllerAnimated:YES];
 }
 
+# pragma mark project retrival and projectplatformmodeldelegate
 
+//method to be called from delegate, if new projects have been found
+- (void)projectArrayDidChange:(NSArray *)availableProjects
+{
+    self.availableCells = availableProjects;
+    self.displayedCells = [self.availableCells copy];
+    [self.tableView reloadData];
+}
+
+//method to be called from delegate if connection should be retried
+- (BOOL)projectPlatformModelShouldKeepRetryingConnection
+{
+    return (self.isViewLoaded && self.view.window);
+}
 
 //seperate method to be called that gets projects from the projectplatform model
-- (BOOL)getProjects
+- (void)getProjects
 {
-    self.availableCells = [self.platformModel getAllProjectNames];
-    self.displayedCells = [self.availableCells copy];    
-    return YES;
+    //get stored projects first
+    self.availableCells = [self.platformModel getAllProjectsNamesAndSetDelegate:self];
+    self.displayedCells = [self.availableCells copy];
+    [self.tableView reloadData];
 }
 
-
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
 
 
 
@@ -245,44 +231,6 @@
    
 }
 
-/*
-// Override to support conditional editing of the table view.
-- (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
-}
-*/
-
-/*
-// Override to support editing the table view.
-- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    if (editingStyle == UITableViewCellEditingStyleDelete) {
-        // Delete the row from the data source
-        [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
-    }   
-    else if (editingStyle == UITableViewCellEditingStyleInsert) {
-        // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-    }   
-}
-*/
-
-/*
-// Override to support rearranging the table view.
-- (void)tableView:(UITableView *)tableView moveRowAtIndexPath:(NSIndexPath *)fromIndexPath toIndexPath:(NSIndexPath *)toIndexPath
-{
-}
-*/
-
-/*
-// Override to support conditional rearranging of the table view.
-- (BOOL)tableView:(UITableView *)tableView canMoveRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    // Return NO if you do not want the item to be re-orderable.
-    return YES;
-}
-*/
 
 #pragma mark - Table view delegate
 

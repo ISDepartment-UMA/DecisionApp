@@ -151,128 +151,6 @@
     
 }
 
-- (void)calculateResults
-{
-    //explanation
-    //Since you rated Knowledge Specificity high and Communication complexity low, the weighted average value is low which indicates outsourcing
-    //a core component that should be produced in house
-    //indifference.
-    //string for result explanation
-    NSString *explanationTmp = @"Since you rated";
-    
-    //calculate the sum of all weights of supercharacteristics
-    float totalWeightOfSupercharacteristics = 0.0;
-    for (int i=0; i<[[self.superChars objectAtIndex:1] count]; i++) {
-        totalWeightOfSupercharacteristics += [[[self.superChars objectAtIndex:1] objectAtIndex:i] floatValue];
-    }
-    self.totalWeightOfSuperCharacteristics = totalWeightOfSupercharacteristics;
-    
-    
-    float weightedSumOfSupercharacteristics = 0.0;
-    
-    NSMutableArray *mutableValuesForCells = [NSMutableArray array];
-    
-    //for every supercharacteristic
-    for (int i=0; i<[[self.superChars objectAtIndex:0] count]; i++) {
-        
-        NSMutableArray *valuesForCell = [NSMutableArray array];
-        
-        //add name of characteristic...
-        NSString *nameOfSuperCharacteristic = [[self.superChars objectAtIndex:0] objectAtIndex:i];
-        
-        //...to cells
-        [valuesForCell addObject:nameOfSuperCharacteristic];
-        
-        // ...to explanation
-        if ((i == ([[self.superChars objectAtIndex:0] count]-1)) && (i > 0)) {
-            explanationTmp = [[explanationTmp stringByAppendingString:@" and "] stringByAppendingString:nameOfSuperCharacteristic];
-        } else if (i > 0){
-            explanationTmp = [[explanationTmp stringByAppendingString:@", "] stringByAppendingString:nameOfSuperCharacteristic];
-        } else {
-            explanationTmp = [[explanationTmp stringByAppendingString:@" "] stringByAppendingString:nameOfSuperCharacteristic];
-        }
-        
-        
-        //add evaluation
-        NSArray *subCharacteristicsValues = [[self.chars objectAtIndex:1] objectAtIndex:i];
-        float sum = 0.0;
-        //add all values
-        for (int y=0; y<[subCharacteristicsValues count]; y++) {
-            sum = sum + [[subCharacteristicsValues objectAtIndex:y] floatValue];
-        }
-        //devide the sum by the number of characteristics --> average and extract the rating of the supercharacteristic
-        float superCharValue = sum/[subCharacteristicsValues count];
-        
-        //add rating average string name
-        // ... to cell
-        [valuesForCell addObject:[SmartSourceFunctions getHighMediumLowStringForFloatValue:superCharValue]];
-        //...to explanation
-        explanationTmp = [[explanationTmp stringByAppendingString:@" "] stringByAppendingString:[SmartSourceFunctions getSmallHighMediumLowStringForFloatValue:superCharValue]];
-        
-        //add rating average string number
-        [valuesForCell addObject:[NSString stringWithFormat:@"%.1f", superCharValue]];
-        
-        //add weight
-        float weight = ([[[self.superChars objectAtIndex:1] objectAtIndex:i] floatValue]/self.totalWeightOfSuperCharacteristics);
-        [valuesForCell addObject:[[NSString stringWithFormat:@"%.f", (weight * 100)] stringByAppendingString:@"%"]];
-        
-        //add weighted average
-        float weightedAverage = ([[[self.superChars objectAtIndex:1] objectAtIndex:i] floatValue]/self.totalWeightOfSuperCharacteristics) * superCharValue;
-        [valuesForCell addObject:[NSString stringWithFormat:@"%.1f", weightedAverage]];
-        
-        //add the weighted value to the end rating value
-        weightedSumOfSupercharacteristics += ([[[self.superChars objectAtIndex:1] objectAtIndex:i] floatValue]/self.totalWeightOfSuperCharacteristics) * superCharValue;
-        
-        //add array to mutableValuesForCells
-        NSArray *result = [valuesForCell copy];
-        [mutableValuesForCells addObject:result];
-    }
-    
-    self.valuesForCells = [mutableValuesForCells copy];
-    
-    //check if sum of weighted averages is correct
-    CGFloat sum = 0.0;
-    for (NSArray *oneCellsValues in self.valuesForCells) {
-        sum += [[oneCellsValues lastObject] floatValue];
-    }
-    
-    //if sum is not the same then add difference to last superchars weighted average
-    CGFloat roundedWeightedSumOfSupercharacteristics = [[NSString stringWithFormat:@"%.1f", weightedSumOfSupercharacteristics] floatValue];
-    CGFloat roundedSumFromLabels = [[NSString stringWithFormat:@"%.1f", sum] floatValue];
-    
-    if (roundedSumFromLabels != roundedWeightedSumOfSupercharacteristics) {
-        
-        CGFloat difference = roundedSumFromLabels - roundedWeightedSumOfSupercharacteristics;
-        if (difference < 0) {
-            difference = difference * (-1);
-        }
-        
-        NSMutableArray *lastCellsValues = [[self.valuesForCells lastObject] mutableCopy];
-        CGFloat newWeightedAverage = [[[self.valuesForCells lastObject] lastObject] floatValue] + difference;
-        [lastCellsValues replaceObjectAtIndex:4 withObject:[NSString stringWithFormat:@"%.1f", newWeightedAverage]];
-        [mutableValuesForCells replaceObjectAtIndex:([self.valuesForCells count]-1) withObject:[lastCellsValues copy]];
-        self.valuesForCells = [mutableValuesForCells copy];
-    }
-
-    
-    self.weightedSumOfSuperCharacteristics = weightedSumOfSupercharacteristics;
-    
-    explanationTmp = [[[explanationTmp stringByAppendingString:@", the weighted average is "] stringByAppendingString:[SmartSourceFunctions getSmallHighMediumLowStringForFloatValue:weightedSumOfSupercharacteristics]] stringByAppendingString:@" which indicates"];
-    
-    if (weightedSumOfSupercharacteristics < 1.67) {
-        explanationTmp = [explanationTmp stringByAppendingString:@" outsourcing."];
-    } else if (weightedSumOfSupercharacteristics < 2.34) {
-        explanationTmp = [explanationTmp stringByAppendingString:@" indifference."];
-    } else if (weightedSumOfSupercharacteristics <= 3.0) {
-        explanationTmp = [explanationTmp stringByAppendingString:@" a core component that should be produced in-house."];
-    }
-    
-    self.explanation = explanationTmp;
-    [self.tableView reloadData];
-    
-}
-
-
 
 - (void)updateLabelsFromResults
 {
@@ -290,17 +168,8 @@
     [self.resultSumWeightedAveragesLabel setText:[NSString stringWithFormat:@"%.1f", self.weightedSumOfSuperCharacteristics]];
     
     //set evaluation label - high, medium low
-    if (self.weightedSumOfSuperCharacteristics < 1.67) {
-        [self.resultClassificationLetterLabel setText:@"OUTSOURCING"];
-        [self.resultIconImageView setImage:[UIImage imageNamed:@"Result_Out.png"]];
-    } else if (self.weightedSumOfSuperCharacteristics < 2.34) {
-        [self.resultClassificationLetterLabel setText:@"INDIFFERENT"];
-        [self.resultIconImageView setImage:[UIImage imageNamed:@"Result_Un.png"]];
-    } else if (self.weightedSumOfSuperCharacteristics <= 3.0) {
-        [self.resultClassificationLetterLabel setText:@"CORE"];
-        [self.resultIconImageView setImage:[UIImage imageNamed:@"Result_In.png"]];
-    }
-    
+    [self.resultIconImageView setImage:[SmartSourceFunctions getImageForWeightedAverageValue:self.weightedSumOfSuperCharacteristics]];
+    [self.resultClassificationLetterLabel setText:[SmartSourceFunctions getOutIndCoreStringForWeightedAverageValue:self.weightedSumOfSuperCharacteristics]];
     [self.scaleView setValue:self.weightedSumOfSuperCharacteristics];
 }
 
@@ -344,12 +213,16 @@
 {
     //set model
     self.projectModel = model;
-    NSArray *returnedValues = [self.projectModel getCharsAndValuesArray:component.componentID];
-    self.superChars = [returnedValues objectAtIndex:0];
-    self.chars = [returnedValues objectAtIndex:1];
+    self.currentComponent = [[ComponentModel alloc] initWithComponentId:component.componentID];
+    self.totalWeightOfSuperCharacteristics = [self.currentComponent getTotalWeightOfSuperCharacteristics];
     
-    self.currentComponent = [[ComponentModel alloc] initWithComponent:component];
-    [self calculateResults];
+    NSDictionary *results = [self.currentComponent calculateDetailedResults];
+    self.explanation = [results objectForKey:@"explanationText"];
+    self.weightedSumOfSuperCharacteristics = [[results objectForKey:@"weightedSumOfSupercharacteristics"] floatValue];
+    self.valuesForCells = [results objectForKey:@"valuesForCells"];
+    self.superChars = [results objectForKey:@"superChars"];
+    self.chars = [results objectForKey:@"chars"];
+    [self.tableView reloadData];
     
     
 }
