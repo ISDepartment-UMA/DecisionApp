@@ -90,9 +90,7 @@
 }
 
 - (IBAction)selectProjects:(id)sender {
-    [self dismissModalViewControllerAnimated:YES];
-    //[[NSNotificationCenter defaultCenter] postNotificationName:@"LoadProjectsFromCodebeamer" object:nil];
-    
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 

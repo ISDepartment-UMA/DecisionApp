@@ -14,11 +14,16 @@
 #import "AvailableSuperCharacteristic+Factory.h"
 #import "WebServiceConnector.h"
 #import "PDFExporter.h"
+#import "Requirement+Factory.h"
+#import "Graph.h"
+#import "GraphEdge.h"
+#import "GraphNode.h"
+#import "SODAFunctions.h"
+#import "Component+Factory.h"
 
 @interface ProjectModel ()
 @property (nonatomic, strong) Project *project;
 @property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-
 @property (strong, nonatomic) NSArray *classificationResult;
 
 
@@ -28,6 +33,7 @@
 //for decision table
 @property (strong, nonatomic) NSDictionary *superCharValueDic;
 
+//SODA
 
 
 @end
@@ -169,12 +175,11 @@
 
 - (BOOL)ratingCharacteristicsHaveBeenAdded
 {
+    //available characteristics from settings
     NSArray *availableSuperCharacteristics = [AvailableSuperCharacteristic getAllAvailableSuperCharacteristicsFromManagedObjectContext:self.managedObjectContext];
     Component *component = [[self.project.consistsOf objectEnumerator] nextObject];
-    
     //availablesupercharacteristics
     for (AvailableSuperCharacteristic *availableSuperChar in availableSuperCharacteristics) {
-        
         //check if all available supercharacteristics have been used in the component
         bool foundAvailableSuperChar = false;
         //iterate used supercharacteristics
@@ -182,7 +187,6 @@
             if ([usedSuperChar.name isEqualToString:availableSuperChar.name]) {
                 //found
                 foundAvailableSuperChar = true;
-                
                 //check if all available characteristics of a used supercharacteristics have been used
                 for (AvailableCharacteristic *availableCharacteristic in availableSuperChar.availableSuperCharacteristicOf) {
                     bool foundAvailableChar = false;
@@ -193,14 +197,12 @@
                             foundAvailableChar = true;
                         }
                     }
-                    
                     if (!foundAvailableChar) {
                         return true;
                     }
                 }
             }
         }
-        
         //if supercharacteristic not in project AND IF SUPERCHARACTERISTIC HAS AT LEAST ONE SUBCHARACTERISTIC
         if ((!foundAvailableSuperChar) && ([availableSuperChar.availableSuperCharacteristicOf count] > 0)) {
             return true;
@@ -213,22 +215,17 @@
 
 - (BOOL)ratingCharacteristicsHaveBeenDeleted
 {
-    
     NSArray *availableSuperCharacteristics = [AvailableSuperCharacteristic getAllAvailableSuperCharacteristicsFromManagedObjectContext:self.managedObjectContext];
     Component *component = [[self.project.consistsOf objectEnumerator] nextObject];
-    
     //iterate superchars used
     for (SuperCharacteristic *usedSuperChar in component.ratedBy) {
         //check if used superchars are still present in available superchars
         bool foundSuperChar = false;
-        
         for (AvailableSuperCharacteristic *availableSuperChar in availableSuperCharacteristics) {
             if ([usedSuperChar.name isEqualToString:availableSuperChar.name]) {
                 foundSuperChar = true;
-                
                 for (Characteristic *usedCharacteristic in usedSuperChar.superCharacteristicOf) {
                     bool foundCharacteristic = false;
-                    
                     //iterate
                     for (AvailableCharacteristic *availableCharacteristic in availableSuperChar.availableSuperCharacteristicOf) {
                         if ([usedCharacteristic.name isEqualToString:availableCharacteristic.name]) {
@@ -236,9 +233,11 @@
                             foundCharacteristic = true;
                         }
                     }
-                    
                     if (!foundCharacteristic) {
-                        return true;
+                        //ignore cohesion and coupling
+                        if (!([usedCharacteristic.name isEqualToString:@"Coupling"] || [usedCharacteristic.name isEqualToString:@"Cohesion"])) {
+                            return true;
+                        }
                     }
                 }
             }
@@ -327,11 +326,7 @@
             [tmpWeightedValues addObject:@"INDIFFERENT"];
         } else if (weightedValue <= 3) {
             [tmpWeightedValues addObject:@"CORE"];
-        }
-        
-        
-        
-        
+        }  
     }
     
     NSArray *weightedValues = [NSArray arrayWithObjects:@"Weighted Value", @"", tmpWeightedValues, nil];
@@ -379,8 +374,7 @@
             
             //add name of subcharacteristic to array of subcharacteristics
             [tmp addObject:tmpcharacteristic.name];
-            
-            
+        
             //iterate through all components of the project and add this characteristic to it
             NSArray *componentsOfProject = [WebServiceConnector getAllComponentsForProjectId:projectID];
             
@@ -405,8 +399,127 @@
 {
     Project *approProject = self.project;
     return [NSArray arrayWithObjects:self.project.projectID, approProject.name, approProject.descr, approProject.category, approProject.startdate, approProject.enddate, approProject.creator, nil];
+}
+
+
+#pragma mark SODA
+
+- (ProjectModel *)initWithProjectID:(NSString *)idOfProject useSoda:(BOOL)useSoda
+{
+    //build project model
+    self = [[ProjectModel alloc] initWithProjectID:idOfProject];
     
+    if (useSoda && (![self sodaValuesAvailable])) {
+        
+        //download requirements...
+        [self downloadAllRequirementsForProject];
+        //...and build graph
+        Graph *requirementsGraph = [self buildGraphFromRequirements];
+        
+        //build dictionary with clusternames = componentnames and sets of requirementnodes
+        NSMutableDictionary *clusterDictionaryMutable = [NSMutableDictionary dictionary];
+        
+        //build array of NSSets with requirements - one NSSet for each component, representing the clusters
+        for (Component *oneComponent in self.project.consistsOf) {
+            
+            //build NSSet with nodes of graph
+            NSMutableSet *nodeSetMutable = [NSMutableSet set];
+            for (Requirement *requirementInSubset in oneComponent.relatedRequirements) {
+                [nodeSetMutable addObject:[requirementsGraph nodeWithValue:requirementInSubset]];
+            }
+            NSSet *nodeSet = [nodeSetMutable copy];
+            //use set of nodes to get cohesion of cluster
+            oneComponent.cohesion = [NSNumber numberWithFloat:[SODAFunctions getCohesionOfClusterWithRequirementsSubset:nodeSet inRequirementsGraph:requirementsGraph]];
+            //add NSSet of nodes to dictionary of clusters
+            [clusterDictionaryMutable setObject:nodeSet forKey:oneComponent.componentID];
+        }
+        
+        //imutable Array and results of relative coupling
+        NSDictionary *clusterDictionary = [NSDictionary dictionaryWithDictionary:clusterDictionaryMutable];
+        NSDictionary *dictionaryOfCouplingValuesForCcomponents = [SODAFunctions getCouplingValuesForClusteringDictionary:clusterDictionary inRequirementsGraph:requirementsGraph];
+        
+        //get highmediumlow value of coupling and cohesion for every component and save it into database
+        for (Component *oneComponent in self.project.consistsOf) {
+            oneComponent.coupling = [dictionaryOfCouplingValuesForCcomponents objectForKey:oneComponent.componentID];
+
+            NSNumber *valueCohesion = [SODAFunctions get123ValueForLinearValue:(1-[oneComponent.cohesion floatValue])];
+            NSNumber *valueCoupling = [SODAFunctions get123ValueForLinearValue:[oneComponent.coupling floatValue]];
+            //add characteristicsort
+            BOOL found = NO;
+            for (SuperCharacteristic *superChar in oneComponent.ratedBy) {
+                if ([superChar.name isEqualToString:@"Communication Complexity"]) {
+                    for (Characteristic *oneCharacteristic in superChar.superCharacteristicOf) {
+                        if ([oneCharacteristic.name isEqualToString:@"Cohesion"]) {
+                            //set values
+                            [oneCharacteristic setValue:valueCohesion];
+                            found = YES;
+                        } else if ([oneCharacteristic.name isEqualToString:@"Coupling"]) {
+                            [oneCharacteristic setValue:valueCoupling];
+                            found = YES;
+                        }
+                    }
+                }
+            }
+            if (!found) {
+                //insert characteristics for values
+                [Characteristic addNewCharacteristic:@"Cohesion" withValue:valueCohesion toSuperCharacteristic:@"Communication Complexity" withWeight:[NSNumber numberWithInt:3] andComponent:oneComponent.componentID andProject:oneComponent.partOf.projectID andManagedObjectContext:self.managedObjectContext];
+                [Characteristic addNewCharacteristic:@"Coupling" withValue:valueCoupling toSuperCharacteristic:@"Communication Complexity" withWeight:[NSNumber numberWithInt:3] andComponent:oneComponent.componentID andProject:oneComponent.partOf.projectID andManagedObjectContext:self.managedObjectContext];
+            }
+            
+            [Component saveContext:self.managedObjectContext];
+        }
+    }
+    return self;
+}
+
+- (BOOL)sodaValuesAvailable
+{
+    Component *arbritaryComponent = [[self.project.consistsOf objectEnumerator] nextObject];
+    if (arbritaryComponent.cohesion) {
+        return YES;
+    } else {
+        return NO;
+    }
+}
+
+- (void)downloadAllRequirementsForProject
+{
+    NSArray *requirements = [WebServiceConnector getRequirementsAndInterdependenciesForProject:self.project.projectID];
+    for (NSDictionary *oneRequirement in requirements) {
+        [Requirement addNewRequirementWithId:[oneRequirement objectForKey:@"id"] andName:[oneRequirement objectForKey:@"name"] andLinkedRequirements:[oneRequirement objectForKey:@"connectedRequirements"] andLinkedComponents:[oneRequirement objectForKey:@"connectedComponents"] andProjectId:self.project.projectID toManagedObjectContext:self.managedObjectContext];
+    }
     
+}
+
+- (Graph *)buildGraphFromRequirements
+{
+    Graph *requirementsGraph = [[Graph alloc] init];
+    //iterate requirements
+    for (Requirement *oneRequirement in self.project.hasRequirements) {
+        //add node
+        GraphNode *oneReqNode = [requirementsGraph nodeWithValue:oneRequirement];
+        
+        for (Requirement *linkedRequirement in oneRequirement.linkedWith) {
+            //add edge
+            [requirementsGraph addEdgeFromNode:oneReqNode toNode:[requirementsGraph nodeWithValue:linkedRequirement] withWeight:1.0];
+        }
+    }
+    
+    return requirementsGraph;
+}
+
+
+//temp
+- (void)printAllRequirements
+{
+    NSLog(@"------ printAllRequirements --------");
+    for (Component *oneComponent in self.project.consistsOf) {
+        NSLog(oneComponent.name);
+        for (Requirement *linkedReq in oneComponent.relatedRequirements) {
+            NSLog([NSString stringWithFormat:@" - %@", linkedReq.name]);
+        }
+    }
+    NSLog(@"-------------------------------------");
 }
 
 #pragma mark - Core Data Methods
@@ -415,6 +528,7 @@
 {
     return [Project saveContext:self.managedObjectContext];
 }
+
 
 //constructor that initializes the projectmodel and prepares the core database for the rating
 - (ProjectModel *)initWithProjectID:(NSString *)idOfProject

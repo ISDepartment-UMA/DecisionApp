@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model name="" userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="2057" systemVersion="11G63" minimumToolsVersion="Xcode 4.1" macOSVersion="Automatic" iOSVersion="Automatic">
+<model userDefinedModelVersionIdentifier="" type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="3396" systemVersion="13A603" minimumToolsVersion="Xcode 4.1" macOSVersion="Automatic" iOSVersion="Automatic">
     <entity name="AvailableCharacteristic" representedClassName="AvailableCharacteristic" syncable="YES">
         <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
@@ -19,7 +19,9 @@
         <relationship name="hasSuperCharacteristic" optional="YES" minCount="1" maxCount="1" deletionRule="Nullify" destinationEntity="SuperCharacteristic" inverseName="superCharacteristicOf" inverseEntity="SuperCharacteristic" syncable="YES"/>
     </entity>
     <entity name="Component" representedClassName="Component" syncable="YES">
+        <attribute name="cohesion" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="componentID" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="coupling" optional="YES" attributeType="Float" defaultValueString="0.0" syncable="YES"/>
         <attribute name="descr" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="estimatedhours" optional="YES" attributeType="Integer 32" defaultValueString="0" syncable="YES"/>
         <attribute name="modifier" optional="YES" attributeType="String" syncable="YES"/>
@@ -30,6 +32,7 @@
         <attribute name="shortdescr" optional="YES" attributeType="String" syncable="YES"/>
         <relationship name="partOf" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="consistsOf" inverseEntity="Project" syncable="YES"/>
         <relationship name="ratedBy" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="SuperCharacteristic" inverseName="rates" inverseEntity="SuperCharacteristic" syncable="YES"/>
+        <relationship name="relatedRequirements" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Requirement" inverseName="linkedComponents" inverseEntity="Requirement" syncable="YES"/>
     </entity>
     <entity name="Project" representedClassName="Project" syncable="YES">
         <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
@@ -43,6 +46,14 @@
         <attribute name="timestamp" optional="YES" attributeType="Date" syncable="YES"/>
         <attribute name="weightingHasBeenEdited" optional="YES" attributeType="Boolean" syncable="YES"/>
         <relationship name="consistsOf" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Component" inverseName="partOf" inverseEntity="Component" syncable="YES"/>
+        <relationship name="hasRequirements" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Requirement" inverseName="linkedProject" inverseEntity="Requirement" syncable="YES"/>
+    </entity>
+    <entity name="Requirement" representedClassName="Requirement" syncable="YES">
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="requirementID" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="linkedComponents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Component" inverseName="relatedRequirements" inverseEntity="Component" syncable="YES"/>
+        <relationship name="linkedProject" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Project" inverseName="hasRequirements" inverseEntity="Project" syncable="YES"/>
+        <relationship name="linkedWith" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Requirement" inverseName="linkedWith" inverseEntity="Requirement" syncable="YES"/>
     </entity>
     <entity name="SuperCharacteristic" representedClassName="SuperCharacteristic" syncable="YES">
         <attribute name="componentID" optional="YES" attributeType="String" syncable="YES"/>
@@ -53,11 +64,12 @@
         <relationship name="superCharacteristicOf" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Characteristic" inverseName="hasSuperCharacteristic" inverseEntity="Characteristic" syncable="YES"/>
     </entity>
     <elements>
-        <element name="AvailableCharacteristic" positionX="135" positionY="-180" width="128" height="90"/>
-        <element name="AvailableSuperCharacteristic" positionX="160" positionY="48" width="128" height="90"/>
-        <element name="Characteristic" positionX="45" positionY="267" width="128" height="135"/>
-        <element name="Component" positionX="-333" positionY="-36" width="128" height="210"/>
-        <element name="Project" positionX="-225" positionY="273" width="128" height="210"/>
-        <element name="SuperCharacteristic" positionX="-81" positionY="-135" width="128" height="135"/>
+        <element name="AvailableCharacteristic" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="AvailableSuperCharacteristic" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Characteristic" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Component" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Project" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="Requirement" positionX="0" positionY="0" width="0" height="0"/>
+        <element name="SuperCharacteristic" positionX="0" positionY="0" width="0" height="0"/>
     </elements>
 </model>

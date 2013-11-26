@@ -192,6 +192,8 @@
 
 #define heightOfCollaborationPlatformView 270
 #define heightOfWebServiceInfoView 144
+#define yOriginOfTopViews 10
+
 
 //detect rotation
 - (void)deviceOrientationDidChange:(NSNotification *)notification {
@@ -207,9 +209,9 @@
         CGFloat widthOfInfoViews = ((self.view.frame.size.width - 60) / 2);
         
         //rects
-        CGRect collaborationPlatformRect = CGRectMake(20, 55, widthOfInfoViews, heightOfCollaborationPlatformView);
-        CGRect webServiceRect = CGRectMake((40 + widthOfInfoViews), 55, widthOfInfoViews, heightOfWebServiceInfoView);
-        CGRect characteristicsRect = CGRectMake(20, (65 + heightOfCollaborationPlatformView), widthOfCharacteristicsView, heightOfCharacteristicsView);
+        CGRect collaborationPlatformRect = CGRectMake(20, yOriginOfTopViews, widthOfInfoViews, heightOfCollaborationPlatformView);
+        CGRect webServiceRect = CGRectMake((40 + widthOfInfoViews), yOriginOfTopViews, widthOfInfoViews, heightOfWebServiceInfoView);
+        CGRect characteristicsRect = CGRectMake(20, (yOriginOfTopViews + heightOfCollaborationPlatformView + 10), widthOfCharacteristicsView, heightOfCharacteristicsView);
         
         [self.collaborationPlaformSubview setFrame:collaborationPlatformRect];
         [self.webServiceSubview setFrame:webServiceRect];
@@ -227,9 +229,9 @@
         CGFloat heightOfCharacteristicsView = (self.view.frame.size.height - 65);
         
         //rects
-        CGRect collaborationPlatformRect = CGRectMake(20, 55, widthOfAllViews, heightOfCollaborationPlatformView);
-        CGRect webServiceRect = CGRectMake(20, (65 + heightOfCollaborationPlatformView), widthOfAllViews, heightOfWebServiceInfoView);
-        CGRect characteristicsRect = CGRectMake((40 + widthOfAllViews), 55, widthOfAllViews, heightOfCharacteristicsView);
+        CGRect collaborationPlatformRect = CGRectMake(20, yOriginOfTopViews, widthOfAllViews, heightOfCollaborationPlatformView);
+        CGRect webServiceRect = CGRectMake(20, (yOriginOfTopViews + heightOfCollaborationPlatformView + 10), widthOfAllViews, heightOfWebServiceInfoView);
+        CGRect characteristicsRect = CGRectMake((40 + widthOfAllViews), yOriginOfTopViews, widthOfAllViews, heightOfCharacteristicsView);
         
         [self.collaborationPlaformSubview setFrame:collaborationPlatformRect];
         [self.webServiceSubview setFrame:webServiceRect];

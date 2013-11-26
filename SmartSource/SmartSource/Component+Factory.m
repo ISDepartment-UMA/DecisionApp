@@ -44,17 +44,17 @@
         comp.descr = [componentInfo objectForKey:@"description"];
         comp.priority = [componentInfo objectForKey:@"priority"];
         comp.ratingComplete = [NSNumber numberWithBool:NO];
-        
         //estimated hours passed as string --> NSNumber in database
         NSNumberFormatter * f = [[NSNumberFormatter alloc] init];
         [f setNumberStyle:NSNumberFormatterDecimalStyle];
         NSNumber *hours = [f numberFromString:[componentInfo objectForKey:@"estimatedhours"]];
         comp.estimatedhours = hours;
-        
-        
         comp.shortdescr = [componentInfo objectForKey:@"shortdescription"];
         comp.modifier = [componentInfo objectForKey:@"modifier"];
         comp.partOf = [Project addNewProject:projectID toManagedObjectContext:context withTimestamp:nil];
+        //SODA
+        comp.coupling = nil;
+        comp.cohesion = nil;
         
         
         

@@ -13,7 +13,6 @@
 
 @property (nonatomic) BOOL projectsFromWebServiceAvailable;
 
-- (NSArray *)getAllProjectNames;
 - (ProjectPlatformModel *)init;
 - (NSArray *)getStoredProjects;
 - (void)deleteProjectWithID:(NSString *)projectID;

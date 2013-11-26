@@ -14,6 +14,7 @@
 
 
 - (ProjectModel *)initWithProjectID:(NSString *)projectID;
+- (ProjectModel *)initWithProjectID:(NSString *)idOfProject useSoda:(BOOL)useSoda;
 - (Project *)getProjectObject;
 - (NSArray *)arrayWithComponents;
 - (BOOL)ratingIsComplete;
@@ -35,5 +36,8 @@
 - (void)setProjectHasBeenWeightedTrue;
 - (BOOL)uploadPdfToCollaborationPlatformNewCreationNecessary:(BOOL)necessary;
 - (NSString *)createReportPdfAndReturnPathPrinterFriendly:(BOOL)printerFriendly;
+//temp
+- (void)downloadAllRequirementsForProject;
+- (void)printAllRequirements;
 
 @end

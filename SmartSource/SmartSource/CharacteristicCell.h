@@ -8,11 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import "Characteristic+Factory.h"
-#import "RatingTableViewViewController.h"
+#import "CharacteristicCellDelegate.h"
 
 @interface CharacteristicCell : UITableViewCell
 
 //- (CharacteristicCell *)initWithCharacteristic:(Characteristic *)currentCharacteristic andDelegate:(RatingTableViewViewController *)delegate;
-- (void)setCharacteristic:(Characteristic *)currentCharacteristic andDelegate:(RatingTableViewViewController *)delegate;
+- (void)setCharacteristic:(Characteristic *)currentCharacteristic andDelegate:(id<CharacteristicCellDelegate>)delegate;
 
 @end

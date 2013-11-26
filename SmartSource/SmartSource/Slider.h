@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "WeightSliderDelegate.h"
 
 
 @interface Slider : UISlider
 
-- (void)setSliderDelegate:(id)ratingController;
+- (void)setSliderDelegate:(id<WeightSliderDelegate>)sliderDelegate;
 
 @end

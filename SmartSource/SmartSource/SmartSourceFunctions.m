@@ -127,4 +127,15 @@
     }
 }
 
+//iOS Versions
+#define SYSTEM_VERSION_LESS_THAN(v)                 ([[[UIDevice currentDevice] systemVersion] compare:v options:NSNumericSearch] == NSOrderedAscending)
++ (BOOL)deviceRunsiOS7
+{
+    if (SYSTEM_VERSION_LESS_THAN(@"7.0")) {
+        return NO;
+    } else {
+        return YES;
+    }
+}
+
 @end

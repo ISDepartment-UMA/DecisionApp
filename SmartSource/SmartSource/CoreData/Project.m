@@ -2,12 +2,13 @@
 //  Project.m
 //  SmartSource
 //
-//  Created by Lorenz on 29.10.13.
+//  Created by Lorenz on 14.11.13.
 //
 //
 
 #import "Project.h"
 #import "Component.h"
+#import "Requirement.h"
 
 
 @implementation Project
@@ -17,11 +18,12 @@
 @dynamic descr;
 @dynamic enddate;
 @dynamic name;
+@dynamic pathReportPdf;
 @dynamic projectID;
 @dynamic startdate;
 @dynamic timestamp;
 @dynamic weightingHasBeenEdited;
-@dynamic pathReportPdf;
 @dynamic consistsOf;
+@dynamic hasRequirements;
 
 @end

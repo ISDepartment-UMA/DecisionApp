@@ -189,8 +189,6 @@
     
     if (UIInterfaceOrientationIsLandscape(deviceOrientation)) {
         
-        CGFloat widthOfArea = self.view.frame.size.width - 40;
-        CGFloat widthOfImageView = 150;
         CGFloat heightOfArea = 150;
         CGFloat widthOfTextView = 345;
         CGFloat yOriginOfArea = 49;
@@ -261,6 +259,13 @@
         return 0;
     }
     
+}
+
+//necessary for iOS7 to change cells background color from white
+//available after iOS6
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [cell setBackgroundColor:[UIColor clearColor]];
 }
 
 

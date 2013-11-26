@@ -67,7 +67,7 @@
     [super viewDidUnload];
 }
 - (IBAction)cancelButton:(id)sender {
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)uploadComplete

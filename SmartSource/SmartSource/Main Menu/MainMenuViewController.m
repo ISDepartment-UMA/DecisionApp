@@ -121,14 +121,11 @@
 {
     [super viewDidAppear:animated];
     
-    
     //tell subviews that view did appear so they can start to assign actions to buttons
     [self.projectSelectionSubview addActionsToSubviews];
     
-    
     //adjust orientation of screen
     [self deviceOrientationDidChange:nil];
-    
     
     //get project model from rating screen and set it as selected project, if it exists
     ProjectModel *model = nil;
@@ -138,7 +135,6 @@
         self.projectInfo = [model getProjectInfoArray];
         NSArray *selectedProject = [NSArray arrayWithObjects:[self.projectInfo objectAtIndex:0],[self.projectInfo objectAtIndex:1], [self.projectInfo objectAtIndex:2] , nil];
         [self.platformModel setSelectedProject:selectedProject];
-        
         
         //set project model and build screen
         self.projectModel = model;
@@ -157,7 +153,7 @@
     self.platformModel = [[ProjectPlatformModel alloc] init];
     [self.ratingScreen setProjectModel:nil];
     
-    [self selectedProjectMayHaveChanged];
+    [NSThread detachNewThreadSelector:@selector(selectedProjectMayHaveChanged) toTarget:self withObject:nil];
 }
 
 
@@ -171,37 +167,46 @@
 }
 
 
-//public method to be called when the modal view controller for project selection has dismissed itself
-//all it does is to call selectedProjectMayHaveChanged
-- (void)modalViewControllerHasBeenDismissed
+- (void)projectSelectionViewControllerHasBeenDismissedWithPlatformModel:(ProjectPlatformModel *)platformModel
 {
-    //call method to update screen
-    [self selectedProjectMayHaveChanged];
+    self.platformModel = platformModel;
+    [NSThread detachNewThreadSelector:@selector(selectedProjectMayHaveChanged) toTarget:self withObject:nil];
 }
 
+
+//method that starts activity indicators --> seperate thread
+- (void)startActivityIndicators
+{
+    [self.projectSelectionSubview startActivityIndicator];
+    [self.evaluationView startActivityIndicator];
+    [self.resultView startActivityIndicator];
+}
 
 //method that consistently updates the screen based on the selected project
 //this involves the management of project models
 - (void)selectedProjectMayHaveChanged
 {
     //deactivate all user interaction
-    [NSThread detachNewThreadSelector:@selector(deactivateUserInteraction) toTarget:self withObject:nil];
-    
-    //put activity indicator
-    [NSThread detachNewThreadSelector:@selector(startActivityIndicator) toTarget:self.projectSelectionSubview withObject:nil];
-    [NSThread detachNewThreadSelector:@selector(startActivityIndicator) toTarget:self.evaluationView withObject:nil];
-    [NSThread detachNewThreadSelector:@selector(startActivityIndicator) toTarget:self.resultView withObject:nil];
-    
-    //get selected project from project platform model
-    NSArray *project = [self.platformModel getSelectedProject];
+    [self deactivateUserInteraction];
+    //start activity indicators before doing anything else
+    NSThread *thread = [[NSThread alloc] initWithTarget:self selector:@selector(startActivityIndicators) object:nil];
+    [thread start];
+    while (![thread isFinished]) {
+        //do nothing
+    }
     
     //if no project selected, deactivate and return
+    NSArray *project = [self.platformModel getSelectedProject];
     if (!project) {
         [self.projectSelectionSubview setEmpty];
         [self.evaluationView setEmpty];
         [self.resultView setEmpty];
         
         [self reactivateUserInteraction];
+        //remove activity indicator
+        [self.projectSelectionSubview stopActivityIndicator];
+        [self.evaluationView stopActivityIndicator];
+        [self.resultView stopActivityIndicator];
         return;
     }
     
@@ -214,8 +219,8 @@
             NSLog(@"But is not the right one");
             self.projectInfo = nil;
             //start seperate thread that gets all information about a project from the webservice and builds the project model
-            [NSThread detachNewThreadSelector:@selector(initializeProjectModel) toTarget:self withObject:nil];
-            
+            //[NSThread detachNewThreadSelector:@selector(initializeProjectModel) toTarget:self withObject:nil];
+            [self initializeProjectModel];
         }
         
     //if project model does not exist
@@ -223,36 +228,19 @@
         NSLog(@"Model does not exist");
         self.projectInfo = nil;
         //start seperate thread that gets all information about a project from the webservice and builds the project model
-        [NSThread detachNewThreadSelector:@selector(initializeProjectModel) toTarget:self withObject:nil];
-        
+        //[NSThread detachNewThreadSelector:@selector(initializeProjectModel) toTarget:self withObject:nil];
+        [self initializeProjectModel];
     }
-    
-    //wait
-    while (!self.projectInfo) {
-        //do nothing
-        NSLog(@"waiting");
-    }
-    
-    
     //update project info in project selection subview
     Project *selectedProject = [self.projectModel getProjectObject];
     [self.projectSelectionSubview setDisplayedProject:selectedProject];
-
-    
-    
     
     //if there are components in the project, enable the evaluation button in the main screen
     if ([self.projectModel numberOfComponents] > 0) {
-        
         [self.evaluationView setActiveForEvaluation];
-
-        
     } else {
         [self.evaluationView setDeactiveForEvaliation];
-
     }
-    
-    
     //if rating is complete, enable button to advance to results
     if ([self.projectModel ratingIsComplete]) {
         [self.resultView setActiveToShowResults];
@@ -301,7 +289,7 @@
         [self.ratingScreen setProjectModel:self.projectModel];
         
         //disappear
-        [self dismissModalViewControllerAnimated:YES];
+        [self dismissViewControllerAnimated:YES completion:nil];
     } else {
         //deactivate all user interaction
         [NSThread detachNewThreadSelector:@selector(deactivateUserInteraction) toTarget:self withObject:nil];
@@ -353,7 +341,7 @@
         [self.ratingScreen setProjectModel:self.projectModel];
         
         //disappear
-        [self dismissModalViewControllerAnimated:YES];
+        [self dismissViewControllerAnimated:YES completion:nil];
     }
     
 }
@@ -374,7 +362,8 @@
 {
     //build project Model
     NSArray *project = [self.platformModel getSelectedProject];
-    self.projectModel = [[ProjectModel alloc] initWithProjectID:[project objectAtIndex:0]];
+    self.projectModel = [[ProjectModel alloc] initWithProjectID:[project objectAtIndex:0] useSoda:YES];
+    //self.projectModel = [[ProjectModel alloc] initWithProjectID:[project objectAtIndex:0]];
     self.projectInfo = [self.projectModel getProjectInfoArray];
 }
 
@@ -384,7 +373,7 @@
     if ([segue.identifier isEqualToString:@"projectSelection"]) {
         ProjectSelectionViewController *projectSelectionVC = (ProjectSelectionViewController *)segue.destinationViewController;
         [projectSelectionVC setPlatformModel:self.platformModel];
-        
+        [projectSelectionVC setDelegate:self];
         
     } else if ([segue.identifier isEqualToString:@"results"]) {
         //do something

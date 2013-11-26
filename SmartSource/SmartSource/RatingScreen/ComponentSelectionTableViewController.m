@@ -59,7 +59,6 @@
     //get components and selected index path
     self.availableCells = [self.ratingScreen getAvailableComponents];
     Component *selectedComponent = [self.ratingScreen getSelectedComponent];
-    
     for (int i=0; i < [self.availableCells count]; i++) {
         Component *comp = [self.availableCells objectAtIndex:i];
         if ([comp.componentID isEqualToString:selectedComponent.componentID]) {
@@ -67,6 +66,7 @@
         }
     }
     
+    //reload table
     [self.tableView reloadData];
     
     if (self.selectedIndexPath) {
@@ -103,8 +103,16 @@
 
 - (IBAction)weightingButtonPressed:(id)sender {
     [self.ratingScreen setWeightingIsComplete:YES];
+    UIInterfaceOrientation deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    if (UIInterfaceOrientationIsPortrait(deviceOrientation)) {
+        NSLog(@"portrait");
+        [self dismissViewControllerAnimated:YES completion:^{
+            [self.splitViewController performSegueWithIdentifier:@"weightSuperChars" sender:self];
+        }];
+    } else {
+        [self.splitViewController performSegueWithIdentifier:@"weightSuperChars" sender:self];
+    }
     
-    [self.splitViewController performSegueWithIdentifier:@"weightSuperChars" sender:self];
 }
 
 
@@ -157,6 +165,12 @@
 }
 
 
+//necessary for iOS7 to change cells background color from white
+//available after iOS6
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [cell setBackgroundColor:[UIColor clearColor]];
+}
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -200,7 +214,7 @@
     
     //set component
     [self.ratingScreen setComponent:[self.availableCells objectAtIndex:indexPath.row]];
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (void)viewDidUnload {

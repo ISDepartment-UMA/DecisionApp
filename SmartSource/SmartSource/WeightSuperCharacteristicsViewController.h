@@ -9,8 +9,10 @@
 #import <UIKit/UIKit.h>
 #import "ProjectModel.h"
 #import "RatingTableViewViewController.h"
+#import "WeightSliderDelegate.h"
 
-@interface WeightSuperCharacteristicsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
+@interface WeightSuperCharacteristicsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, WeightSliderDelegate>
 - (void)setRatingDelegate:(RatingTableViewViewController *)delegate;
 - (void)saveContext;
+
 @end

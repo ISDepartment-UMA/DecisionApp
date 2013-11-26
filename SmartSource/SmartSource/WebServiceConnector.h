@@ -17,4 +17,5 @@
 + (NSString *)checkLoginData:(NSArray *)loginData withServiceUrl:(NSString *)javaServiceURL;
 + (BOOL)checkConnectionToWebService:(NSString *)javaWebServiceUrl;
 + (BOOL)uploadFileWithPath:(NSString *)filePath withName:(NSString *)fileName toProject:(NSString *)projectID;
++ (NSArray *)getRequirementsAndInterdependenciesForProject:(NSString *)projectID;
 @end

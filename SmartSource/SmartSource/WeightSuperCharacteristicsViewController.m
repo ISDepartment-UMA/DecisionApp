@@ -75,17 +75,14 @@
 
 
 - (IBAction)componentsButtonPressed:(id)sender {
-    
     //make modal view controller disappear
-    [self dismissModalViewControllerAnimated:NO];
+    [self dismissViewControllerAnimated:NO completion:nil];
 }
 
 
 - (IBAction)backToMainMenu:(id)sender {
-    
-
     //make modal view controller disappear
-    [self dismissModalViewControllerAnimated:NO];
+    [self dismissViewControllerAnimated:NO completion:nil];
     [self.delegate returnToMainMenu];
     
 }
@@ -108,7 +105,7 @@
 - (void)saveValueForSlider:(Slider *)slider
 {
     //get name of supercharacteristic
-    UILabel *textLabel = (UILabel *)[slider.superview viewWithTag:10];
+    UILabel *textLabel = (UILabel *)[slider.superview.superview viewWithTag:10];
     
     //save weight into model
     [self.currentProject saveWeightValue:slider.value forSuperCharacteristicWithName:textLabel.text];
@@ -136,6 +133,12 @@
     return [self.superCharacteristics count];
 }
 
+//necessary for iOS7 to change cells background color from white
+//available after iOS6
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [cell setBackgroundColor:[UIColor clearColor]];
+}
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -153,7 +156,8 @@
     text.text = superChar.name;
     
     //add action to slider
-    Slider *slider = (Slider *)[contentView viewWithTag:11];
+    UIView *sliderView = [contentView viewWithTag:15];
+    Slider *slider = (Slider *)[sliderView viewWithTag:11];
     //change appearence
     UIImage *sliderLeftTrackImage = [[UIImage imageNamed: @"thumb.jpg"] stretchableImageWithLeftCapWidth: 9 topCapHeight: 0];
     UIImage *sliderRightTrackImage = [[UIImage imageNamed: @"nothumb.jpg"] resizableImageWithCapInsets:UIEdgeInsetsMake(0, 1, 0, 1)];

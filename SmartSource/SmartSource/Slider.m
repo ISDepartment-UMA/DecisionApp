@@ -11,11 +11,7 @@
 
 
 @interface Slider ()
-@property (nonatomic, strong) RatingTableViewViewController *sliderDelegate;
-
-
-
-
+@property (nonatomic) id<WeightSliderDelegate> sliderDelegate;
 @end
 
 @implementation Slider
@@ -26,12 +22,13 @@
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
-        
-
-    
     }
-    
     return self;
+}
+
+- (void)setSliderDelegate:(id<WeightSliderDelegate>)sliderDelegate
+{
+    _sliderDelegate = sliderDelegate;
 }
 
 
@@ -69,14 +66,8 @@
     } else {
         [self setValue: 5.0 animated: YES];
     }
-    
-    
+    //save value in delegate
     [self.sliderDelegate saveValueForSlider:self];
-    //UILabel *textLabel = (UILabel *)[self.superview viewWithTag:10];
-    //[self.currentComponentModel saveWeight:[NSNumber numberWithFloat:self.value] forSuperCharacteristic:textLabel.text];
-    //[self sendActionsForControlEvents:UIControlEventValueChanged];
-    
-    
 }
 
 

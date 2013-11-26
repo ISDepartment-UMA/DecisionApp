@@ -115,13 +115,13 @@
 
 - (IBAction)cancelButtonPressed:(id)sender {
     
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)acknowledgeButtonPressed:(id)sender {
     
     self.acknowledgeButtonPressed = YES;
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

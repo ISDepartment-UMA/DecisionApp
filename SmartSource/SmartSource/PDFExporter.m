@@ -149,16 +149,16 @@ static UIColor *backGroundColor;
     CGContextSetRGBFillColor(currentContext, 0.53, 0.53, 0.53, 1.0);
     NSString *projectTitle = [self.projectModel getProjectName];
     UIFont *font = [UIFont fontWithName:@"BitstreamVeraSans-Bold" size:25.0];
-    CGSize stringSize = [projectTitle sizeWithFont:font constrainedToSize: CGSizeMake(pageSize.width - 2*leftBorderScreen, pageSize.height - 2*leftBorderScreen) lineBreakMode:UILineBreakModeWordWrap];
+    CGSize stringSize = [projectTitle sizeWithFont:font constrainedToSize: CGSizeMake(pageSize.width - 2*leftBorderScreen, pageSize.height - 2*leftBorderScreen) lineBreakMode:NSLineBreakByWordWrapping];
     CGRect renderingRect = CGRectMake(((pageSize.width/2) - (0.5*stringSize.width)), (leftBorderScreen + 50), stringSize.width, stringSize.height);
-    [projectTitle drawInRect:renderingRect withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:UITextAlignmentLeft];
+    [projectTitle drawInRect:renderingRect withFont:font lineBreakMode:NSLineBreakByWordWrapping alignment:NSTextAlignmentLeft];
     
     //results
     CGContextSetRGBFillColor(currentContext, 1.0, 0.58, 0.0, 1.0);
     NSString *const1 = @"SmartSourcer Results";
-    stringSize = [const1 sizeWithFont:font constrainedToSize: CGSizeMake(pageSize.width - 2*leftBorderScreen, pageSize.height - 2*leftBorderScreen) lineBreakMode:UILineBreakModeWordWrap];
+    stringSize = [const1 sizeWithFont:font constrainedToSize: CGSizeMake(pageSize.width - 2*leftBorderScreen, pageSize.height - 2*leftBorderScreen) lineBreakMode:NSLineBreakByWordWrapping];
     renderingRect = CGRectMake(((pageSize.width/2) - (0.5*stringSize.width)), (renderingRect.origin.y + renderingRect.size.height + 10), stringSize.width, stringSize.height);
-    [const1 drawInRect:renderingRect withFont:font lineBreakMode:UILineBreakModeWordWrap alignment:UITextAlignmentLeft];
+    [const1 drawInRect:renderingRect withFont:font lineBreakMode:NSLineBreakByWordWrapping alignment:NSTextAlignmentLeft];
     
     
     //titles
@@ -204,16 +204,16 @@ static UIColor *backGroundColor;
         Component *currCompInd;
         if ([[self.resultArray objectAtIndex:0] count] > i) {
             currComp = [[self.resultArray objectAtIndex:0] objectAtIndex:i];
-            stringSize = [currComp.name sizeWithFont:font constrainedToSize:CGSizeMake(widthOfImage, 100) lineBreakMode:UILineBreakModeWordWrap];
+            stringSize = [currComp.name sizeWithFont:font constrainedToSize:CGSizeMake(widthOfImage, 100) lineBreakMode:NSLineBreakByWordWrapping];
         }
         if ([[self.resultArray objectAtIndex:2] count] > i) {
             currCompOut = [[self.resultArray objectAtIndex:2] objectAtIndex:i];
-            stringSizeOut = [currCompOut.name sizeWithFont:font constrainedToSize:CGSizeMake(widthOfImage, 100) lineBreakMode:UILineBreakModeWordWrap];
+            stringSizeOut = [currCompOut.name sizeWithFont:font constrainedToSize:CGSizeMake(widthOfImage, 100) lineBreakMode:NSLineBreakByWordWrapping];
             
         }
         if ([[self.resultArray objectAtIndex:1] count] > i) {
             currCompInd = [[self.resultArray objectAtIndex:1] objectAtIndex:i];
-            stringSizeInd = [currCompInd.name sizeWithFont:font constrainedToSize:CGSizeMake(widthOfImage, 100) lineBreakMode:UILineBreakModeWordWrap];
+            stringSizeInd = [currCompInd.name sizeWithFont:font constrainedToSize:CGSizeMake(widthOfImage, 100) lineBreakMode:NSLineBreakByWordWrapping];
             
         }
         CGFloat maxHeightOfComp = MAX(stringSize.height, MAX(stringSizeOut.height, stringSizeInd.height));
@@ -680,7 +680,7 @@ static CGFloat heightOfHeader = 50;
 
 - (void)drawString:(NSString*)s withFont:(UIFont*)font inRect:(CGRect)contextRect withColor:(UIColor *)color backGroundColor:(UIColor *)backGroundColor andTextAlignment:(NSTextAlignment)textAlignment inContext:(CGContextRef)context{
     
-    CGFloat fontHeight = [s sizeWithFont:font constrainedToSize:CGSizeMake(contextRect.size.width, contextRect.size.height) lineBreakMode:UILineBreakModeWordWrap].height;
+    CGFloat fontHeight = [s sizeWithFont:font constrainedToSize:CGSizeMake(contextRect.size.width, contextRect.size.height) lineBreakMode:NSLineBreakByWordWrapping].height;
     CGFloat yOffset = (contextRect.size.height - fontHeight) / 2.0;
     CGRect textRect = CGRectMake(contextRect.origin.x, (contextRect.origin.y + yOffset), contextRect.size.width, fontHeight);
     [backGroundColor set];
@@ -721,14 +721,14 @@ static CGFloat heightOfHeader = 50;
     
     CGSize stringSize = [textToDraw sizeWithFont:font
                                constrainedToSize:CGSizeMake(pageSize.width - 2*kBorderInset-2*kMarginInset, pageSize.height - 2*kBorderInset - 2*kMarginInset)
-                                   lineBreakMode:UILineBreakModeWordWrap];
+                                   lineBreakMode:NSLineBreakByWordWrapping];
     
     CGRect renderingRect = CGRectMake(kBorderInset + kMarginInset, kBorderInset + kMarginInset + 50.0, pageSize.width - 2*kBorderInset - 2*kMarginInset, stringSize.height);
     
     [textToDraw drawInRect:renderingRect
                   withFont:font
-             lineBreakMode:UILineBreakModeWordWrap
-                 alignment:UITextAlignmentLeft];
+             lineBreakMode:NSLineBreakByWordWrapping
+                 alignment:NSTextAlignmentLeft];
 }
 - (void) drawImage
 {

@@ -13,7 +13,7 @@
 #import "VeraRomanButton.h"
 #import "ButtonExternalBackground.h"
 #import "PDFExporter.h"
-#import "SmartSourcePopoverController.h"
+#import "SmartSourcEPopoverController.h"
 #import "UploadCompleteHandler.h"
 
 @interface ResultsOverviewViewController ()
@@ -207,31 +207,23 @@
     [self.tableViewCore setDataSource:self];
     [self.tableViewOutsourcing setDataSource:self];
     [self.tableViewIndifferent setDataSource:self];
-    
     [self.tableViewCore setDelegate:self];
     [self.tableViewOutsourcing setDelegate:self];
     [self.tableViewIndifferent setDelegate:self];
-    
     //backbutton
     [self.backButton setViewToChangeIfSelected:self.backButtonBackground];
     //entypo
     [self.shareButton setTitle:@"\uE715" forState:UIControlStateNormal];
-    
 	// Do any additional setup after loading the view.
     [NSThread detachNewThreadSelector:@selector(tellModelToCalculateResults) toTarget:self withObject:nil];
-    
-    
     //rotation notifications
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(deviceOrientationDidChange:) name: UIDeviceOrientationDidChangeNotification object: nil];
     UIInterfaceOrientation deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    
     //if device orientation is portrait, handle it
     if (UIInterfaceOrientationIsPortrait(deviceOrientation)) {
         [self deviceOrientationDidChange:nil];
     }
-
-    
 }
 
 
@@ -463,6 +455,14 @@
         return [[self.classificationResult objectAtIndex:(tableView.tag - 91)] count];
     }
     
+}
+
+
+//necessary for iOS7 to change cells background color from white
+//available after iOS6
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [cell setBackgroundColor:[UIColor clearColor]];
 }
 
 

@@ -126,6 +126,14 @@
     
 }
 
+
+//necessary for iOS7 to change cells background color from white
+//available after iOS6
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [cell setBackgroundColor:[UIColor clearColor]];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     
@@ -235,7 +243,7 @@
                 CGFloat maximumlabelheight = componentLabel.frame.size.height;
                 CGFloat maximumlabelwidth = cell.frame.size.width - (30 + (155 * ([self.columns count])));
                 CGSize maximumLabelSize = CGSizeMake(maximumlabelwidth, maximumlabelheight);
-                CGSize expectedLabelSize = [[self.componentModel getComponentObject].name sizeWithFont:[UIFont fontWithName:@"BitstreamVeraSans-Roman" size:15.0] constrainedToSize:maximumLabelSize lineBreakMode:UILineBreakModeWordWrap];
+                CGSize expectedLabelSize = [[self.componentModel getComponentObject].name sizeWithFont:[UIFont fontWithName:@"BitstreamVeraSans-Roman" size:15.0] constrainedToSize:maximumLabelSize lineBreakMode:NSLineBreakByWordWrapping];
                 [componentLabel setFrame:CGRectMake((30 + (155 * ([self.columns count]))), 5, expectedLabelSize.width, 40)];
                 [componentLabel setHidden:NO];
               

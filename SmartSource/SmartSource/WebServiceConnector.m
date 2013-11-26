@@ -152,11 +152,23 @@ static NSString *javaServiceURL;
 }
 
 
++ (NSArray *)getRequirementsAndInterdependenciesForProject:(NSString *)projectID
+{
+    if (![WebServiceConnector getUserCredentials]) {
+        return nil;
+    }
+    //building the url
+    NSString *url = [NSString stringWithFormat:@"%@DataFetcher/getAllRequirementsForProject?url=%@&login=%@&password=%@&projectID=%@", javaServiceURL, serviceUrl, login, password, projectID];
+    NSArray *requirements = [WebServiceConnector performRequestWithUrl:url andTimeOutInterval:10.0];
+    return requirements;
+}
+
+
 + (BOOL)uploadFileWithPath:(NSString *)filePath withName:(NSString *)fileName toProject:(NSString *)projectID
 {
     //login data
     if (![WebServiceConnector getUserCredentials]) {
-        return nil;
+        return NO;
     }
     
     //JSON request to web service

@@ -84,7 +84,7 @@
 
 #pragma mark Button Pressed
 - (IBAction)cancelButtonPressed:(id)sender {
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 - (IBAction)saveButtonPressed:(id)sender {
@@ -116,7 +116,7 @@
 
 - (void)disappear
 {
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 #pragma mark Error Handling

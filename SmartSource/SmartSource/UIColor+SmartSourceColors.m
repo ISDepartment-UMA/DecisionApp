@@ -13,7 +13,7 @@
 
 + (UIColor *)colorOrange;
 {
-    return [UIColor colorWithRed:1.0 green:0.53 blue:0.0 alpha:1.0];
+    return [UIColor colorWithRed:1.0 green:0.58 blue:0.0 alpha:1.0];
 }
 
 + (UIColor *)colorLightGray

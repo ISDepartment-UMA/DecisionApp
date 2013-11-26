@@ -62,6 +62,10 @@
     return [output copy];
 }
 
+- (BOOL)sodaValuesAreAvailable
+{
+    return (self.currentComponent.cohesion != nil);
+}
 
 //returns the characteristics and supercharacteristics of a component sorted by name
 // 0 - superchars
@@ -85,9 +89,48 @@
         for (Characteristic *charact in superChar.superCharacteristicOf) {
             [subCharsTemp addObject:charact];
         }
+    
         //sort subcharacteristics by name
         NSArray *subCharsTempSorted = [NSArray arrayWithArray:subCharsTemp];
         subCharsTempSorted = [subCharsTempSorted sortedArrayUsingDescriptors:[NSArray arrayWithObject:[NSSortDescriptor sortDescriptorWithKey:@"name" ascending:YES]]];
+        subCharsTemp = [NSMutableArray arrayWithArray:subCharsTempSorted];
+        
+        
+        /*
+         *  in communication complexity, put coupling and cohesion characteristics to top
+         */
+        BOOL alreadyMovedCohesion = NO;
+        if ([superChar.name isEqualToString:@"Communication Complexity"]) {
+            for (int i=0; i<[subCharsTemp count]; i++) {
+                Characteristic *oneCharacteristic = [subCharsTemp objectAtIndex:i];
+                if ([oneCharacteristic.name isEqualToString:@"Cohesion"]) {
+                    //shift all characteristics one spot down
+                    for (int y=i; y>0; y--) {
+                        [subCharsTemp replaceObjectAtIndex:y withObject:[subCharsTemp objectAtIndex:(y-1)]];
+                    }
+                    //put cohesion into first spot
+                    [subCharsTemp replaceObjectAtIndex:0 withObject:oneCharacteristic];
+                    alreadyMovedCohesion = YES;
+                } else if (([oneCharacteristic.name isEqualToString:@"Coupling"]) && alreadyMovedCohesion) {
+                    //characteristics with index 1-i down one spot
+                    for (int y=i; y>1; y--) {
+                        [subCharsTemp replaceObjectAtIndex:y withObject:[subCharsTemp objectAtIndex:(y-1)]];
+                    }
+                    //put cohesion into first spot
+                    [subCharsTemp replaceObjectAtIndex:1 withObject:oneCharacteristic];
+                    break;
+                //cohesion not moved yet
+                } else  if ([oneCharacteristic.name isEqualToString:@"Coupling"]) {
+                    //characteristics with index 1-i down one spot
+                    for (int y=i; y>0; y--) {
+                        [subCharsTemp replaceObjectAtIndex:y withObject:[subCharsTemp objectAtIndex:(y-1)]];
+                    }
+                    //put cohesion into first spot
+                    [subCharsTemp replaceObjectAtIndex:0 withObject:oneCharacteristic];
+                }
+            }
+        }
+        subCharsTempSorted = [subCharsTemp copy];
         //add subcharacteristics
         [subChars addObject:[NSArray arrayWithArray:subCharsTempSorted]];
     }

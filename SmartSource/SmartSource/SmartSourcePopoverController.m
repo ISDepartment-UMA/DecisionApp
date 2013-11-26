@@ -1,4 +1,3 @@
-
 //
 //  PCPopoverController.m
 //  PCPopoverControllerTests
@@ -11,11 +10,12 @@
 #import "SmartSourcePopoverBackgroundView.h"
 
 #pragma mark - Internal Constants
+/*
 CGFloat const contentInset = 10.0;
 CGFloat const capInset = 25.0;
 CGFloat const arrowHeight = 15.0;
 CGFloat const arrowBase = 24.0;
-
+*/
 @interface SmartSourcePopoverController()
 @property (nonatomic, strong) UIColor *tintColor;
 
@@ -68,4 +68,3 @@ CGFloat const arrowBase = 24.0;
 }
 
 @end
-

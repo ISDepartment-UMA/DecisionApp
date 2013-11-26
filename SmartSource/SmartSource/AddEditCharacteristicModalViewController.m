@@ -81,13 +81,13 @@
 - (IBAction)saveButtonPressed:(id)sender {
     
     [self.delegate modalViewControllerHasBeenDismissedWithInput:self.characteristicNameTextField.text];
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 //makes the modal view controller disappear
 - (IBAction)cancelButtonPressed:(id)sender {
     
-    [self dismissModalViewControllerAnimated:YES];
+    [self dismissViewControllerAnimated:YES completion:nil];
     
 }
 

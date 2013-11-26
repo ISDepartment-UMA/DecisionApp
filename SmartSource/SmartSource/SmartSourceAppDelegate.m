@@ -9,12 +9,14 @@
 #import "SmartSourceAppDelegate.h"
 #import "SmartSourceSplitViewController.h"
 #import "Component+Factory.h"
+#import "SmartSourceFunctions.h"
 
 //unneceario if characteristics don't need to be in there
 #import "AvailableCharacteristic+Factory.h"
 #import "AvailableSuperCharacteristic+Factory.h"
 #import "SuperCharacteristic+Factory.h"
 #import "Characteristic+Factory.h"
+#import "WebServiceConnector.h"
 
 @implementation SmartSourceAppDelegate
 
@@ -56,9 +58,21 @@
         } else {
             NSLog(@"Initialized with default settings");
         }
-        
     }
     
+    
+    //in iOS7 set status bar text color
+    if ([SmartSourceFunctions deviceRunsiOS7]) {
+        [[UIApplication sharedApplication] setStatusBarStyle:UIStatusBarStyleLightContent];
+    }
+    
+    NSArray *requirements = [WebServiceConnector getRequirementsAndInterdependenciesForProject:@"114"];
+    NSDictionary *req = [requirements lastObject];
+    NSEnumerator *enumer = [req keyEnumerator];
+    NSString *key;
+    while ((key = [enumer nextObject]) != nil) {
+        NSLog(key);
+    }
     /*
     //Log all available fonts
     NSArray *fontFamilyNames = [UIFont familyNames];

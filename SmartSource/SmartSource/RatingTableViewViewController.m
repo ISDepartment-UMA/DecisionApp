@@ -23,6 +23,9 @@
 #import "ComponentSelectionTableViewController.h"
 #import "WeightSuperCharacteristicsViewController.h"
 #import "ModalAlertViewController.h"
+#import "SmartSourceFunctions.h"
+#import "UIColor+SmartSourceColors.h"
+#import "SodaCharacteristicCell.h"
 
 
 @interface RatingTableViewViewController ()
@@ -55,10 +58,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *weightingCompleteLabel;
 @property (nonatomic) BOOL shouldReturnToMainMenuImmediately;
 
-
-
-
-
 @end
 
 @implementation RatingTableViewViewController
@@ -82,22 +81,45 @@
 @synthesize screenTitleLabel = _screenTitleLabel;
 @synthesize shouldReturnToMainMenuImmediately = _shouldReturnToMainMenuImmediately;
 
+static NSInteger indexOfCommunicationComplexity;
+static NSInteger indexOfCohesionCell;
+static NSInteger indexOfCouplingCell;
 
+
+
+#pragma mark CharacteristicCell delegate methods
 
 - (void)checkForCompleteness
 {
+    //rating complete?
     if ([self.currentProject ratingIsComplete]) {
         [self setComponentRatingIsComplete:YES];
     }
-    
     //tell master view to update
     UINavigationController *masterNavigation = [self.splitViewController.viewControllers objectAtIndex:0];
     id visibleViewController = masterNavigation.visibleViewController;
     if ([visibleViewController isKindOfClass:[ComponentSelectionTableViewController class]]) {
         [visibleViewController reloadTableView];
     }
-    
-    
+}
+
+//save context
+- (void)saveContext
+{
+    if (![self.currentComponent saveContext]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"The Project Rating could not be saved!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
+- (NSNumber *)getValueForCohesion
+{
+    return [self.currentComponent getComponentObject].cohesion;
+}
+
+- (NSNumber *)getValueForCoupling
+{
+    return [self.currentComponent getComponentObject].coupling;
 }
 
 //if componentratingcomplete is set, update view
@@ -112,14 +134,12 @@
     }
 }
 
-
-
 //if weighting is complete set, update view
 - (void)setWeightingIsComplete:(BOOL)weightingIsComplete
 {
-    
     _weightingIsComplete = weightingIsComplete;
     
+    //set check mark on button in lower left corner
     if (weightingIsComplete) {
         [self.currentProject setProjectHasBeenWeightedTrue];
         [self.weightingCompleteLabel setText:@"\u2713"];
@@ -127,17 +147,6 @@
         [self.weightingCompleteLabel setText:@""];
     }
 }
-
-- (void)saveContext
-{
-    if (![self.currentComponent saveContext]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"The Project Rating could not be saved!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
-    }
-    
-}
-
-
 
 
 //sets the component currently displayed in the ratingtableview
@@ -148,17 +157,35 @@
     self.currentComponent = [[ComponentModel alloc] initWithComponentId:component.componentID];
     //get rating characteristics
     self.characteristics = [self.currentComponent getCharacteristics];
+    //soda - get indices
+    [self getIndicesForCommunicationComplexity];
     [self.tableView reloadData];
     //if component has been selected, dismiss popovercontroller
     SmartSourceSplitViewController *splitVC = (SmartSourceSplitViewController *)self.splitViewController;
     [splitVC.masterPopoverController dismissPopoverAnimated:YES];
     self.displayedComponent = component;
-    
-    
-    
-    
-
 }
+
+- (void)getIndicesForCommunicationComplexity
+{
+    //get indices for
+    for (int i=0; i<[[self.characteristics objectAtIndex:0] count]; i++) {
+        SuperCharacteristic *superChar = [[self.characteristics objectAtIndex:0] objectAtIndex:i];
+        if ([superChar.name isEqualToString:@"Communication Complexity"]) {
+            indexOfCommunicationComplexity = i;
+            for (int y=0; y<[[[self.characteristics objectAtIndex:1] objectAtIndex:i] count]; y++) {
+                Characteristic *previousChar = [[[self.characteristics objectAtIndex:1] objectAtIndex:i] objectAtIndex:y];
+                if ([previousChar.name isEqualToString:@"Cohesion"]) {
+                    indexOfCohesionCell = y;
+                } else if ([previousChar.name isEqualToString:@"Coupling"]) {
+                    indexOfCouplingCell = y;
+                }
+            }
+            break;
+        }
+    }
+}
+
 
 //set project model
 - (void)setProjectModel:(ProjectModel *)projectModel
@@ -187,7 +214,6 @@
 
 - (IBAction)backToMainMenu:(id)sender {
     
-    
     //if weighting has not been edited, ask for acknowledgement
     if (!self.weightingIsComplete) {
         
@@ -200,8 +226,8 @@
         [modalAVC setStringForTextLabel:@"You did not weight the Supercharacteristics. Please do so by taping the weighting button in the bottom bar. Do you want to return with the same weight for every Supercharacteristic?"];
         [modalAVC setStringForTitleLabel:@"Alert"];
         [modalAVC setDelegate:self];
-        [self presentModalViewController:modalAVC animated:YES];
-    
+        [self presentViewController:modalAVC animated:YES completion:nil];
+        
     } else {
         
         //return to main menu
@@ -222,20 +248,16 @@
 }
 
 - (IBAction)weightingButtonPressed:(id)sender {
-    
     [self setWeightingIsComplete:YES];
     [self checkForCompleteness];
     [self.splitViewController performSegueWithIdentifier:@"weightSuperChars" sender:self];
-    
 }
-
 
 
 - (NSArray *)getAvailableComponents
 {
     return self.availableComponents;
 }
-
 
 
 - (NSString *)getCurrentProjectName
@@ -259,27 +281,20 @@
     if (splitViewController.masterPopoverController) {
         [self splitViewController:splitViewController willHideViewController:nil withBarButtonItem:splitViewController.barButtonItem forPopoverController:splitViewController.masterPopoverController];
     }
-    
-    
 }
+
 
 - (void)viewDidLoad
 {
-    
     [super viewDidLoad];
     [self.tableView setDelegate:self];
     [self.tableView setDataSource:self];
     [self.tableView reloadData];
-    
     //show main menu
     [self.splitViewController performSegueWithIdentifier:@"mainMenu" sender:self];
-    
     //set tag to show scrollers permenantly
     [self.tableView setTag:noDisableVerticalScrollTag];
-    
     self.tableViewShowsFullComponentDescription = NO;
-    
-
 }
 
 //custom method that gets called when master view appears
@@ -324,22 +339,56 @@
     //show scrollers once and they won't disappear
     [self.tableView flashScrollIndicators];
     
-    //blue line that covers the vertical black separator in the header
-    CGFloat yOriginOfBottomBar = self.view.frame.size.height - 40;
-    UIView *bottommask = [[UIView alloc] initWithFrame:CGRectMake(315, yOriginOfBottomBar, 12, 40)];
-    [bottommask setBounds:CGRectMake(315, yOriginOfBottomBar, 12, 40)];
-    [bottommask setBackgroundColor:[UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0f]];
-    [[self.splitViewController view] insertSubview:bottommask atIndex:0];
+    //hide three dimensional borders of splitviewcontroller in ios6
+    if (![SmartSourceFunctions deviceRunsiOS7]) {
+        CGFloat yOriginOfBottomBar = self.view.frame.size.height - 40;
+        UIView *bottommask = [[UIView alloc] initWithFrame:CGRectMake(315, yOriginOfBottomBar, 12, 40)];
+        [bottommask setBounds:CGRectMake(315, yOriginOfBottomBar, 12, 40)];
+        [bottommask setBackgroundColor:[UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0f]];
+        [[self.splitViewController view] insertSubview:bottommask atIndex:0];
+        
+        UIView *headerMask = [[UIView alloc] initWithFrame:CGRectMake(315, 0, 12, 45)];
+        [headerMask setBounds:CGRectMake(315, 0, 12, 45)];
+        [headerMask setBackgroundColor:[UIColor colorWithRed:1.0 green:0.58 blue:0.0 alpha:1.0f]];
+        [[self.splitViewController view] insertSubview:headerMask atIndex:0];
+        
+        UIView *centerMask = [[UIView alloc] initWithFrame:CGRectMake(315, 44, 12, (yOriginOfBottomBar - 44))];
+        [centerMask setBounds:CGRectMake(315, 44, 12, (yOriginOfBottomBar - 44))];
+        [centerMask setBackgroundColor:[UIColor colorWithRed:0.25 green:0.25 blue:0.25 alpha:1.0f]];
+        [[self.splitViewController view] insertSubview:centerMask atIndex:0];
+    } else {
+        
+        CGFloat xOriginOfDividerLine = 315;
+        
+        UIView *statusBarMask = [[UIView alloc] initWithFrame:CGRectMake(xOriginOfDividerLine, 0, 12, 20)];
+        [statusBarMask setBounds:CGRectMake(xOriginOfDividerLine, 0, 12, 20)];
+        [statusBarMask setBackgroundColor:[UIColor blackColor]];
+        [[self.splitViewController view] insertSubview:statusBarMask atIndex:0];
+        
+        UIView *headerMask = [[UIView alloc] initWithFrame:CGRectMake(xOriginOfDividerLine, 20, 12, 45)];
+        [headerMask setBounds:CGRectMake(xOriginOfDividerLine, 0, 12, 45)];
+        [headerMask setBackgroundColor:[UIColor colorOrange]];
+        [[self.splitViewController view] insertSubview:headerMask atIndex:0];
+        
+        CGFloat yOriginOfBottomBar = self.view.frame.size.height - 40;
+        UIView *bottommask = [[UIView alloc] initWithFrame:CGRectMake(315, yOriginOfBottomBar, 12, 40)];
+        [bottommask setBounds:CGRectMake(315, yOriginOfBottomBar, 12, 40)];
+        [bottommask setBackgroundColor:[UIColor colorWithRed:0.35 green:0.35 blue:0.35 alpha:1.0f]];
+        [[self.splitViewController view] insertSubview:bottommask atIndex:0];
+        
+        UIView *centerMask = [[UIView alloc] initWithFrame:CGRectMake(xOriginOfDividerLine, 65, 12, (yOriginOfBottomBar - 44))];
+        [centerMask setBounds:CGRectMake(315, 65, 12, (yOriginOfBottomBar - 44))];
+        [centerMask setBackgroundColor:[UIColor colorDarkGray]];
+        [[self.splitViewController view] insertSubview:centerMask atIndex:0];
+    }
     
-    UIView *headerMask = [[UIView alloc] initWithFrame:CGRectMake(315, 0, 12, 45)];
-    [headerMask setBounds:CGRectMake(315, 0, 12, 45)];
-    [headerMask setBackgroundColor:[UIColor colorWithRed:1.0 green:0.58 blue:0.0 alpha:1.0f]];
-    [[self.splitViewController view] insertSubview:headerMask atIndex:0];
+    //in portrait mode center header
+    UIInterfaceOrientation deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
+    if (UIInterfaceOrientationIsPortrait(deviceOrientation)) {
+        [self masterViewIsNotThere];
+    }
     
-    UIView *centerMask = [[UIView alloc] initWithFrame:CGRectMake(315, 44, 12, (yOriginOfBottomBar - 44))];
-    [centerMask setBounds:CGRectMake(315, 44, 12, (yOriginOfBottomBar - 44))];
-    [centerMask setBackgroundColor:[UIColor colorWithRed:0.25 green:0.25 blue:0.25 alpha:1.0f]];
-    [[self.splitViewController view] insertSubview:centerMask atIndex:0];
+    
 }
 
 
@@ -412,11 +461,18 @@
         return 5;
     } else if (section > [[self.characteristics objectAtIndex:0] count]){
         return 1;
-    } else {
-        return [[[self.characteristics objectAtIndex:1] objectAtIndex:(section-1)] count] + 1;
     }
+    //else
+    return [[[self.characteristics objectAtIndex:1] objectAtIndex:(section-1)] count] + 1;
 }
 
+
+//necessary for iOS7 to change cells background color from white
+//available after iOS6
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [cell setBackgroundColor:[UIColor clearColor]];
+}
 
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -465,21 +521,17 @@
                 UIButton *readMoreButton = (UIButton *)[contentView viewWithTag:11];
                 [readMoreButton addTarget:self action:@selector(showHideFullDescription) forControlEvents:UIControlEventTouchUpInside];
                 [readMoreButton setHidden:NO];
-                
             } else {
                 //set button invisible
                 UIButton *readMoreButton = (UIButton *)[contentView viewWithTag:11];
                 [readMoreButton setHidden:YES];
             }
             
-            
         //rows 2... - componentInfoContentCell
         } else {
-            
             //get cell
             static NSString *CellIdentifier = @"componentInfoContentCell";
             cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-            
             //set label
             UIView *contentView = [cell viewWithTag:20];
             UILabel *info = (UILabel *)[contentView viewWithTag:10];
@@ -496,23 +548,16 @@
                 [info setText:@"Last Modifier"];
                 [infoValue setText:component.modifier];
             }
-            
-            
             //replace empty string by N.A.
             if ([infoValue.text isEqualToString:@""] || (!infoValue.text)) {
                 NSLog(@"true");
                 [infoValue setText:@"N.A."];
             }
-            
-            
-            
         }
-    
     return cell;
 
         
-    
-    } else if (indexPath.section > [[self.characteristics objectAtIndex:0] count]){
+    } else if (indexPath.section > ([[self.characteristics objectAtIndex:0] count])){
         
         static NSString *CellIdentifier = @"emptySpaceCell";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
@@ -520,25 +565,30 @@
         
         
     } else {
-    
+        
         //the first row of each section should present a supercharacteristik 
         if (indexPath.row == 0) {
-            
             SuperCharacteristic *superChar = [[self.characteristics objectAtIndex:0] objectAtIndex:(indexPath.section-1)];
-
-            //get cell
             static NSString *CellIdentifier = @"superCharacteristicCell";
             UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-            
             //set label
             UIView *contentView = [cell viewWithTag:20];
             UILabel *text = (UILabel *)[contentView viewWithTag:10];
             text.text = superChar.name;
-            
-            
             return cell;
             
         } else {
+            
+            //soda - first two cells of communication complexity are different
+            if (indexPath.section == (indexOfCommunicationComplexity+1)) {
+                if ((indexPath.row == (indexOfCohesionCell+1)) || (indexPath.row == (indexOfCouplingCell+1))) {
+                    Characteristic *rightCharacteristic = [[[self.characteristics objectAtIndex:1] objectAtIndex:(indexPath.section-1)] objectAtIndex:indexPath.row-1];
+                    static NSString *CellIdentifier = @"sodaCell";
+                    SodaCharacteristicCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
+                    [cell setCharacteristic:rightCharacteristic andDelegate:self];
+                    return cell;
+                }
+            }
             
             //return cell of subcharacteristic
             static NSString *CellIdentifier = @"characteristicCell";
@@ -550,12 +600,11 @@
             //return cell with characteristic
             [cell setCharacteristic:rightCharacteristic andDelegate:self];
             return cell;
-            //return [[CharacteristicCell alloc] initWithCharacteristic:rightCharacteristic andDelegate:self];
-            
         }
     } 
 
 }
+
 
 
 - (CGFloat)calculateHeightForDescriptionCell
@@ -571,11 +620,10 @@
     
     //calculate hight
     CGSize maximumLabelSize = CGSizeMake(510, FLT_MAX);
-    CGSize expectedLabelSize = [self.textDescriptionLabel sizeWithFont:[UIFont fontWithName:@"BitstreamVeraSans-Roman" size:17.0] constrainedToSize:maximumLabelSize lineBreakMode:UILineBreakModeWordWrap];
+    CGSize expectedLabelSize = [self.textDescriptionLabel sizeWithFont:[UIFont fontWithName:@"BitstreamVeraSans-Roman" size:17.0] constrainedToSize:maximumLabelSize lineBreakMode:NSLineBreakByWordWrapping];
     self.heightDescriptionLabel = expectedLabelSize.height;
     return self.heightDescriptionLabel + 40;
 }
-
 
 
 -(CGFloat)tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -583,21 +631,25 @@
     
     //for description label, calculate cell height from description length
     if ((indexPath.section == 0) && (indexPath.row == 1)) {
-        
         return [self calculateHeightForDescriptionCell];
-        
     //last cell to leave space
     } else if (indexPath.section > [[self.characteristics objectAtIndex:0] count]) {
         return 30;
     }
     
-    
-    
     if (indexPath.row == 0) {
         return 75;
-    } else {
-        return 50;
+        
+    //soda cells higher
+    } else if (indexPath.section == (indexOfCommunicationComplexity + 1)) {
+        if (indexPath.row == (indexOfCohesionCell+1)) {
+            return 100;
+        } else if (indexPath.row == (indexOfCouplingCell+1)) {
+            return 100;
+        }
     }
+    //else
+    return 50;
 }
 
 

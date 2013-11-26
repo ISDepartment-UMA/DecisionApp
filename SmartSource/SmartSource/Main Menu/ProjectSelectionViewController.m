@@ -11,6 +11,10 @@
 #import "MainMenuViewController.h"
 #import "SmartSourceTableViewCell.h"
 #import "ButtonExternalBackground.h"
+#import "UIColor+SmartSourceColors.h"
+#import "ModalAlertViewController.h"
+#import "SmartSourcePopoverController.h"
+#import "VeraRomanLabel.h"
 
 @interface ProjectSelectionViewController ()
 
@@ -22,6 +26,11 @@
 @property (strong, nonatomic) IBOutlet UILabel *backLabel;
 @property (strong, nonatomic) IBOutlet ButtonExternalBackground *backButton;
 @property (strong, nonatomic) IBOutlet UIView *backButtonBackGroundView;
+@property (nonatomic, strong) ProjectPlatformModel *platformModel;
+@property (nonatomic) id<ProjectSelectionViewControllerDelegate>delegate;
+@property (nonatomic, strong) NSArray *projectToDelete;
+@property (nonatomic, strong) UIPopoverController *popOver;
+
 
 @end
 
@@ -34,6 +43,21 @@
 @synthesize backLabel = _backLabel;
 @synthesize backButton = _backButton;
 @synthesize backButtonBackGroundView = _backButtonBackGroundView;
+@synthesize delegate = _delegate;
+@synthesize projectToDelete = _projectToDelete;
+@synthesize popOver = _popOver;
+
+
+#pragma mark getters & setters
+- (void)setDelegate:(id<ProjectSelectionViewControllerDelegate>)delegate
+{
+    _delegate = delegate;
+}
+
+- (void)setPlatformModel:(ProjectPlatformModel *)platformModel;
+{
+    _platformModel = platformModel;
+}
 
 
 
@@ -77,7 +101,10 @@
 
 - (IBAction)backButtonPressed:(id)sender {
     //make modal view controller disappear
-    [self dismissModalViewControllerAnimated:YES];
+    //dsimiss and tell delegate
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self.delegate projectSelectionViewControllerHasBeenDismissedWithPlatformModel:self.platformModel];
+    }];
 }
 
 # pragma mark project retrival and projectplatformmodeldelegate
@@ -172,63 +199,165 @@
     
 }
 
+
+
+//necessary for iOS7 to change cells background color from white
+//available after iOS6
+- (void)tableView:(UITableView *)tableView willDisplayCell:(UITableViewCell *)cell forRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    [cell setBackgroundColor:[UIColor clearColor]];
+}
+
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
     UIView *cellSubView = nil;
     UITableViewCell *cell;
-    
     //while the cellsubview on the dequed cell does not exist, get a new cell
     //this could be, since the cell subview is removed if an activity indicator is added
     while (!cellSubView) {
-        
         //get cell
         NSString *cellIdentifier = @"Cell";
         cell = [tableView dequeueReusableCellWithIdentifier:cellIdentifier];
-        
-        
         //get subview of cell
         cellSubView = [cell viewWithTag:22];
     }
-    
-    
-    
-    
     //get text label of cell
     UILabel *textLabel = (UILabel *)[cellSubView viewWithTag:12];
-    
-    
-
-    // Configure the cell...
+    UIButton *deleteButton = (UIButton *)[cell viewWithTag:13];
     // Initialize array of project info
     NSArray *projectInfo = [NSArray arrayWithObjects:@"", @"", @"", @"", nil];
-    
-    
+    //entypo - delete button in cells of core data projects
+    if (indexPath.section < 1) {
+        [deleteButton setTitle:@"\uE729" forState:UIControlStateNormal];
+        [deleteButton addTarget:self action:@selector(askForDeletion:) forControlEvents:UIControlEventTouchUpInside];
+    } else {
+        [deleteButton removeFromSuperview];
+    }
     //check if the communication to the server returned projects
     if (self.displayedCells && ([[self.displayedCells objectAtIndex:indexPath.section] count] > 0)) {
-        
         //get project info
         projectInfo = [[self.displayedCells objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
-        
         //put project info into cell
         textLabel.text = [projectInfo objectAtIndex:1];
-        
         return cell;
-        
-        
-        
     //else show activity indicator
     } else {
-        
         [cellSubView removeFromSuperview];
         UIActivityIndicatorView *spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleGray];
         spinner.frame = CGRectMake(((cell.frame.size.width/2)-20), 0, 40, 40);
         [cell addSubview:spinner];
         [spinner startAnimating];
         return cell;
-        
     }
+}
+
+# pragma mark delete project from core database
+
+/*
+ *  shows popover with the selection of projects from core database
+ *  if yes clicked --> deletionPopoverYesPressed method called
+ *  if no clicked --> deletionPopoverNoPressed method called
+ */
+- (void)askForDeletion:(UIButton *)sender {
     
-   
+    //show popup to ask for acknowledgement to delete project from core data
+    if (self.popOver == nil) {
+        //get right project
+        UIView *currentView = sender;
+        UITableViewCell *cell;
+        while (YES) {
+            if ([currentView isKindOfClass:[UITableViewCell class]]) {
+                cell = (UITableViewCell *)currentView;
+                break;
+            } else {
+                currentView = currentView.superview;
+            }
+        }
+        NSIndexPath *indexPath = [self.tableView indexPathForCell:cell];
+        self.projectToDelete = [[self.displayedCells objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
+        NSString *message = [NSString stringWithFormat:@"Are you sure to delete the Project \"%@\"?", [self.projectToDelete objectAtIndex:1]];
+        //view controller
+        UIViewController *viewC = [[UIViewController alloc] init];
+        //three buttons
+        CGFloat heightOfView = 100;
+        UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 280, heightOfView)];
+        [view setBackgroundColor:[UIColor whiteColor]];
+        //color for all button titles
+        UIColor *colorForAllTitles = [UIColor colorWithRed:0.53 green:0.53 blue:0.53 alpha:1.0];
+        //font for all button titles
+        UIFont *fontForAllTitles = [UIFont fontWithName:@"BitstreamVeraSans-Roman" size:15.0];
+        //label
+        VeraRomanLabel *label = [[VeraRomanLabel alloc] initWithFrame:CGRectMake(0, 0, 280, 50)];
+        UIFont *labelFont = [UIFont fontWithName:@"BitstreamVeraSans-Roman" size:12.0];
+        [label setText:message];
+        [label setFont:labelFont];
+        [label setTextAlignment:NSTextAlignmentCenter];
+        [label setLineBreakMode:NSLineBreakByCharWrapping];
+        [label setNumberOfLines:0];
+        [label setTextColor:[UIColor colorDarkGray]];
+        [view addSubview:label];
+        //button1
+        UIButton *noButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [noButton setFrame:CGRectMake(0, 50, 140, 50)];
+        [noButton.titleLabel setFont:fontForAllTitles];
+        [noButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [noButton setTitleColor:colorForAllTitles forState:UIControlStateNormal];
+        [noButton setTitle:@"NO" forState:UIControlStateNormal];
+        [noButton addTarget:self action:@selector(deletionPopoverNoPressed) forControlEvents:UIControlEventTouchUpInside];
+        [view addSubview:noButton];
+        //button2
+        UIButton *yesButton = [UIButton buttonWithType:UIButtonTypeCustom];
+        [yesButton setFrame:CGRectMake(140, 50, 140, 50)];
+        [yesButton.titleLabel setFont:fontForAllTitles];
+        [yesButton setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+        [yesButton setTitleColor:colorForAllTitles forState:UIControlStateNormal];
+        [yesButton setTitle:@"YES" forState:UIControlStateNormal];
+        [yesButton addTarget:self action:@selector(deletionPopoverYesPressed) forControlEvents:UIControlEventTouchUpInside];
+        [view addSubview:yesButton];
+        [viewC setView:view];
+        
+        //UIPopoverController *popover = [[UIPopoverController alloc] initWithContentViewController:viewC];
+        SmartSourcePopoverController *tempPopover = [[SmartSourcePopoverController alloc] initWithContentViewController:viewC andTintColor:[UIColor colorWithRed:1.0 green:0.53 blue:0.0 alpha:1.0]];
+        tempPopover.delegate = self;
+        tempPopover.popoverContentSize=CGSizeMake(280.0, heightOfView);
+        self.popOver = tempPopover;
+        [self.popOver presentPopoverFromRect:sender.frame inView:sender.superview permittedArrowDirections:UIPopoverArrowDirectionUp animated:YES];
+    }
+}
+
+/*
+ *  methods that gets called when user acknowledges to delete project from core database
+ *  tells model to delete project and updates displayed cells
+ */
+- (void)deletionPopoverYesPressed
+{
+    //dismiss popover
+    [self.popOver dismissPopoverAnimated:YES];
+    //delete project with this id from core database
+    [self.platformModel deleteProjectWithID:[self.projectToDelete objectAtIndex:0]];
+    //remove project from displayed cells
+    NSMutableArray *displayedProjectsFromCoreMutable = [[self.displayedCells objectAtIndex:0] mutableCopy];
+    [displayedProjectsFromCoreMutable removeObject:self.projectToDelete];
+    self.displayedCells = [NSArray arrayWithObjects:[NSArray arrayWithArray:displayedProjectsFromCoreMutable], [self.displayedCells objectAtIndex:1], nil];
+    if ([[[self.platformModel getSelectedProject] objectAtIndex:0] isEqualToString:[self.projectToDelete objectAtIndex:0]]) {
+        [self.platformModel setSelectedProject:nil];
+    }
+    [self.tableView reloadData];
+    [NSThread detachNewThreadSelector:@selector(getProjects) toTarget:self withObject:nil];
+    self.popOver = nil;
+    self.projectToDelete = nil;
+    
+}
+
+/*
+ *  methods that gets called when user declines to delete project from core database
+ *  dismiss popover and set it to nil
+ */
+- (void)deletionPopoverNoPressed
+{
+    [self.popOver dismissPopoverAnimated:YES];
+    self.popOver = nil;
+    self.projectToDelete = nil;
 }
 
 
@@ -240,21 +369,10 @@
     NSArray *project = [[self.displayedCells objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     [self.platformModel setSelectedProject:project];
     
-    //make modal view controller disappear
-    [self dismissModalViewControllerAnimated:YES];
-    
-    
-    //check presenting view controller
-    if ([self.presentingViewController isKindOfClass:[UINavigationController class]]) {
-        UINavigationController *navi = (UINavigationController *)self.presentingViewController;
-        
-        if ([[navi.viewControllers lastObject] isKindOfClass:[MainMenuViewController class]]) {
-            MainMenuViewController *main = (MainMenuViewController *)[navi.viewControllers lastObject];
-            //[main modalViewControllerHasBeenDismissed];
-            [NSThread detachNewThreadSelector:@selector(modalViewControllerHasBeenDismissed) toTarget:main withObject:nil];
-        }
-    }
-    
+    //dsimiss and tell delegate
+    [self dismissViewControllerAnimated:YES completion:^{
+        [self.delegate projectSelectionViewControllerHasBeenDismissedWithPlatformModel:self.platformModel];
+    }];
 }
 - (void)viewDidDisappear:(BOOL)animated
 {

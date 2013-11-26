@@ -9,9 +9,12 @@
 #import <UIKit/UIKit.h>
 #import "ProjectPlatformModel.h"
 #import "ProjectPlatformModelDelegate.h"
+#import "ProjectSelectionViewControllerDelegate.h"
+#import "ModalAlertViewControllerDelegate.h"
 
 
-@interface ProjectSelectionViewController : UIViewController <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, ProjectPlatformModelDelegate>
+@interface ProjectSelectionViewController : UIViewController <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, ProjectPlatformModelDelegate, UIPopoverControllerDelegate>
 
-@property (nonatomic, strong) ProjectPlatformModel *platformModel;
+- (void)setDelegate:(id<ProjectSelectionViewControllerDelegate>)delegate;
+- (void)setPlatformModel:(ProjectPlatformModel *)platformModel;
 @end
