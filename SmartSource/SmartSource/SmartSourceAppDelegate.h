@@ -17,7 +17,7 @@
 @property (strong, nonatomic) UIPopoverController *masterPopOverController;
 @property (strong, nonatomic) UIBarButtonItem *barButtonItem;
 @property (readonly, strong, nonatomic) NSPersistentStoreCoordinator *persistentStoreCoordinator;
-
+//methods
 - (void)saveContext;
 - (NSURL *)applicationDocumentsDirectory;
 
