@@ -18,46 +18,37 @@
 
 
 @interface ResultExplanationViewController ()
-
 //Model
 @property (strong, nonatomic) ProjectModel *projectModel;
 @property (strong, nonatomic) ComponentModel *currentComponent;
-
 //Characteristics used
 @property (strong, nonatomic) NSArray *superChars;
 @property (strong, nonatomic) NSArray *chars;
-
 //results
 @property (nonatomic) float totalWeightOfSuperCharacteristics;
 @property (nonatomic) float weightedSumOfSuperCharacteristics;
 @property (nonatomic, strong) NSArray *valuesForCells;
 @property (nonatomic, strong) NSString *explanation;
-
 //Views
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) IBOutlet UIView *explanationTextView;
 @property (strong, nonatomic) IBOutlet UIView *classificationResultsView;
 @property (strong, nonatomic) IBOutlet UIView *resultImageView;
-
 //Labels and values
 @property (strong, nonatomic) IBOutlet ScaleView *scaleView;
 @property (strong, nonatomic) IBOutlet UILabel *componentNameLabel;
 @property (strong, nonatomic) IBOutlet UITextView *componentDescriptionTextView;
 @property (strong, nonatomic) IBOutlet UIImageView *resultIconImageView;
-
 @property (strong, nonatomic) IBOutlet UILabel *resultClassificationLetterLabel;
 @property (strong, nonatomic) IBOutlet UILabel *resultSumWeightedAveragesLabel;
-
+//buttons
+@property (strong, nonatomic) IBOutlet ButtonExternalBackground *backButton;
+@property (strong, nonatomic) IBOutlet UIView *backButtonBackground;
 //expansion
 //index path of cell to be expanded
 @property (nonatomic, strong) NSIndexPath *cellExpansionIndexPath;
 @property (nonatomic, strong) SubCharacteristicsView *expansionView;
 @property (nonatomic) CGFloat heightOfEV;
-
-@property (strong, nonatomic) IBOutlet ButtonExternalBackground *backButton;
-@property (strong, nonatomic) IBOutlet UIView *backButtonBackground;
-
-
 @end
 
 @implementation ResultExplanationViewController
@@ -87,86 +78,53 @@
 
 
 
+#pragma mark IBActions
 
-
-
-- (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
-{
-    self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
-    if (self) {
-        // Custom initialization
-    }
-    return self;
-}
-
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-
+//show decision table
 - (IBAction)showComponentInDecisionTable:(id)sender {
     [self performSegueWithIdentifier:@"decisionTable" sender:self];
 }
 
-
+//back to results overview
 - (IBAction)backToResultOverview:(id)sender {
-    NSLog(@"ButtonPressed");
     [self.navigationController popViewControllerAnimated:YES];
 }
 
+#pragma mark Inherited methods
 
 
 //view did load
 - (void)viewDidLoad
 {
-    
     [super viewDidLoad];
-    
     //table view delegate
     [self.tableView setDelegate:self];
     [self.tableView setDataSource:self];
-    
     //backbutton
     [self.backButton setViewToChangeIfSelected:self.backButtonBackground];
-    
     //no cell expanded when view loads
     self.cellExpansionIndexPath = nil;
-    
-    
+    //device orientation handling
     [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
     [[NSNotificationCenter defaultCenter] addObserver: self selector:   @selector(deviceOrientationDidChange:) name: UIDeviceOrientationDidChangeNotification object: nil];
     UIInterfaceOrientation deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    
     //if device orientation is portrait, handle it
     if (UIInterfaceOrientationIsPortrait(deviceOrientation)) {
         [self deviceOrientationDidChange:nil];
     }
-    
+    //fill labels with results
     [self updateLabelsFromResults];
-    
-    
-    
 }
 
 
+//fill label with results
 - (void)updateLabelsFromResults
 {
-    
-
     //component info labels
     [self.componentNameLabel setText:[self.currentComponent getComponentObject].name];
-    
-    
     [self.componentDescriptionTextView setText:self.explanation];
-    
-    
-    
     //result labels
     [self.resultSumWeightedAveragesLabel setText:[NSString stringWithFormat:@"%.1f", self.weightedSumOfSuperCharacteristics]];
-    
     //set evaluation label - high, medium low
     [self.resultIconImageView setImage:[SmartSourceFunctions getImageForWeightedAverageValue:self.weightedSumOfSuperCharacteristics]];
     [self.resultClassificationLetterLabel setText:[SmartSourceFunctions getOutIndCoreStringForWeightedAverageValue:self.weightedSumOfSuperCharacteristics]];
@@ -174,37 +132,53 @@
 }
 
 
+- (void)viewDidUnload {
+    [self setTableView:nil];
+    [self setScaleView:nil];
+    [self setComponentNameLabel:nil];
+    [self setResultClassificationLetterLabel:nil];
+    [self setResultSumWeightedAveragesLabel:nil];
+    [self setScaleView:nil];
+    [self setComponentDescriptionTextView:nil];
+    [self setResultIconImageView:nil];
+    [self setExplanationTextView:nil];
+    [self setClassificationResultsView:nil];
+    [self setResultImageView:nil];
+    [super viewDidUnload];
+}
+
+
+
+#pragma mark Device Orientation
+
 //detect rotation
 - (void)deviceOrientationDidChange:(NSNotification *)notification {
-    
+    //get current orientaiton
     UIInterfaceOrientation deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
-    
+    //differentiate between orientations
     if (UIInterfaceOrientationIsPortrait(deviceOrientation)) {
-        
         [self.explanationTextView setFrame:CGRectMake(0, 49, (self.view.frame.size.width -40), 60)];
         [self.classificationResultsView setFrame:CGRectMake(0, 114, (self.view.frame.size.width - 195), 150)];
         [self.resultImageView setFrame:CGRectMake((self.view.frame.size.width - 190), 114, 150, 150)];
         [self.tableView setFrame:CGRectMake(20, 294, (self.view.frame.size.width - 40), (self.view.frame.size.height - 294))];
-    }
-    
-    if (UIInterfaceOrientationIsLandscape(deviceOrientation)) {
-        
+    } else if (UIInterfaceOrientationIsLandscape(deviceOrientation)) {
+        //values
         CGFloat heightOfArea = 150;
         CGFloat widthOfTextView = 345;
         CGFloat yOriginOfArea = 49;
         CGFloat xOriginOfImageView = (self.view.frame.size.width - 190);
         CGFloat widthOfClassificationFactsView = ((xOriginOfImageView - 5) - (widthOfTextView + 5));
         CGFloat yOriginOfTableView = yOriginOfArea + heightOfArea + 30;
-        
+        //frames
         [self.explanationTextView setFrame:CGRectMake(0, yOriginOfArea, widthOfTextView, heightOfArea)];
         [self.classificationResultsView setFrame:CGRectMake((widthOfTextView + 5), yOriginOfArea, widthOfClassificationFactsView, heightOfArea)];
         [self.resultImageView setFrame:CGRectMake(xOriginOfImageView, yOriginOfArea, 150, 150)];
         [self.tableView setFrame:CGRectMake(20, yOriginOfTableView, (self.view.frame.size.width - 40), (self.view.frame.size.height - (yOriginOfTableView + 20)))];
-        
     }
 }
 
 
+#pragma mark getters and setters
 
 //set component to be displayed and project model
 - (void)setComponent:(Component *)component andModel:(ProjectModel *)model
@@ -221,9 +195,8 @@
     self.superChars = [results objectForKey:@"superChars"];
     self.chars = [results objectForKey:@"chars"];
     [self.tableView reloadData];
-    
-    
 }
+
 
 
 #pragma mark - UITableViewDataSource
@@ -277,17 +250,13 @@
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         return cell;
         
-    
     //all other cells are supercharacteristic cells - superCharacteristicCell
     } else {
-        
         //row -1 because value 0 has been used for header
         NSInteger row = indexPath.row - 1;
-        
         //get cell
         static NSString *CellIdentifier = @"superCharacteristicCell";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-        
         //get labels
         UIView *cellContentView = [cell viewWithTag:20];
         UILabel *superCharNameLabel = (UILabel *)[cellContentView viewWithTag:25];
@@ -295,57 +264,59 @@
         UILabel *superCharAverageLabel = (UILabel *)[cellContentView viewWithTag:22];
         UILabel *superCharWeightLabel = (UILabel *)[cellContentView viewWithTag:23];
         UILabel *superCharWeightedAverageLabel = (UILabel *)[cellContentView viewWithTag:24];
-        
         //set name label
         [superCharNameLabel setText:[[self.valuesForCells objectAtIndex:row] objectAtIndex:0]];
-        
         //set average label        
         [superCharEvaluationLabel setText:[[self.valuesForCells objectAtIndex:row] objectAtIndex:1]];
         [superCharAverageLabel setText:[[self.valuesForCells objectAtIndex:row] objectAtIndex:2]];
-        
         // set weight label
         [superCharWeightLabel setText:[[self.valuesForCells objectAtIndex:row] objectAtIndex:3]];
-        
         //set weighted average label
         [superCharWeightedAverageLabel setText:[[self.valuesForCells objectAtIndex:row] objectAtIndex:4]];
-        
         return cell;
     }
 }
 
 
+#pragma mark UITableViewDelegate
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
+{
+    //show complete explanation of subcharacteristics substantiations
+    [self showHideSubCharacteristicsForCellAtIndexPath:indexPath];
+}
+
+
+#pragma mark Subcharacteristics expansion
+
+/*
+ *  method to be called that expands a cell to display a complete
+ *  explanation of subcharacteristics values
+ */
 - (void)showHideSubCharacteristicsForCellAtIndexPath:(NSIndexPath *)indexPath
 {
     //not for first row
     if (indexPath.row == 0) {
         return;
     }
-    
     //first cell is header cell
     NSInteger row = indexPath.row-1;
-    
-    
-    //check if new selected cell is same as previously
+    //check if new selected cell is same as previously selected
     BOOL sameCell = [indexPath isEqual:self.cellExpansionIndexPath];
-
     UITableViewCell *previouslyySelectedCell;
     UIView *contentViewPreciousCell;
     UIImageView *arrowImagePrevious;
     //save old characteristics view in tmpvariable
     SubCharacteristicsView *tempCharView;
-    
     //if expansion exists, hide it
     if (self.cellExpansionIndexPath) {
         //get old cell cell
         previouslyySelectedCell = [self.tableView cellForRowAtIndexPath:self.cellExpansionIndexPath];
         contentViewPreciousCell = [previouslyySelectedCell viewWithTag:20];
         arrowImagePrevious = (UIImageView *)[contentViewPreciousCell viewWithTag:26];
-        
         //save old characteristics view in tmpvariable
         tempCharView = (SubCharacteristicsView *)self.expansionView;
     }
-    
-    
     UITableViewCell *cellCurrent;
     UIView *contentViewCurrent;
     UIImageView *arrowImageCurrent;
@@ -356,8 +327,6 @@
         cellCurrent = [self.tableView cellForRowAtIndexPath:indexPath];
         contentViewCurrent = [cellCurrent viewWithTag:20];
         arrowImageCurrent = (UIImageView *)[contentViewCurrent viewWithTag:26];
-        
-        
         //build new view
         //initialize new characteristics subview
         NSArray *subviewArray = [[NSBundle mainBundle] loadNibNamed:@"SubCharacteristicsView" owner:self options:nil];
@@ -373,73 +342,49 @@
         
         //set view
         [self.expansionView setCharacteristics:charsForView width:widthOfExpansionView average:superCharValue weight:weight andWeightedAverage:weightedAverage];
-        
         //hide behind content view to pull it out
         frameOfCharacteristicsView = self.expansionView.frame;
         self.heightOfEV = frameOfCharacteristicsView.size.height + 5;
         [self.expansionView setFrame:contentViewCurrent.frame];
-        
         //put subview below content view
         [cellCurrent insertSubview:self.expansionView belowSubview:contentViewCurrent];
         [self.expansionView.superview sendSubviewToBack:self.expansionView];
-        
     } else {
         self.expansionView = nil;
         self.cellExpansionIndexPath = nil;
     }
-        
-        
-        
     
-        
-        //hide expansion view and return
+    //hide expansion view and return
     if (arrowImagePrevious) {
         [self rotateImage:arrowImagePrevious duration:0.2 curve:UIViewAnimationCurveEaseIn degrees:0];
     }
-    
     if (!sameCell) {
         [self rotateImage:arrowImageCurrent duration:0.2 curve:UIViewAnimationCurveEaseIn degrees:90];
         //set index path
         self.cellExpansionIndexPath = indexPath;
     }
-    
-    
     if (tempCharView) {
         for (UIView *view in tempCharView.subviews) {
             [view removeFromSuperview];
         }
     }
     
-
     //start animation
     [UIView animateWithDuration:0.2 animations:^{
-        
         if (tempCharView) {
             [tempCharView.superview sendSubviewToBack:self.expansionView];
             [tempCharView setFrame:contentViewPreciousCell.frame];
         }
-        
-        
         [self.tableView beginUpdates];
         [self.tableView endUpdates];
-        
         if (!sameCell) {
             [self.expansionView setFrame:frameOfCharacteristicsView];
         }
-     
-            
-                                 
-                             } completion:^(BOOL finished) {
-                                 
-                                 
-                                 if (tempCharView) {
-                                     [tempCharView removeFromSuperview];
-                                 }
-                                 
-                        
-                             }];
-
-    
+    } completion:^(BOOL finished) {
+        if (tempCharView) {
+            [tempCharView removeFromSuperview];
+        }
+    }];
 }
 
 
@@ -448,7 +393,9 @@
 #define M_PI   3.14159265358979323846264338327950288   /* pi */
 #define DEGREES_RADIANS(angle) ((angle) / 180.0 * M_PI)
 
-
+/*
+ *  helper method to rotate image when expanding cell
+ */
 - (void)rotateImage:(UIImageView *)image duration:(NSTimeInterval)duration
               curve:(int)curve degrees:(CGFloat)degrees
 {
@@ -457,20 +404,17 @@
     [UIView setAnimationDuration:duration];
     [UIView setAnimationCurve:curve];
     [UIView setAnimationBeginsFromCurrentState:YES];
-    
     // The transform matrix
     CGAffineTransform transform =
     CGAffineTransformMakeRotation(DEGREES_RADIANS(degrees));
     image.transform = transform;
-    
     // Commit the changes
     [UIView commitAnimations];
 }
 
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    [self showHideSubCharacteristicsForCellAtIndexPath:indexPath];
-}
+
+#pragma mark prepareForSegue
+
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
@@ -482,23 +426,4 @@
     }
 }
 
-
-
-
-
-
-- (void)viewDidUnload {
-    [self setTableView:nil];
-    [self setScaleView:nil];
-    [self setComponentNameLabel:nil];
-    [self setResultClassificationLetterLabel:nil];
-    [self setResultSumWeightedAveragesLabel:nil];
-    [self setScaleView:nil];
-    [self setComponentDescriptionTextView:nil];
-    [self setResultIconImageView:nil];
-    [self setExplanationTextView:nil];
-    [self setClassificationResultsView:nil];
-    [self setResultImageView:nil];
-    [super viewDidUnload];
-}
 @end

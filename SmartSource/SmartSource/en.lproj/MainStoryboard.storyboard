@@ -95,7 +95,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xuH-X1-CQr" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2006" y="-3798"/>
+            <point key="canvasLocation" x="-3366" y="-3966"/>
         </scene>
         <!--Main Menu View Controller-->
         <scene sceneID="iIZ-nh-BKt">
@@ -174,11 +174,11 @@
                                                 <color key="backgroundColor" red="0.34901960784313724" green="0.34901960784313724" blue="0.34901960784313724" alpha="1" colorSpace="calibratedRGB"/>
                                                 <connections>
                                                     <outlet property="descriptionLabel" destination="BqY-pe-KnP" id="5xU-34-85c"/>
-                                                    <outlet property="evaluationButton" destination="LaZ-JE-Ewa" id="HgB-ry-4FQ"/>
                                                     <outlet property="leftImageView" destination="MJM-vT-NDx" id="Xey-fI-fZa"/>
                                                     <outlet property="rightImageBackGroundView" destination="KOS-ES-Zet" id="Fpv-nK-K69"/>
                                                     <outlet property="rightImageBottomView" destination="OcK-ma-x1b" id="av7-6h-5Ha"/>
                                                     <outlet property="rightImageView" destination="xul-Pw-UTu" id="5ro-CR-z1t"/>
+                                                    <outlet property="triggerStepButton" destination="LaZ-JE-Ewa" id="A5t-ac-Lqu"/>
                                                 </connections>
                                             </view>
                                             <view contentMode="scaleToFill" id="Dm1-Ij-qrr" customClass="ProjectSelectionView">
@@ -323,7 +323,7 @@
                                                     <outlet property="projectInfoView" destination="hUb-2z-Zth" id="n9j-hn-KXG"/>
                                                     <outlet property="rightImageBackgroundView" destination="eB7-pC-7TF" id="nId-bt-l0G"/>
                                                     <outlet property="rightImageView" destination="DCV-OF-mQs" id="Sqn-yO-b1R"/>
-                                                    <outlet property="selectProjectButton" destination="Boi-8S-ZG2" id="9s1-u9-JnB"/>
+                                                    <outlet property="triggerStepButton" destination="Boi-8S-ZG2" id="SmC-AV-qFb"/>
                                                 </connections>
                                             </view>
                                             <view contentMode="scaleToFill" id="L3b-7r-14M" customClass="ResultView">
@@ -391,11 +391,12 @@
                                                     <outlet property="rightImageBackGroundView" destination="eVg-9j-r9P" id="gOc-7w-Uby"/>
                                                     <outlet property="rightImageBottomView" destination="rpt-br-80a" id="hAg-4j-fsi"/>
                                                     <outlet property="rightImageView" destination="hX6-m5-N01" id="d0F-ng-Zcg"/>
-                                                    <outlet property="showResultsButton" destination="nsm-V3-TAg" id="lFK-EJ-PJs"/>
+                                                    <outlet property="triggerStepButton" destination="nsm-V3-TAg" id="7vu-Gy-GQi"/>
                                                 </connections>
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="0.0"/>
                                     </view>
                                     <view contentMode="scaleToFill" id="WoB-7c-FAc">
                                         <rect key="frame" x="0.0" y="20" width="1024" height="45"/>
@@ -457,7 +458,7 @@
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" red="1" green="0.58039215686274503" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                        <inset key="insetFor6xAndEarlier" minX="0.0" minY="0.0" maxX="0.0" maxY="20"/>
+                                        <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="-20"/>
                                     </view>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="Ddg-sp-vVK" customClass="ButtonExternalBackground">
                                         <rect key="frame" x="944" y="0.0" width="80" height="84"/>
@@ -503,7 +504,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="fkq-Ab-rSF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-480" y="-3798"/>
+            <point key="canvasLocation" x="-2144" y="-3966"/>
         </scene>
         <!--Rating Table View View Controller-->
         <scene sceneID="Fti-RA-ACK">
@@ -517,6 +518,7 @@
                                 <rect key="frame" x="0.0" y="0.0" width="703" height="20"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                                <inset key="insetFor6xAndEarlier" minX="0.0" minY="0.0" maxX="0.0" maxY="-20"/>
                             </view>
                             <view contentMode="scaleToFill" id="b6z-NH-8sN">
                                 <rect key="frame" x="0.0" y="0.0" width="703" height="768"/>
@@ -594,11 +596,13 @@
                                             </view>
                                         </subviews>
                                         <color key="backgroundColor" red="1" green="0.58039215690000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                        <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="-20"/>
                                     </view>
                                     <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="EIG-3T-GF2">
                                         <rect key="frame" x="0.0" y="65" width="703" height="663"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                         <color key="backgroundColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
+                                        <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="-20"/>
                                         <color key="separatorColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
                                         <prototypes>
                                             <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="superCharacteristicCell" rowHeight="75" id="CoV-NU-0yw">
@@ -639,8 +643,8 @@
                                                             <rect key="frame" x="30" y="0.0" width="631" height="50"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                             <subviews>
-                                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="10" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="9m1-Px-usn" customClass="VeraRomanLabel">
-                                                                    <rect key="frame" x="10" y="5" width="255" height="40"/>
+                                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="10" contentMode="left" text="Label" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" id="9m1-Px-usn" customClass="VeraRomanLabel">
+                                                                    <rect key="frame" x="10" y="5" width="220" height="40"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                     <color key="backgroundColor" red="0.33109454719387754" green="0.1165505673678849" blue="0.12279694261050365" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
@@ -783,8 +787,8 @@
                                                             <rect key="frame" x="30" y="0.0" width="631" height="100"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
-                                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="10" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="10" id="Xyr-yK-1jD" customClass="VeraRomanLabel">
-                                                                    <rect key="frame" x="10" y="5" width="255" height="40"/>
+                                                                <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="10" contentMode="left" text="Label" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" minimumFontSize="10" id="Xyr-yK-1jD" customClass="VeraRomanLabel">
+                                                                    <rect key="frame" x="10" y="5" width="220" height="60"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                     <color key="backgroundColor" red="1" green="0.58039215690000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                     <fontDescription key="fontDescription" type="system" pointSize="12"/>
@@ -896,6 +900,7 @@
                                             </label>
                                         </subviews>
                                         <color key="backgroundColor" red="0.34901960780000002" green="0.34901960780000002" blue="0.34901960780000002" alpha="1" colorSpace="calibratedRGB"/>
+                                        <inset key="insetFor6xAndEarlier" minX="0.0" minY="20" maxX="0.0" maxY="-20"/>
                                     </view>
                                     <view contentMode="scaleToFill" id="isO-co-UJU">
                                         <rect key="frame" x="0.0" y="0.0" width="703" height="20"/>
@@ -926,7 +931,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yAV-lW-cA7" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-346" y="-2355"/>
+            <point key="canvasLocation" x="-1198" y="-2083"/>
         </scene>
         <!--Weight Super Characteristics View Controller-->
         <scene sceneID="zjf-uy-0DQ">
@@ -1270,7 +1275,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TcO-dD-d2s" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3578" y="-856"/>
+            <point key="canvasLocation" x="-3354" y="-2094"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="0Dp-5O-pdM">
@@ -1285,7 +1290,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="xwy-7B-I1Y" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-2048" y="-1911"/>
+            <point key="canvasLocation" x="-2120" y="-2083"/>
         </scene>
         <!--Login Data Modal View Controller-->
         <scene sceneID="wSe-sS-len">
@@ -1910,7 +1915,6 @@
                         <outlet property="tableViewCore" destination="oAN-op-6VN" id="9hs-HG-9RG"/>
                         <outlet property="tableViewIndifferent" destination="iyh-Lo-c35" id="rtn-jE-rMw"/>
                         <outlet property="tableViewOutsourcing" destination="Bur-ne-zVj" id="6a5-L7-qPs"/>
-                        <segue destination="EVe-5d-wEw" kind="push" identifier="detailInfo" id="nnT-Qc-OVI"/>
                         <segue destination="2wh-do-skf" kind="push" identifier="explanation" id="MT5-MZ-btP"/>
                         <segue destination="VJT-Hs-E2v" kind="modal" identifier="modalWaitingScreen" modalPresentationStyle="formSheet" id="NZk-dq-33G"/>
                     </connections>
@@ -1932,7 +1936,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Pxj-gs-oEJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1821" y="-2845"/>
+            <point key="canvasLocation" x="-2125" y="-3009"/>
         </scene>
         <!--Component Selection Table View Controller-->
         <scene sceneID="OCu-39-P3t">
@@ -2095,7 +2099,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QEp-PD-Ynx" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1349" y="-2845"/>
+            <point key="canvasLocation" x="-1673" y="-2997"/>
         </scene>
         <!--Smart Source Split View Controller-->
         <scene sceneID="fA1-uR-TIM">
@@ -2111,7 +2115,7 @@
                 </splitViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oYU-g7-1GR" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-3417" y="-2617"/>
+            <point key="canvasLocation" x="-3361" y="-3009"/>
         </scene>
         <!--Decision Table View Controller-->
         <scene sceneID="tP6-Zc-6it">
@@ -2275,310 +2279,6 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Oqn-vr-RMM" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1222" y="-1644"/>
-        </scene>
-        <!--Component Info View Controller-->
-        <scene sceneID="Dfb-HQ-Ymt">
-            <objects>
-                <viewController id="EVe-5d-wEw" customClass="ComponentInfoViewController" sceneMemberID="viewController">
-                    <view key="view" contentMode="scaleToFill" id="N3c-sA-9C5">
-                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
-                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                        <subviews>
-                            <view contentMode="scaleToFill" id="Jg6-IT-wDG">
-                                <rect key="frame" x="20" y="90" width="482" height="211"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" id="Gxy-r6-JCv">
-                                        <rect key="frame" x="0.0" y="0.0" width="482" height="60"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                        <subviews>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="PROJECT" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="gmV-ai-uNH" customClass="VeraBoldLabel">
-                                                <rect key="frame" x="20" y="0.0" width="462" height="60"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                                <color key="textColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" red="1" green="0.58039215690000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                    </view>
-                                    <view contentMode="scaleToFill" id="06Q-D0-blI">
-                                        <rect key="frame" x="0.0" y="60" width="482" height="7"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
-                                    </view>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="DIp-ig-LmN" customClass="VeraBoldLabel">
-                                        <rect key="frame" x="20" y="75" width="442" height="40"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.84705882349999995" green="0.84705882349999995" blue="0.84705882349999995" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" id="Y2v-Os-2Tu">
-                                        <rect key="frame" x="20" y="115" width="442" height="76"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                        <color key="textColor" red="0.84705882349999995" green="0.84705882349999995" blue="0.84705882349999995" alpha="1" colorSpace="calibratedRGB"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                    </textView>
-                                </subviews>
-                                <color key="backgroundColor" red="0.52941176470588236" green="0.52941176470588236" blue="0.52941176470588236" alpha="1" colorSpace="calibratedRGB"/>
-                            </view>
-                            <view contentMode="scaleToFill" id="YGI-kb-rUd">
-                                <rect key="frame" x="522" y="90" width="482" height="658"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <subviews>
-                                    <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" id="Krw-o8-QUF">
-                                        <rect key="frame" x="0.0" y="68" width="482" height="570"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                        <color key="backgroundColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
-                                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
-                                        <color key="separatorColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
-                                        <prototypes>
-                                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="headerCell" rowHeight="60" id="IsJ-JV-XeI">
-                                                <rect key="frame" x="0.0" y="22" width="482" height="60"/>
-                                                <autoresizingMask key="autoresizingMask"/>
-                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IsJ-JV-XeI" id="Dm9-qJ-8Na">
-                                                    <rect key="frame" x="0.0" y="0.0" width="482" height="60"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <subviews>
-                                                        <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" tag="20" contentMode="left" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Qv6-BZ-fHV" customClass="VeraBoldLabel">
-                                                            <rect key="frame" x="20" y="0.0" width="442" height="59"/>
-                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="22"/>
-                                                            <color key="textColor" red="0.84705882349999995" green="0.84705882349999995" blue="0.84705882349999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                            <color key="highlightedColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                                        </label>
-                                                    </subviews>
-                                                </tableViewCellContentView>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            </tableViewCell>
-                                            <tableViewCell contentMode="scaleToFill" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="infoCell" textLabel="Mpe-Ws-5SR" detailTextLabel="3YY-pc-P0A" style="IBUITableViewCellStyleValue1" id="IyL-wG-pf4">
-                                                <rect key="frame" x="0.0" y="82" width="482" height="44"/>
-                                                <autoresizingMask key="autoresizingMask"/>
-                                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="IyL-wG-pf4" id="TtJ-1s-zzf">
-                                                    <rect key="frame" x="0.0" y="0.0" width="482" height="44"/>
-                                                    <autoresizingMask key="autoresizingMask"/>
-                                                    <subviews>
-                                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Title" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Mpe-Ws-5SR">
-                                                            <rect key="frame" x="15" y="12" width="34" height="21"/>
-                                                            <autoresizingMask key="autoresizingMask"/>
-                                                            <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
-                                                            <color key="textColor" red="0.84705882352941175" green="0.84705882352941175" blue="0.84705882352941175" alpha="1" colorSpace="calibratedRGB"/>
-                                                            <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                        </label>
-                                                        <label opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="left" text="Detail" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="3YY-pc-P0A">
-                                                            <rect key="frame" x="423" y="12" width="44" height="21"/>
-                                                            <autoresizingMask key="autoresizingMask"/>
-                                                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                            <color key="textColor" red="1" green="0.58039215690000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                            <color key="highlightedColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                                        </label>
-                                                    </subviews>
-                                                </tableViewCellContentView>
-                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                            </tableViewCell>
-                                        </prototypes>
-                                    </tableView>
-                                    <view contentMode="scaleToFill" id="IhX-Hw-uNY">
-                                        <rect key="frame" x="0.0" y="0.0" width="482" height="60"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                        <subviews>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="EVALUATION" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="jRE-XS-2wz" customClass="VeraBoldLabel">
-                                                <rect key="frame" x="20" y="0.0" width="462" height="60"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                                <color key="textColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" red="1" green="0.58039215690000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                    </view>
-                                    <view contentMode="scaleToFill" id="NJJ-Ij-bpL">
-                                        <rect key="frame" x="0.0" y="60" width="482" height="7"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
-                                    </view>
-                                </subviews>
-                                <color key="backgroundColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
-                            </view>
-                            <view contentMode="scaleToFill" id="XTf-xP-cQq">
-                                <rect key="frame" x="0.0" y="0.0" width="1024" height="60"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                <subviews>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="3. RESULTS: DETAILS" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="GrL-Ht-X3M" customClass="VeraBoldLabel">
-                                        <rect key="frame" x="423" y="9" width="309" height="42"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" name="Helvetica-Bold" family="Helvetica" pointSize="24"/>
-                                        <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <view contentMode="scaleToFill" id="BDN-B7-NOs">
-                                        <rect key="frame" x="0.0" y="0.0" width="60" height="60"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <subviews>
-                                            <view contentMode="scaleToFill" id="asd-5P-GoX">
-                                                <rect key="frame" x="0.0" y="56" width="60" height="4"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                <color key="backgroundColor" red="1" green="0.8980392157" blue="0.76078431369999999" alpha="1" colorSpace="calibratedRGB"/>
-                                            </view>
-                                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="back.png" id="QXM-vT-E58">
-                                                <rect key="frame" x="19" y="10" width="22" height="40"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                            </imageView>
-                                        </subviews>
-                                        <color key="backgroundColor" red="0.99215686270000003" green="0.80392156859999997" blue="0.5450980392" alpha="1" colorSpace="calibratedRGB"/>
-                                    </view>
-                                </subviews>
-                                <color key="backgroundColor" red="1" green="0.58039215690000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                            </view>
-                            <view contentMode="scaleToFill" id="V5n-Zr-ScT">
-                                <rect key="frame" x="20" y="318" width="482" height="430"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                                <subviews>
-                                    <view contentMode="scaleToFill" id="Jws-gQ-C8G">
-                                        <rect key="frame" x="0.0" y="0.0" width="482" height="60"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                        <subviews>
-                                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="COMPONENT" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="xfM-LY-gX1" customClass="VeraBoldLabel">
-                                                <rect key="frame" x="20" y="0.0" width="462" height="60"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="24"/>
-                                                <color key="textColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" red="1" green="0.58039215690000001" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                    </view>
-                                    <view contentMode="scaleToFill" id="uCA-OT-n8n">
-                                        <rect key="frame" x="0.0" y="60" width="482" height="7"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
-                                    </view>
-                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Name" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="efj-fS-hcw" customClass="VeraBoldLabel">
-                                        <rect key="frame" x="20" y="75" width="442" height="40"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.84705882349999995" green="0.84705882349999995" blue="0.84705882349999995" alpha="1" colorSpace="calibratedRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <view contentMode="scaleToFill" id="cI8-fj-lkS">
-                                        <rect key="frame" x="20" y="234" width="442" height="156"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                        <subviews>
-                                            <view contentMode="scaleToFill" id="yuH-BX-m8i">
-                                                <rect key="frame" x="0.0" y="0.0" width="134" height="156"/>
-                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
-                                                <subviews>
-                                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Priority" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="QKq-Re-TyD" customClass="VeraBoldLabel">
-                                                        <rect key="frame" x="-8" y="20" width="130" height="40"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <color key="textColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Last Modifier" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="HVC-qS-lKD" customClass="VeraBoldLabel">
-                                                        <rect key="frame" x="-8" y="68" width="130" height="40"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <color key="textColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Estimation" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="O2j-CQ-ngG" customClass="VeraBoldLabel">
-                                                        <rect key="frame" x="-8" y="116" width="130" height="40"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <color key="textColor" red="0.25098039220000001" green="0.25098039220000001" blue="0.25098039220000001" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                            </view>
-                                            <view contentMode="scaleToFill" id="Cxb-EN-LQK">
-                                                <rect key="frame" x="134" y="0.0" width="308" height="156"/>
-                                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
-                                                <subviews>
-                                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Priority" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="54t-7Y-K8D" customClass="VeraRomanLabel">
-                                                        <rect key="frame" x="14" y="20" width="300" height="40"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <color key="textColor" red="0.84705882349999995" green="0.84705882349999995" blue="0.84705882349999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Last Modifier" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Hhb-37-dVq" customClass="VeraRomanLabel">
-                                                        <rect key="frame" x="14" y="68" width="300" height="40"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <color key="textColor" red="0.84705882349999995" green="0.84705882349999995" blue="0.84705882349999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Estimated Hours" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Vio-PV-1hi" customClass="VeraRomanLabel">
-                                                        <rect key="frame" x="14" y="116" width="300" height="40"/>
-                                                        <autoresizingMask key="autoresizingMask" widthSizable="YES"/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <color key="textColor" red="0.84705882349999995" green="0.84705882349999995" blue="0.84705882349999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                </subviews>
-                                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                            </view>
-                                        </subviews>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                    </view>
-                                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" id="ECE-zw-AaZ" customClass="VeraRomanTextView">
-                                        <rect key="frame" x="20" y="123" width="442" height="120"/>
-                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES" flexibleMaxY="YES"/>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                        <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
-                                        <color key="textColor" red="0.84705882349999995" green="0.84705882349999995" blue="0.84705882349999995" alpha="1" colorSpace="calibratedRGB"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
-                                    </textView>
-                                </subviews>
-                                <color key="backgroundColor" red="0.52941176469999995" green="0.52941176469999995" blue="0.52941176469999995" alpha="1" colorSpace="calibratedRGB"/>
-                            </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" id="C3d-hM-pNK" customClass="ButtonExternalBackground">
-                                <rect key="frame" x="0.0" y="0.0" width="84" height="84"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="backToResultsOverview:" destination="EVe-5d-wEw" eventType="touchUpInside" id="ngY-CO-cEf"/>
-                                </connections>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" red="0.25098039215686274" green="0.25098039215686274" blue="0.25098039215686274" alpha="1" colorSpace="calibratedRGB"/>
-                        <simulatedOrientationMetrics key="simulatedOrientationMetrics" orientation="landscapeRight"/>
-                    </view>
-                    <navigationItem key="navigationItem" id="i0Y-sf-Wdp"/>
-                    <connections>
-                        <outlet property="backButton" destination="C3d-hM-pNK" id="oc3-2R-SOO"/>
-                        <outlet property="backButtonBackground" destination="BDN-B7-NOs" id="YyL-6F-XvA"/>
-                        <outlet property="componentDescriptionTextView" destination="ECE-zw-AaZ" id="6ix-Fe-6Sr"/>
-                        <outlet property="componentEstimatedHoursLabel" destination="Vio-PV-1hi" id="AZF-nO-Aou"/>
-                        <outlet property="componentEvaluationSubview" destination="YGI-kb-rUd" id="pSW-Ye-ccH"/>
-                        <outlet property="componentEvaluationTableView" destination="Krw-o8-QUF" id="f2K-bb-JEl"/>
-                        <outlet property="componentInfoSubview" destination="V5n-Zr-ScT" id="t7c-Nv-f9W"/>
-                        <outlet property="componentLastModifierLabel" destination="Hhb-37-dVq" id="ZH0-CF-YFE"/>
-                        <outlet property="componentNameLabel" destination="efj-fS-hcw" id="paz-pN-vP2"/>
-                        <outlet property="componentPriorityLabel" destination="54t-7Y-K8D" id="KJW-Lp-9Mf"/>
-                        <outlet property="projectDescriptionTextView" destination="Y2v-Os-2Tu" id="u3T-xX-c2n"/>
-                        <outlet property="projectInfoSubView" destination="Jg6-IT-wDG" id="PwG-Be-1Hl"/>
-                        <outlet property="projectNameLabel" destination="DIp-ig-LmN" id="8AC-qW-yvl"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="INN-If-CWT" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2598" y="-3555"/>
         </scene>
         <!--Result Explanation View Controller-->
         <scene sceneID="chy-K3-e8P">
@@ -3933,7 +3633,6 @@
         <image name="Start_Project.png" width="186" height="195"/>
         <image name="Start_Result_Inactive.png" width="189" height="140"/>
         <image name="Tooltip-Dreieck.png" width="23" height="19"/>
-        <image name="back.png" width="34" height="61"/>
         <image name="back.png" width="34" height="61"/>
         <image name="back.png" width="34" height="61"/>
         <image name="back.png" width="34" height="61"/>

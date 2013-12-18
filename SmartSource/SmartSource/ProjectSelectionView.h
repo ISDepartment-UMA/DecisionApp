@@ -9,8 +9,9 @@
 #import <UIKit/UIKit.h>
 #import "Project+Factory.h"
 #import "ButtonExternalBackground.h"
+#import "MainMenuStepSubview.h"
 
-@interface ProjectSelectionView : UIView
+@interface ProjectSelectionView : MainMenuStepSubview
 
 
 @property (strong, nonatomic) IBOutlet UIView *rightImageBackgroundView;
@@ -22,18 +23,14 @@
 @property (strong, nonatomic) IBOutlet UILabel *labelCreator;
 @property (strong, nonatomic) IBOutlet UILabel *labelEndDate;
 @property (strong, nonatomic) IBOutlet UILabel *labelStartDate;
-@property (strong, nonatomic) IBOutlet ButtonExternalBackground *selectProjectButton;
+@property (strong, nonatomic) IBOutlet ButtonExternalBackground *triggerStepButton;
 @property (strong, nonatomic) IBOutlet UIView *projectInfoView;
 
 
 - (void)setDisplayedProject:(Project *)project;
 - (void)fitForPortraitMode;
 - (void)fitForLandscapeMode;
-- (void)startActivityIndicator;
-- (void)stopActivityIndicator;
-- (void)deactivateUserInteraction;
-- (void)reactivateUserInteraction;
 - (void)addActionsToSubviews;
-- (void)setEmpty;
+
 
 @end

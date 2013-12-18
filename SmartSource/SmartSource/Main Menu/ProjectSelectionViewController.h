@@ -15,6 +15,10 @@
 
 @interface ProjectSelectionViewController : UIViewController <UISearchBarDelegate, UITableViewDataSource, UITableViewDelegate, ProjectPlatformModelDelegate, UIPopoverControllerDelegate>
 
+//delegate to talk back to once a project has been selected
 - (void)setDelegate:(id<ProjectSelectionViewControllerDelegate>)delegate;
+//platform model to retrieve projects from, needs to be set during segue
 - (void)setPlatformModel:(ProjectPlatformModel *)platformModel;
+
+
 @end

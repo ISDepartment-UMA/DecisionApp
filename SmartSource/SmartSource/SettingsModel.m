@@ -15,21 +15,17 @@
 #import "SuperCharacteristic+Factory.h"
 
 @interface SettingsModel()
-
-@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
-
 @end
 
 @implementation SettingsModel
-@synthesize managedObjectContext = _managedObjectContext;
 
+#pragma mark Initializer
+
+//initializer simply fetches NSManagedObejctContext from app delegate
 - (SettingsModel *)init
 {
     //initialize
     self = [super init];
-    //get context
-    SmartSourceAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    self.managedObjectContext = appDelegate.managedObjectContext;
     return self;
 }
 

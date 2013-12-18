@@ -14,5 +14,6 @@
 + (UIColor *)colorLightGray;
 + (UIColor *)colorDarkGray;
 + (UIColor *)colorDarkWhite;
-
++ (UIColor *)colorLightOrange;
++ (UIColor *)colorOrangeBackgroundChange;
 @end

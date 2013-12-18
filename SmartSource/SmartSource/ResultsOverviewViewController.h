@@ -10,7 +10,6 @@
 #import "ProjectModel.h"
 
 @interface ResultsOverviewViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, UIPopoverControllerDelegate, UIDocumentInteractionControllerDelegate>
-
+//project model of the project to display
 @property (strong, nonatomic) ProjectModel *projectModel;
-
 @end

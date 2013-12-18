@@ -23,20 +23,20 @@
 @synthesize speechBubbleArrowImageView = _speechBubbleArrowImageView;
 @synthesize explanationLabel = _explanationLabel;
 
+//main method that sets characteristc and delegate and modifies cell content accordingly
 - (void)setCharacteristic:(Characteristic *)currentCharacteristic andDelegate:(id<CharacteristicCellDelegate>)delegate
 {
     [super setCharacteristic:currentCharacteristic andDelegate:delegate];
     //explanation
     NSNumber *valueOfInterest = nil;
     NSString *explanation = @"";
-    if ([currentCharacteristic.name isEqualToString:@"Cohesion"]) {
+    if ([currentCharacteristic.name isEqualToString:@"Autonomy of requirements within this component"]) {
         valueOfInterest = [self.delegate getValueForCohesion];
         explanation = [NSString stringWithFormat:@"SODA produced a cohesion value of %.1f for the graph of requirements related to this component.", [valueOfInterest floatValue]];
         valueOfInterest = [NSNumber numberWithFloat:(1-[valueOfInterest floatValue])];
-    } else if ([currentCharacteristic.name isEqualToString:@"Coupling"]) {
+    } else if ([currentCharacteristic.name isEqualToString:@"Number of inter-component requirements links"]) {
         valueOfInterest = [self.delegate getValueForCoupling];
         explanation = [NSString stringWithFormat:@"SODA produced a coupling value of %.1f for the graph of requirements related to this component.", [valueOfInterest floatValue]];
-
     }
     [self.explanationLabel setText:explanation];
     
@@ -57,7 +57,6 @@
             xTargetOfArray = 0;
             break;
     }
-    
     CGRect arrowFrame = self.speechBubbleArrowImageView.frame;
     [self.speechBubbleArrowImageView setFrame:CGRectMake(xTargetOfArray, arrowFrame.origin.y, arrowFrame.size.width, arrowFrame.size.height)];
 }

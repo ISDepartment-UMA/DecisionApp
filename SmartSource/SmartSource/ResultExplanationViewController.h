@@ -11,6 +11,6 @@
 
 @interface ResultExplanationViewController : UIViewController <UITableViewDataSource, UITableViewDelegate>
 
-
 - (void)setComponent:(Component *)component andModel:(ProjectModel *)model;
+
 @end

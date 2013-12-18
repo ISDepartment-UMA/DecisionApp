@@ -12,12 +12,9 @@
 #import "EvaluationViewDelegate.h"
 #import "ResultViewDelegate.h"
 #import "ProjectSelectionViewControllerDelegate.h"
+#import "MainMenuRatingDelegate.h"
+#import "SettingsDelegate.h"
 
-@interface MainMenuViewController : UIViewController <UIScrollViewDelegate, EvaluationViewDelegate, ResultViewDelegate, ProjectSelectionViewControllerDelegate>
-@property (nonatomic, weak) RatingTableViewViewController *ratingScreen;
-
-- (void)modalViewControllerHasBeenDismissed;
-- (void)resetProjectModel;
-
-
+@interface MainMenuViewController : UIViewController <UIScrollViewDelegate, EvaluationViewDelegate, ResultViewDelegate, ProjectSelectionViewControllerDelegate, SettingsDelegate>
+@property (nonatomic, weak) id<MainMenuRatingDelegate> ratingScreen;
 @end

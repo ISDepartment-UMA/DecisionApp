@@ -12,7 +12,6 @@
 #import "WeightSliderDelegate.h"
 
 @interface WeightSuperCharacteristicsViewController : UIViewController <UITableViewDataSource, UITableViewDelegate, WeightSliderDelegate>
-- (void)setRatingDelegate:(RatingTableViewViewController *)delegate;
-- (void)saveContext;
-
+//delegate needs to be set during push segue
+- (void)setRatingDelegate:(id<WeightSuperCharacteristicsRatingDelegate>)delegate;
 @end

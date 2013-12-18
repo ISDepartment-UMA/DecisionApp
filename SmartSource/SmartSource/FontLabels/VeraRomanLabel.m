@@ -10,22 +10,14 @@
 
 @implementation VeraRomanLabel
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
-
-
+//change font
 - (void)awakeFromNib
 {
     [super awakeFromNib];
     self.font = [UIFont fontWithName:@"BitstreamVeraSans-Roman" size:self.font.pointSize];
 }
 
+//copy
 - (id)copy
 {
     VeraRomanLabel *duplicateLabel = [[VeraRomanLabel alloc] initWithFrame:self.frame];
@@ -41,14 +33,5 @@
     
     return duplicateLabel;
 }
-
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
 
 @end

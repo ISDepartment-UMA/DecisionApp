@@ -10,6 +10,4 @@
 #import "UploadCompleteHandler.h"
 
 @interface ReportUploadViewController : UIViewController <UploadCompleteHandler>
-
-
 @end

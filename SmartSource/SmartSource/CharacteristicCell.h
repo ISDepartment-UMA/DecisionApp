@@ -12,7 +12,6 @@
 
 @interface CharacteristicCell : UITableViewCell
 
-//- (CharacteristicCell *)initWithCharacteristic:(Characteristic *)currentCharacteristic andDelegate:(RatingTableViewViewController *)delegate;
 - (void)setCharacteristic:(Characteristic *)currentCharacteristic andDelegate:(id<CharacteristicCellDelegate>)delegate;
 
 @end

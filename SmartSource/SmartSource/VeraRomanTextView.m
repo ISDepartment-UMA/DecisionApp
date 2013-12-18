@@ -10,21 +10,14 @@
 
 @implementation VeraRomanTextView
 
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
-
+//change font
 - (void)awakeFromNib
 {
     [super awakeFromNib];
     self.font = [UIFont fontWithName:@"BitstreamVeraSans-Roman" size:self.font.pointSize];
 }
 
+//copy
 - (VeraRomanTextView *)copy
 {
     VeraRomanTextView *textView = [[VeraRomanTextView alloc] initWithFrame:self.frame];
@@ -39,13 +32,5 @@
     return textView;
 }
 
-/*
-// Only override drawRect: if you perform custom drawing.
-// An empty implementation adversely affects performance during animation.
-- (void)drawRect:(CGRect)rect
-{
-    // Drawing code
-}
-*/
 
 @end

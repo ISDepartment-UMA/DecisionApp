@@ -16,7 +16,7 @@
 + (NSString *)getOutIndCoreStringForWeightedAverageValue:(CGFloat)weightedAverage;
 + (UIImage *)getImageForWeightedAverageValue:(CGFloat)weightedAverage;
 + (NSString *)getHighMediumLowStringForIntValue:(NSInteger)value;
-
++ (UIColor *)getColorForStringClassificationValue:(NSString *)stringValue;
 
 + (BOOL)deviceRunsiOS7;
 @end

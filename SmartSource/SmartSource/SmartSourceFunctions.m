@@ -80,10 +80,20 @@
     } else {
         return nil;
     }
-    
-    
 }
 
++ (UIColor *)getColorForStringClassificationValue:(NSString *)stringValue
+{
+    if ([stringValue isEqualToString:@"OUTSOURCING"]) {
+        return [UIColor colorWithRed:0.13 green:1.0 blue:0.45 alpha:1.0];
+    } else if ([stringValue isEqualToString:@"INDIFFERENT"]) {
+        return [UIColor colorWithRed:1.0 green:1.0 blue:0.52 alpha:1.0];
+    } else if ([stringValue isEqualToString:@"CORE"]) {
+        return [UIColor colorWithRed:1.0 green:0.56 blue:0.56 alpha:1.0];
+    } else {
+        return nil;
+    }
+}
 
 + (NSString *)getHighMediumLowStringForIntValue:(NSInteger)value
 {
@@ -92,7 +102,6 @@
             return @"LOW";
         case 2:
             return @"MEDIUM";
-            
             break;
         case 3:
             return @"HIGH";

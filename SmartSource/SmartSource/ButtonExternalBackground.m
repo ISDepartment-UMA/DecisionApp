@@ -1,7 +1,7 @@
 
 
 //
-//  TopBarButton.m
+//  ButtonExternalBackground.m
 //  SmartSource
 //
 //  Created by Lorenz on 16.08.13.
@@ -9,29 +9,17 @@
 //
 
 #import "ButtonExternalBackground.h"
+#import "UIColor+SmartSourceColors.h"
 
 @interface ButtonExternalBackground ()
-
 //Views
 @property (nonatomic, strong) UIColor *colorOfSuperview;
-
 @end
-
 
 @implementation ButtonExternalBackground
 @synthesize colorOfSuperview = _colorOfSuperview;
 @synthesize viewToChangeIfSelected = _viewToChangeIfSelected;
 @synthesize colorToUseIfSelected = _colorToUseIfSelected;
-
-
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
 
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -44,14 +32,12 @@
         }
         
         if (!self.colorToUseIfSelected) {
-            self.colorToUseIfSelected = [UIColor colorWithRed:1.0 green:0.58 blue:0.0 alpha:1.0];
+            self.colorToUseIfSelected = [UIColor colorOrange];
         }
         
         self.colorOfSuperview = self.viewToChangeIfSelected.backgroundColor;
         [self.viewToChangeIfSelected setBackgroundColor:self.colorToUseIfSelected];
     }
-    
-    
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
@@ -71,14 +57,6 @@
     }
     
 }
-/*
- // Only override drawRect: if you perform custom drawing.
- // An empty implementation adversely affects performance during animation.
- - (void)drawRect:(CGRect)rect
- {
- // Drawing code
- }
- */
 
 @end
 

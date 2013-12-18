@@ -16,6 +16,16 @@
     return [UIColor colorWithRed:1.0 green:0.58 blue:0.0 alpha:1.0];
 }
 
++ (UIColor *)colorLightOrange
+{
+    return [UIColor colorWithRed:0.99 green:0.80 blue:0.55 alpha:1.0];
+}
+
++ (UIColor *)colorOrangeBackgroundChange
+{
+    return [UIColor colorWithRed:0.98 green:0.7 blue:0.25 alpha:1.0];
+}
+
 + (UIColor *)colorLightGray
 {
     return [UIColor colorWithRed:0.529 green:0.529 blue:0.529 alpha:1.0];

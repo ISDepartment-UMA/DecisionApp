@@ -23,14 +23,12 @@
 
 @property (strong, nonatomic) NSArray *selectedProject;
 @property (strong, nonatomic) NSArray *availableProjects;
-@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic) BOOL timerHasStoped;
 
 @end
 
 @implementation ProjectPlatformModel
 @synthesize selectedProject = _selectedProject;
-@synthesize managedObjectContext = _managedObjectContext;
 @synthesize availableProjects = _availableProjects;
 @synthesize timerHasStoped = _timerHasStoped;
 
@@ -48,9 +46,6 @@
 {
     //initialize
     self = [super init];
-    //get context
-    SmartSourceAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    self.managedObjectContext = appDelegate.managedObjectContext;
     return self;
 }
 

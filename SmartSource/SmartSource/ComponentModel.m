@@ -16,26 +16,17 @@
 #import "SmartSourceFunctions.h"
 
 @interface ComponentModel()
-@property (strong, nonatomic) NSManagedObjectContext *managedObjectContext;
 @property (nonatomic, strong) Component *currentComponent;
-
-
-
-
 @end
 
 @implementation ComponentModel
 @synthesize currentComponent = _currentComponent;
-@synthesize managedObjectContext = _managedObjectContext;
 
 
 //constructor that initializes the componentmodel and prepares the core database for the rating
 - (ComponentModel *)initWithComponentId:(NSString *)componentId
 {
     self = [super init];
-    //get context
-    SmartSourceAppDelegate *appDelegate = [[UIApplication sharedApplication] delegate];
-    self.managedObjectContext = appDelegate.managedObjectContext;
     self.currentComponent = [Component getComponentForId:componentId fromManagedObjectContext:self.managedObjectContext];
     return self;
 }
@@ -103,7 +94,7 @@
         if ([superChar.name isEqualToString:@"Communication Complexity"]) {
             for (int i=0; i<[subCharsTemp count]; i++) {
                 Characteristic *oneCharacteristic = [subCharsTemp objectAtIndex:i];
-                if ([oneCharacteristic.name isEqualToString:@"Cohesion"]) {
+                if ([oneCharacteristic.name isEqualToString:@"Autonomy of requirements within this component"]) {
                     //shift all characteristics one spot down
                     for (int y=i; y>0; y--) {
                         [subCharsTemp replaceObjectAtIndex:y withObject:[subCharsTemp objectAtIndex:(y-1)]];
@@ -111,7 +102,7 @@
                     //put cohesion into first spot
                     [subCharsTemp replaceObjectAtIndex:0 withObject:oneCharacteristic];
                     alreadyMovedCohesion = YES;
-                } else if (([oneCharacteristic.name isEqualToString:@"Coupling"]) && alreadyMovedCohesion) {
+                } else if (([oneCharacteristic.name isEqualToString:@"Number of inter-component requirements links"]) && alreadyMovedCohesion) {
                     //characteristics with index 1-i down one spot
                     for (int y=i; y>1; y--) {
                         [subCharsTemp replaceObjectAtIndex:y withObject:[subCharsTemp objectAtIndex:(y-1)]];
@@ -120,7 +111,7 @@
                     [subCharsTemp replaceObjectAtIndex:1 withObject:oneCharacteristic];
                     break;
                 //cohesion not moved yet
-                } else  if ([oneCharacteristic.name isEqualToString:@"Coupling"]) {
+                } else  if ([oneCharacteristic.name isEqualToString:@"Number of inter-component requirements links"]) {
                     //characteristics with index 1-i down one spot
                     for (int y=i; y>0; y--) {
                         [subCharsTemp replaceObjectAtIndex:y withObject:[subCharsTemp objectAtIndex:(y-1)]];

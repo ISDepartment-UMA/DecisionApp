@@ -11,7 +11,7 @@
 
 @interface DecisionTableViewController : UIViewController <UITableViewDelegate, UITableViewDataSource>
 
-@property (nonatomic, strong) ProjectModel *projectModel;
+- (void)setProjectModel:(ProjectModel *)projectModel;
 - (void)markComponentAsSelected:(Component *)component;
 
 

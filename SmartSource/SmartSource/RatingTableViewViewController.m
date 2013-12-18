@@ -8,7 +8,7 @@
 
 #import "RatingTableViewViewController.h"
 #import "UIKit/UIKit.h"
-#import "SBJson.h"
+#import "Slider.h"
 #import "AvailableSuperCharacteristic.h"
 #import "AvailableCharacteristic.h"
 #import "Characteristic+Factory.h"
@@ -34,22 +34,16 @@
 @property (strong, nonatomic) ProjectModel *currentProject;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
 @property (strong, nonatomic) IBOutlet UIView *topBar;
-
 @property (strong, nonatomic) IBOutlet UIView *buttonsViewBottom;
 @property (strong, nonatomic) IBOutlet UILabel *projectNameLabel;
 @property (strong, nonatomic) IBOutlet UILabel *screenTitleLabel;
-
 //barbutton
 @property (strong, nonatomic) IBOutlet UIView *barButtonBackGroundView;
 @property (strong, nonatomic) IBOutlet UIButton *barButton;
-
-
 //array of necessary rating characteristics 
 @property (strong, nonatomic) NSArray *characteristics;
-//split view
 //available components and current component+project
 @property (strong, nonatomic) NSArray *availableComponents;
-
 //show full description of component
 @property (nonatomic) BOOL tableViewShowsFullComponentDescription;
 @property (nonatomic) CGFloat heightDescriptionLabel;
@@ -57,7 +51,6 @@
 @property (strong, nonatomic) IBOutlet UILabel *componentRatingCompleteLabel;
 @property (strong, nonatomic) IBOutlet UILabel *weightingCompleteLabel;
 @property (nonatomic) BOOL shouldReturnToMainMenuImmediately;
-
 @end
 
 @implementation RatingTableViewViewController
@@ -81,195 +74,14 @@
 @synthesize screenTitleLabel = _screenTitleLabel;
 @synthesize shouldReturnToMainMenuImmediately = _shouldReturnToMainMenuImmediately;
 
+//indices for SDOA characteristics --> necessary for automatic detection
 static NSInteger indexOfCommunicationComplexity;
 static NSInteger indexOfCohesionCell;
 static NSInteger indexOfCouplingCell;
 
 
 
-#pragma mark CharacteristicCell delegate methods
-
-- (void)checkForCompleteness
-{
-    //rating complete?
-    if ([self.currentProject ratingIsComplete]) {
-        [self setComponentRatingIsComplete:YES];
-    }
-    //tell master view to update
-    UINavigationController *masterNavigation = [self.splitViewController.viewControllers objectAtIndex:0];
-    id visibleViewController = masterNavigation.visibleViewController;
-    if ([visibleViewController isKindOfClass:[ComponentSelectionTableViewController class]]) {
-        [visibleViewController reloadTableView];
-    }
-}
-
-//save context
-- (void)saveContext
-{
-    if (![self.currentComponent saveContext]) {
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"The Project Rating could not be saved!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
-        [alert show];
-    }
-}
-
-- (NSNumber *)getValueForCohesion
-{
-    return [self.currentComponent getComponentObject].cohesion;
-}
-
-- (NSNumber *)getValueForCoupling
-{
-    return [self.currentComponent getComponentObject].coupling;
-}
-
-//if componentratingcomplete is set, update view
-- (void)setComponentRatingIsComplete:(BOOL)componentRatingIsComplete
-{
-    _componentRatingIsComplete = componentRatingIsComplete;
-    
-    if (componentRatingIsComplete) {
-        [self.componentRatingCompleteLabel setText:@"\u2713"];
-    } else {
-        [self.componentRatingCompleteLabel setText:@""];
-    }
-}
-
-//if weighting is complete set, update view
-- (void)setWeightingIsComplete:(BOOL)weightingIsComplete
-{
-    _weightingIsComplete = weightingIsComplete;
-    
-    //set check mark on button in lower left corner
-    if (weightingIsComplete) {
-        [self.currentProject setProjectHasBeenWeightedTrue];
-        [self.weightingCompleteLabel setText:@"\u2713"];
-    } else {
-        [self.weightingCompleteLabel setText:@""];
-    }
-}
-
-
-//sets the component currently displayed in the ratingtableview
-- (void)setComponent:(Component *)component
-{
-    self.tableViewShowsFullComponentDescription = NO;
-    //initialize model for component
-    self.currentComponent = [[ComponentModel alloc] initWithComponentId:component.componentID];
-    //get rating characteristics
-    self.characteristics = [self.currentComponent getCharacteristics];
-    //soda - get indices
-    [self getIndicesForCommunicationComplexity];
-    [self.tableView reloadData];
-    //if component has been selected, dismiss popovercontroller
-    SmartSourceSplitViewController *splitVC = (SmartSourceSplitViewController *)self.splitViewController;
-    [splitVC.masterPopoverController dismissPopoverAnimated:YES];
-    self.displayedComponent = component;
-}
-
-- (void)getIndicesForCommunicationComplexity
-{
-    //get indices for
-    for (int i=0; i<[[self.characteristics objectAtIndex:0] count]; i++) {
-        SuperCharacteristic *superChar = [[self.characteristics objectAtIndex:0] objectAtIndex:i];
-        if ([superChar.name isEqualToString:@"Communication Complexity"]) {
-            indexOfCommunicationComplexity = i;
-            for (int y=0; y<[[[self.characteristics objectAtIndex:1] objectAtIndex:i] count]; y++) {
-                Characteristic *previousChar = [[[self.characteristics objectAtIndex:1] objectAtIndex:i] objectAtIndex:y];
-                if ([previousChar.name isEqualToString:@"Cohesion"]) {
-                    indexOfCohesionCell = y;
-                } else if ([previousChar.name isEqualToString:@"Coupling"]) {
-                    indexOfCouplingCell = y;
-                }
-            }
-            break;
-        }
-    }
-}
-
-
-//set project model
-- (void)setProjectModel:(ProjectModel *)projectModel
-{
-    //reset
-    [self setComponentRatingIsComplete:NO];
-    [self setWeightingIsComplete:NO];
-    
-    //get model
-    self.currentProject = projectModel;
-    self.availableComponents = [self.currentProject arrayWithComponents];
-    [self setComponent:[self.availableComponents objectAtIndex:0]];
-    
-    //set name of project label
-    self.projectNameLabel.text = [self.currentProject getProjectObject].name;
-    
-    [self setWeightingIsComplete:[self.currentProject getProjectHasBeenWeighted]];
-    [self checkForCompleteness];
-}
-
-- (ProjectModel *)getProjectModel
-{
-    return self.currentProject;
-}
-
-
-- (IBAction)backToMainMenu:(id)sender {
-    
-    //if weighting has not been edited, ask for acknowledgement
-    if (!self.weightingIsComplete) {
-        
-        //show alert to ask for acknowledgement to return with 50:50 weighting
-        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
-        ModalAlertViewController *modalAVC = (ModalAlertViewController *)[storyboard instantiateViewControllerWithIdentifier:@"ModalAlertViewController"];
-        modalAVC.modalPresentationStyle = UIModalPresentationFormSheet;
-        [modalAVC setStringForacknowledgeButton:@"YES"];
-        [modalAVC setStringForcancelButton:@"NO"];
-        [modalAVC setStringForTextLabel:@"You did not weight the Supercharacteristics. Please do so by taping the weighting button in the bottom bar. Do you want to return with the same weight for every Supercharacteristic?"];
-        [modalAVC setStringForTitleLabel:@"Alert"];
-        [modalAVC setDelegate:self];
-        [self presentViewController:modalAVC animated:YES completion:nil];
-        
-    } else {
-        
-        //return to main menu
-        [self.splitViewController performSegueWithIdentifier:@"mainMenu" sender:self];
-    }
-}
-
-//if modal view controller talks back (acknowledgement button has been klicked)
-- (void)modalViewControllerHasBeenDismissedWithInput:(NSString *)input
-{
-    //return to main menu
-    [self.splitViewController performSegueWithIdentifier:@"mainMenu" sender:self];
-}
-
-- (void)returnToMainMenu
-{
-    [self backToMainMenu:nil];
-}
-
-- (IBAction)weightingButtonPressed:(id)sender {
-    [self setWeightingIsComplete:YES];
-    [self checkForCompleteness];
-    [self.splitViewController performSegueWithIdentifier:@"weightSuperChars" sender:self];
-}
-
-
-- (NSArray *)getAvailableComponents
-{
-    return self.availableComponents;
-}
-
-
-- (NSString *)getCurrentProjectName
-{
-    return [self.currentProject.getProjectInfoArray objectAtIndex:1];
-}
-
-- (Component *)getSelectedComponent
-{
-    return [self.currentComponent getComponentObject];
-}
-
+#pragma mark Inherited Methods
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -297,45 +109,9 @@ static NSInteger indexOfCouplingCell;
     self.tableViewShowsFullComponentDescription = NO;
 }
 
-//custom method that gets called when master view appears
-- (void)masterViewIsThere
-{
-    //hide buttons in bottom bar
-    [self.buttonsViewBottom setHidden:YES];
-    
-    //center header in top bar and project name label in bottom bar
-    CGFloat xOriginOfTitleLabel = ((self.view.frame.size.width + 320)/2) - (self.screenTitleLabel.frame.size.width / 2) - 320;
-    CGFloat xOriginOfNameLabel = ((self.view.frame.size.width + 320)/2) - (self.projectNameLabel.frame.size.width / 2) - 320;
-    [self.screenTitleLabel setFrame:CGRectMake(xOriginOfTitleLabel, self.screenTitleLabel.frame.origin.y, self.screenTitleLabel.frame.size.width, self.screenTitleLabel.frame.size.height)];
-    [self.projectNameLabel setFrame:CGRectMake(xOriginOfNameLabel, self.projectNameLabel.frame.origin.y, self.projectNameLabel.frame.size.width, self.projectNameLabel.frame.size.height)];
-}
-
-//custom method that gets called when master view disappears
-- (void)masterViewIsNotThere
-{
-    //hide buttons in bottom bar
-    [self.buttonsViewBottom setHidden:NO];
-    
-    //center header in top bar and project name label in bottom bar
-    CGFloat xOriginOfTitleLabel = (self.view.frame.size.width/2) - (self.screenTitleLabel.frame.size.width / 2);
-    CGFloat xOriginOfNameLabel = self.view.frame.size.width - (10 + self.projectNameLabel.frame.size.width);
-    [self.screenTitleLabel setFrame:CGRectMake(xOriginOfTitleLabel, self.screenTitleLabel.frame.origin.y, self.screenTitleLabel.frame.size.width, self.screenTitleLabel.frame.size.height)];
-    [self.projectNameLabel setFrame:CGRectMake(xOriginOfNameLabel, self.projectNameLabel.frame.origin.y, self.projectNameLabel.frame.size.width, self.projectNameLabel.frame.size.height)];
-    
-}
-
-
-
-- (void)viewWillDisappear:(BOOL)animated
-{
-    [super viewWillDisappear:animated];
-}
-
-
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-
     //show scrollers once and they won't disappear
     [self.tableView flashScrollIndicators];
     
@@ -381,16 +157,12 @@ static NSInteger indexOfCouplingCell;
         [centerMask setBackgroundColor:[UIColor colorDarkGray]];
         [[self.splitViewController view] insertSubview:centerMask atIndex:0];
     }
-    
     //in portrait mode center header
     UIInterfaceOrientation deviceOrientation = [[UIApplication sharedApplication] statusBarOrientation];
     if (UIInterfaceOrientationIsPortrait(deviceOrientation)) {
         [self masterViewIsNotThere];
     }
-    
-    
 }
-
 
 
 - (void)viewDidUnload
@@ -415,6 +187,212 @@ static NSInteger indexOfCouplingCell;
     return YES;
 }
 
+
+#pragma mark Getters & Setters
+
+//if componentratingcomplete is set, update view
+- (void)setComponentRatingIsComplete:(BOOL)componentRatingIsComplete
+{
+    _componentRatingIsComplete = componentRatingIsComplete;
+    if (componentRatingIsComplete) {
+        [self.componentRatingCompleteLabel setText:@"\u2713"];
+    } else {
+        [self.componentRatingCompleteLabel setText:@""];
+    }
+}
+
+//if weighting is complete set, update view
+- (void)setWeightingIsComplete:(BOOL)weightingIsComplete
+{
+    _weightingIsComplete = weightingIsComplete;
+    //set check mark on button in lower left corner
+    if (weightingIsComplete) {
+        [self.currentProject setProjectHasBeenWeightedTrue];
+        [self.weightingCompleteLabel setText:@"\u2713"];
+    } else {
+        [self.weightingCompleteLabel setText:@""];
+    }
+}
+
+
+//sets the component currently displayed in the ratingtableview
+- (void)setComponent:(Component *)component
+{
+    self.tableViewShowsFullComponentDescription = NO;
+    //initialize model for component
+    self.currentComponent = [[ComponentModel alloc] initWithComponentId:component.componentID];
+    //get rating characteristics
+    self.characteristics = [self.currentComponent getCharacteristics];
+    //soda - get indices
+    [self getIndicesForCommunicationComplexity];
+    [self.tableView reloadData];
+    //if component has been selected, dismiss popovercontroller
+    SmartSourceSplitViewController *splitVC = (SmartSourceSplitViewController *)self.splitViewController;
+    [splitVC.masterPopoverController dismissPopoverAnimated:YES];
+    self.displayedComponent = component;
+}
+
+
+//set project model
+- (void)setProjectModel:(ProjectModel *)projectModel
+{
+    //reset
+    [self setComponentRatingIsComplete:NO];
+    [self setWeightingIsComplete:NO];
+    
+    //get model
+    self.currentProject = projectModel;
+    self.availableComponents = [self.currentProject arrayWithComponents];
+    [self setComponent:[self.availableComponents objectAtIndex:0]];
+    
+    //set name of project label
+    self.projectNameLabel.text = [self.currentProject getProjectObject].name;
+    
+    [self setWeightingIsComplete:[self.currentProject getProjectHasBeenWeighted]];
+    [self checkForCompleteness];
+}
+
+- (ProjectModel *)getProjectModel
+{
+    return self.currentProject;
+}
+
+#pragma mark ComponentSelectionRatingDelegate
+
+
+- (NSArray *)getAvailableComponents
+{
+    return self.availableComponents;
+}
+
+
+- (NSString *)getCurrentProjectName
+{
+    return [self.currentProject.getProjectInfoArray objectAtIndex:1];
+}
+
+- (Component *)getSelectedComponent
+{
+    return [self.currentComponent getComponentObject];
+}
+
+//custom method that gets called when master view appears
+- (void)masterViewIsThere
+{
+    //hide buttons in bottom bar
+    [self.buttonsViewBottom setHidden:YES];
+    
+    //center header in top bar and project name label in bottom bar
+    CGFloat xOriginOfTitleLabel = ((self.view.frame.size.width + 320)/2) - (self.screenTitleLabel.frame.size.width / 2) - 320;
+    CGFloat xOriginOfNameLabel = ((self.view.frame.size.width + 320)/2) - (self.projectNameLabel.frame.size.width / 2) - 320;
+    [self.screenTitleLabel setFrame:CGRectMake(xOriginOfTitleLabel, self.screenTitleLabel.frame.origin.y, self.screenTitleLabel.frame.size.width, self.screenTitleLabel.frame.size.height)];
+    [self.projectNameLabel setFrame:CGRectMake(xOriginOfNameLabel, self.projectNameLabel.frame.origin.y, self.projectNameLabel.frame.size.width, self.projectNameLabel.frame.size.height)];
+}
+
+//custom method that gets called when master view disappears
+- (void)masterViewIsNotThere
+{
+    //hide buttons in bottom bar
+    [self.buttonsViewBottom setHidden:NO];
+    
+    //center header in top bar and project name label in bottom bar
+    CGFloat xOriginOfTitleLabel = (self.view.frame.size.width/2) - (self.screenTitleLabel.frame.size.width / 2);
+    CGFloat xOriginOfNameLabel = self.view.frame.size.width - (10 + self.projectNameLabel.frame.size.width);
+    [self.screenTitleLabel setFrame:CGRectMake(xOriginOfTitleLabel, self.screenTitleLabel.frame.origin.y, self.screenTitleLabel.frame.size.width, self.screenTitleLabel.frame.size.height)];
+    [self.projectNameLabel setFrame:CGRectMake(xOriginOfNameLabel, self.projectNameLabel.frame.origin.y, self.projectNameLabel.frame.size.width, self.projectNameLabel.frame.size.height)];
+    
+}
+
+
+#pragma mark CharacteristicCell delegate methods
+
+- (void)checkForCompleteness
+{
+    //rating complete?
+    if ([self.currentProject ratingIsComplete]) {
+        [self setComponentRatingIsComplete:YES];
+    }
+    //tell master view to update
+    UINavigationController *masterNavigation = [self.splitViewController.viewControllers objectAtIndex:0];
+    id visibleViewController = masterNavigation.visibleViewController;
+    if ([visibleViewController isKindOfClass:[ComponentSelectionTableViewController class]]) {
+        [visibleViewController reloadTableView];
+    }
+}
+
+//save context
+- (void)saveContext
+{
+    if (![self.currentComponent saveContext]) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Error!" message:@"The Project Rating could not be saved!" delegate:self cancelButtonTitle:@"OK" otherButtonTitles:nil];
+        [alert show];
+    }
+}
+
+//returns the cohesion value of the subgraph built up by
+//requirements related to the currently displayed component
+- (NSNumber *)getValueForCohesion
+{
+    return [self.currentComponent getComponentObject].cohesion;
+}
+
+//returns the coupling value of the subgraph built up by
+//requirements related to the currently displayed component
+- (NSNumber *)getValueForCoupling
+{
+    return [self.currentComponent getComponentObject].coupling;
+}
+
+#pragma mark IBActions 
+
+
+- (IBAction)backToMainMenu:(id)sender {
+    
+    //if weighting has not been edited, ask for acknowledgement
+    if (!self.weightingIsComplete) {
+        
+        //show alert to ask for acknowledgement to return with 50:50 weighting
+        UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"MainStoryboard" bundle:nil];
+        ModalAlertViewController *modalAVC = (ModalAlertViewController *)[storyboard instantiateViewControllerWithIdentifier:@"ModalAlertViewController"];
+        modalAVC.modalPresentationStyle = UIModalPresentationFormSheet;
+        [modalAVC setStringForacknowledgeButton:@"YES"];
+        [modalAVC setStringForcancelButton:@"NO"];
+        [modalAVC setStringForTextLabel:@"You did not weight the Supercharacteristics. Please do so by taping the weighting button in the bottom bar. Do you want to return with the same weight for every Supercharacteristic?"];
+        [modalAVC setStringForTitleLabel:@"Alert"];
+        [modalAVC setDelegate:self];
+        [self presentViewController:modalAVC animated:YES completion:nil];
+        
+    } else {
+        
+        //return to main menu
+        [self.splitViewController performSegueWithIdentifier:@"mainMenu" sender:self];
+    }
+}
+
+
+#pragma mark ModalAlertViewControllerDelegate
+
+//if modal view controller talks back (acknowledgement button has been klicked)
+- (void)modalViewControllerHasBeenDismissedWithInput:(NSString *)input
+{
+    //return to main menu
+    [self.splitViewController performSegueWithIdentifier:@"mainMenu" sender:self];
+}
+
+
+#pragma mark WeightSuperCharacteristicsRatingDelegate
+
+
+- (void)returnToMainMenu
+{
+    [self backToMainMenu:nil];
+}
+
+- (IBAction)weightingButtonPressed:(id)sender {
+    [self setWeightingIsComplete:YES];
+    [self checkForCompleteness];
+    [self.splitViewController performSegueWithIdentifier:@"weightSuperChars" sender:self];
+}
 
 
 #pragma mark - Split view
@@ -556,13 +534,11 @@ static NSInteger indexOfCouplingCell;
         }
     return cell;
 
-        
     } else if (indexPath.section > ([[self.characteristics objectAtIndex:0] count])){
         
         static NSString *CellIdentifier = @"emptySpaceCell";
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
         return cell;
-        
         
     } else {
         
@@ -593,19 +569,38 @@ static NSInteger indexOfCouplingCell;
             //return cell of subcharacteristic
             static NSString *CellIdentifier = @"characteristicCell";
             CharacteristicCell *cell = [tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-            
             //get characteristic
             Characteristic *rightCharacteristic = [[[self.characteristics objectAtIndex:1] objectAtIndex:(indexPath.section-1)] objectAtIndex:indexPath.row-1];
-            
             //return cell with characteristic
             [cell setCharacteristic:rightCharacteristic andDelegate:self];
             return cell;
         }
-    } 
-
+    }
+}
+//
+//automatic detection of indices of SODA characteristics in characteristics
+//--> used by cellForRowAtIndexPath
+- (void)getIndicesForCommunicationComplexity
+{
+    //get indices for
+    for (int i=0; i<[[self.characteristics objectAtIndex:0] count]; i++) {
+        SuperCharacteristic *superChar = [[self.characteristics objectAtIndex:0] objectAtIndex:i];
+        if ([superChar.name isEqualToString:@"Communication Complexity"]) {
+            indexOfCommunicationComplexity = i;
+            for (int y=0; y<[[[self.characteristics objectAtIndex:1] objectAtIndex:i] count]; y++) {
+                Characteristic *previousChar = [[[self.characteristics objectAtIndex:1] objectAtIndex:i] objectAtIndex:y];
+                if ([previousChar.name isEqualToString:@"Autonomy of requirements within this component"]) {
+                    indexOfCohesionCell = y;
+                } else if ([previousChar.name isEqualToString:@"Number of inter-component requirements links"]) {
+                    indexOfCouplingCell = y;
+                }
+            }
+            break;
+        }
+    }
 }
 
-
+#pragma expand and shrink component description
 
 - (CGFloat)calculateHeightForDescriptionCell
 {
@@ -636,10 +631,8 @@ static NSInteger indexOfCouplingCell;
     } else if (indexPath.section > [[self.characteristics objectAtIndex:0] count]) {
         return 30;
     }
-    
     if (indexPath.row == 0) {
         return 75;
-        
     //soda cells higher
     } else if (indexPath.section == (indexOfCommunicationComplexity + 1)) {
         if (indexPath.row == (indexOfCohesionCell+1)) {
@@ -664,48 +657,22 @@ static NSInteger indexOfCouplingCell;
     UIView *contentView = [cell viewWithTag:20];
     UILabel *text = (UILabel *)[contentView viewWithTag:10];
     UIButton *moreLessButton = (UIButton *)[contentView viewWithTag:11];
-    
     //update hightforrowatindexpath
     [self.tableView beginUpdates];
     self.tableViewShowsFullComponentDescription = !self.tableViewShowsFullComponentDescription;
     [self.tableView endUpdates];
-    
     [UIView animateWithDuration:0.2 animations:^{
         
-        //[moreLessButton setFrame:CGRectMake(moreLessButton.frame.origin.x, (cell.frame.size.height-30), moreLessButton.frame.size.width, moreLessButton.frame.size.height)];
-        //change size of cell
-        //[cell setFrame: CGRectMake(cell.frame.origin.x, cell.frame.origin.y, cell.frame.size.width, (self.heightDescriptionLabel + 40))];
-        //[contentView setFrame:CGRectMake(contentView.frame.origin.x, contentView.frame.origin.y, contentView.frame.size.width, self.heightDescriptionLabel + 40)];
-        //[text setFrame:CGRectMake(text.frame.origin.x, text.frame.origin.y, text.frame.size.width, self.heightDescriptionLabel + 20)];
-        
     } completion:^(BOOL finished) {
-        
         //set label to full component description text
         //Component *component = [self.currentComponent getComponentObject];
         [text setText:self.textDescriptionLabel];
-        
         if ([moreLessButton.titleLabel.text isEqualToString:@"more"]) {
             [moreLessButton setTitle:@"less" forState:UIControlStateNormal];
         } else if ([moreLessButton.titleLabel.text isEqualToString:@"less"]){
             [moreLessButton setTitle:@"more" forState:UIControlStateNormal];
         }
-     
-        
-        
     }];
-
-    
 }
-
-
-
-#pragma mark - Table view delegate
-
-- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
-{
-    //empty
-}
-
-
 
 @end

@@ -9,7 +9,6 @@
 #import "ProjectSelectionViewController.h"
 #import "ModalViewControllerPresenter.h"
 #import "MainMenuViewController.h"
-#import "SmartSourceTableViewCell.h"
 #import "ButtonExternalBackground.h"
 #import "UIColor+SmartSourceColors.h"
 #import "ModalAlertViewController.h"
@@ -17,7 +16,6 @@
 #import "VeraRomanLabel.h"
 
 @interface ProjectSelectionViewController ()
-
 @property (strong, nonatomic) IBOutlet UISearchBar *projectSearchBar;
 @property (nonatomic, strong)NSArray *availableCells;
 @property (strong, nonatomic) NSArray *displayedCells;  //cells that are displayed in the tableview
@@ -30,8 +28,6 @@
 @property (nonatomic) id<ProjectSelectionViewControllerDelegate>delegate;
 @property (nonatomic, strong) NSArray *projectToDelete;
 @property (nonatomic, strong) UIPopoverController *popOver;
-
-
 @end
 
 @implementation ProjectSelectionViewController
@@ -49,6 +45,7 @@
 
 
 #pragma mark getters & setters
+
 - (void)setDelegate:(id<ProjectSelectionViewControllerDelegate>)delegate
 {
     _delegate = delegate;
@@ -85,18 +82,30 @@
     self.didNotUnload = YES;
     self.projectSearchBar.delegate = self;
     self.projectSearchBar.hidden = NO;
-    /*
-    [self.projectSearchBar setBackgroundImage:[UIImage imageNamed:@"search_bar_background.jpg"]];
-    [self.projectSearchBar setSearchFieldBackgroundImage:[UIImage imageNamed:@"search_bar_textfield.jpg"] forState:UIControlStateNormal];*/
-    
     [self.projectSearchBar setTranslucent:YES];
     self.availableCells = nil;
     self.displayedCells = nil;
-    
+    //entypo
     [self.backButton setViewToChangeIfSelected:self.backButtonBackGroundView];
     [self.backLabel setText:@"\u274C"];
-    
 }
+
+- (void)viewDidDisappear:(BOOL)animated
+{
+    self.didNotUnload = NO;
+    [super viewDidDisappear:animated];
+}
+
+- (void)viewDidUnload {
+    [self setProjectSearchBar:nil];
+    [self setTableView:nil];
+    [self setBackLabel:nil];
+    [self setBackButton:nil];
+    [self setBackButtonBackGroundView:nil];
+    [super viewDidUnload];
+}
+
+#pragma mark Button pressed
 
 
 - (IBAction)backButtonPressed:(id)sender {
@@ -107,7 +116,7 @@
     }];
 }
 
-# pragma mark project retrival and projectplatformmodeldelegate
+#pragma mark project retrival and projectplatformmodeldelegate
 
 //method to be called from delegate, if new projects have been found
 - (void)projectArrayDidChange:(NSArray *)availableProjects
@@ -132,9 +141,6 @@
     [self.tableView reloadData];
 }
 
-
-
-
 #pragma mark - Table view data source
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
@@ -157,19 +163,18 @@
     if (section == 0) {
         return @"Stored on Device";
     } else {
-        return @"From WebService";
+        return @"From Collaboration Platform";
     }
 }
 
 - (UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
+    //build view with either one of the two sources in a label
     UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.frame.size.width, 50)];
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(20, 10, tableView.frame.size.width - 10, 20)];
     [label setTextColor:[UIColor whiteColor]];
     [label setFont:[UIFont fontWithName:@"BitstreamVeraSans-Bold" size:15.0]];
     [label setBackgroundColor:[UIColor clearColor]];
-    
-    
     if (section == 0) {
         [label setText:@"Stored on Device"];
     } else {
@@ -181,22 +186,17 @@
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
 {
-    
     if (self.availableCells) {
-        
         //if no projects from webservice available, return 1 for activity indicator
         if (([[self.displayedCells objectAtIndex:section] count] == 0) && (section == 1)) {
             return 1;
         }
-        
         //else return number of projects
         return [[self.displayedCells objectAtIndex:section] count];
-        
     //if no projects available at all, return 1 --> activity indicator
     } else {
         return 1;
     }
-    
 }
 
 
@@ -207,6 +207,8 @@
 {
     [cell setBackgroundColor:[UIColor clearColor]];
 }
+
+
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -250,6 +252,7 @@
         return cell;
     }
 }
+
 
 # pragma mark delete project from core database
 
@@ -363,30 +366,18 @@
 
 #pragma mark - Table view delegate
 
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     //set selected project in model to selected project
     NSArray *project = [[self.displayedCells objectAtIndex:indexPath.section] objectAtIndex:indexPath.row];
     [self.platformModel setSelectedProject:project];
-    
     //dsimiss and tell delegate
     [self dismissViewControllerAnimated:YES completion:^{
         [self.delegate projectSelectionViewControllerHasBeenDismissedWithPlatformModel:self.platformModel];
     }];
 }
-- (void)viewDidDisappear:(BOOL)animated
-{
-    self.didNotUnload = NO;
-    [super viewDidDisappear:animated];
-}
-- (void)viewDidUnload {
-    [self setProjectSearchBar:nil];
-    [self setTableView:nil];
-    [self setBackLabel:nil];
-    [self setBackButton:nil];
-    [self setBackButtonBackGroundView:nil];
-    [super viewDidUnload];
-}
+
 
 
 #pragma mark - Handling Search Bar Query

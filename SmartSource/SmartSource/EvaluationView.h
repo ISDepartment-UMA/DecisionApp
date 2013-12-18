@@ -7,28 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MainMenuStepSubview.h"
 #import "EvaluationViewDelegate.h"
 #import "ButtonExternalBackground.h"
 
-@interface EvaluationView : UIView
-
-//subview for evaluation
+@interface EvaluationView : MainMenuStepSubview
+//redefine outlets
 @property (strong, nonatomic) IBOutlet UIView *rightImageBackGroundView;
 @property (strong, nonatomic) IBOutlet UIImageView *rightImageView;
 @property (strong, nonatomic) IBOutlet UIImageView *leftImageView;
 @property (strong, nonatomic) IBOutlet UILabel *descriptionLabel;
-@property (strong, nonatomic) IBOutlet ButtonExternalBackground *evaluationButton;
+@property (strong, nonatomic) IBOutlet ButtonExternalBackground *triggerStepButton;
 @property (strong, nonatomic) IBOutlet UIView *rightImageBottomView;
-
-//delegate
-@property (nonatomic, strong) id <EvaluationViewDelegate> delegate;
-
-- (void)setActiveForEvaluation;
-- (void)setDeactiveForEvaliation;
-- (void)deactivateUserInteraction;
-- (void)reactivateUserInteraction;
-- (void)startActivityIndicator;
-- (void)stopActivityIndicator;
-- (void)setEmpty;
-
 @end

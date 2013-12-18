@@ -7,11 +7,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Model.h"
 #import "Component+Factory.h"
 #import "SuperCharacteristic+Factory.h"
 
 
-@interface ComponentModel : NSObject
+@interface ComponentModel : Model
 
 - (ComponentModel *)initWithComponentId:(NSString *)componentId;
 - (NSArray *)getCharacteristics;

@@ -7,9 +7,10 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Model.h"
 #import "ProjectPlatformModelDelegate.h"
 
-@interface ProjectPlatformModel : NSObject
+@interface ProjectPlatformModel : Model
 
 @property (nonatomic) BOOL projectsFromWebServiceAvailable;
 

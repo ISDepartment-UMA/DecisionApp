@@ -28,7 +28,7 @@
 #pragma mark initializers
 - (id)init
 {
-    if ( (self = [super init]) ) {
+    if ((self = [super init])) {
         self.nodes = [NSMutableSet set];
         self.edges = [NSMutableSet set];
     }
@@ -37,7 +37,7 @@
 
 - (id)initWithNodes:(NSSet *)nodes
 {
-    if ( (self = [super init]) ) {
+    if ((self = [super init])) {
         self.nodes = [nodes mutableCopy];
         self.edges = [NSMutableSet set];
     }

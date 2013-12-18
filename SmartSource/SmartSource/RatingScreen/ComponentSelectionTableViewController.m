@@ -14,10 +14,9 @@
 @interface ComponentSelectionTableViewController ()
 @property (nonatomic, strong) NSArray *availableCells;
 @property (strong, nonatomic) IBOutlet UITableView *tableView;
-@property (nonatomic, weak) RatingTableViewViewController *ratingScreen;
+@property (nonatomic, weak) id<ComponentSelectionRatingDelegate> ratingScreen;
 @property (strong, nonatomic) IBOutlet UILabel *componentRatingCompleteLabel;
 @property (strong, nonatomic) IBOutlet UILabel *weightingCompleteLabel;
-
 @property (nonatomic, strong) NSIndexPath *selectedIndexPath;
 @end
 
@@ -29,7 +28,7 @@
 @synthesize componentRatingCompleteLabel = _componentRatingCompleteLabel;
 @synthesize weightingCompleteLabel = _weightingCompleteLabel;
 
-
+#pragma mark Inherited Methods
 
 - (void)viewDidLoad
 {
@@ -39,22 +38,27 @@
     [self.tableView reloadData];
 }
 
+- (void)viewDidUnload {
+    [self setTableView:nil];
+    [self setComponentRatingCompleteLabel:nil];
+    [self setWeightingCompleteLabel:nil];
+    [super viewDidUnload];
+}
+
 
 - (void)viewDidAppear:(BOOL)animated
 {
     [super viewDidAppear:animated];
-    
     //check for components on the detail side
     self.ratingScreen = nil;
     while (!self.ratingScreen) {
         UINavigationController *detailNavigation = [self.splitViewController.viewControllers lastObject];
         id visibleViewController = detailNavigation.visibleViewController;
-        if ([visibleViewController isKindOfClass:[RatingTableViewViewController class]]) {
+        if ([visibleViewController conformsToProtocol:@protocol(ComponentSelectionRatingDelegate)]) {
             self.ratingScreen = visibleViewController;
             [self.ratingScreen masterViewIsThere];
         }
     }
-    
     
     //get components and selected index path
     self.availableCells = [self.ratingScreen getAvailableComponents];
@@ -68,7 +72,7 @@
     
     //reload table
     [self.tableView reloadData];
-    
+    //select previously selected cell or first cell
     if (self.selectedIndexPath) {
         [self.tableView selectRowAtIndexPath:self.selectedIndexPath animated:NO scrollPosition:0];
         UITableViewCell *cell = [self.tableView cellForRowAtIndexPath:self.selectedIndexPath];
@@ -86,7 +90,6 @@
     } else {
         [self.componentRatingCompleteLabel setText:@""];
     }
-    
     if (self.ratingScreen.weightingIsComplete) {
         [self.weightingCompleteLabel setText:@"\u2713"];
     } else {
@@ -100,6 +103,7 @@
     [super viewWillDisappear:animated];
 }
 
+#pragma mark IBActions
 
 - (IBAction)weightingButtonPressed:(id)sender {
     [self.ratingScreen setWeightingIsComplete:YES];
@@ -115,14 +119,7 @@
     
 }
 
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
-
+#pragma mark Reload TableView
 - (void)reloadTableView
 {
     //reload table view
@@ -134,7 +131,6 @@
     } else {
         [self.componentRatingCompleteLabel setText:@""];
     }
-    
     if (self.ratingScreen.weightingIsComplete) {
         [self.weightingCompleteLabel setText:@"\u2713"];
     } else {
@@ -146,7 +142,6 @@
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    
     if (self.availableCells) {
         if ([self.availableCells count] > 0) {
             return 1;
@@ -174,29 +169,23 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    
     static NSString *CellIdentifier = @"componentSelectionCell";
     UITableViewCell *cell = [self.tableView dequeueReusableCellWithIdentifier:CellIdentifier];
-    
-    //disable selection style
+    //disable selection style, cell will change background color if selected
     [cell setSelectionStyle:UITableViewCellSelectionStyleNone];
-    
     Component *acutalComponent = [self.availableCells objectAtIndex:indexPath.row];
     UIView *contentView = [cell viewWithTag:120];
     [((UILabel *)[cell viewWithTag:121]) setText:acutalComponent.name];
-    
     if ([acutalComponent.ratingComplete boolValue]) {
         [((UILabel *)[cell viewWithTag:122]) setText:@"\u2713"];
     } else {
         [((UILabel *)[cell viewWithTag:122]) setText:@""];
     }
-    
     if ([indexPath isEqual:self.selectedIndexPath]) {
         [contentView setBackgroundColor:[UIColor colorWithRed:0.25 green:0.25 blue:0.25 alpha:1.0]];
     } else {
         [contentView setBackgroundColor:[UIColor colorWithRed:0.53 green:0.53 blue:0.53 alpha:1.0]];
     }
-    
     return cell;
 }
 
@@ -217,10 +206,5 @@
     [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)viewDidUnload {
-    [self setTableView:nil];
-    [self setComponentRatingCompleteLabel:nil];
-    [self setWeightingCompleteLabel:nil];
-    [super viewDidUnload];
-}
+
 @end

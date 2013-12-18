@@ -12,8 +12,6 @@
 @interface SmartSourcePopoverBackgroundView : UIPopoverBackgroundView
 
 @property (readonly) UIColor *tintColor;
-
-
 + (UIColor *)currentTintColor;
 + (void)setCurrentTintColor:(UIColor *)tintColor;
 

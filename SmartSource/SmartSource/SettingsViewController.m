@@ -42,6 +42,7 @@
 
 
 @property (strong, nonatomic) SettingsModel *settingsModel;
+@property (nonatomic) id<SettingsDelegate> delegate;
 
 @property (nonatomic, strong) NSString *nameOfSuperCharacteristicToAddCharacteristic;
 @property (nonatomic, strong) NSString *nameOfCharacteristicToChange;
@@ -68,7 +69,7 @@
 @synthesize webServiceURLTextView = _webServiceURLTextView;
 @synthesize addSuperCharacteristicView = _addSuperCharacteristicView;
 @synthesize addSuperCharacteristicButton = _addSuperCharacteristicButton;
-@synthesize mainMenu = _mainMenu;
+@synthesize delegate = _delegate;
 @synthesize nameOfSuperCharacteristicToAddCharacteristic = _nameOfSuperCharacteristicToAddCharacteristic;
 @synthesize backButton = _backButton;
 @synthesize backButtonBackground = _backButtonBackground;
@@ -76,6 +77,7 @@
 @synthesize characteristicState = _characteristicState;
 @synthesize editSymbolLabelLogin = _editSymbolLabelLogin;
 @synthesize editSymbolLabelWebservice = _editSymbolLabelWebservice;
+
 
 
 
@@ -463,7 +465,7 @@
         case 7:
             //restore defautls
             [self.settingsModel restoreDefaultSettings];
-            [self.mainMenu resetProjectModel];
+            [self.delegate resetProjectModel];
             break;
             
         default:

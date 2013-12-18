@@ -14,7 +14,6 @@
 @property (strong, nonatomic) IBOutlet UIButton *cancelButton;
 @property (strong, nonatomic) IBOutlet UIView *uploadView;
 @property (nonatomic) CGRect realBounds;
-
 @end
 
 @implementation ReportUploadViewController
@@ -52,13 +51,6 @@
     self.ableToRespond = YES;
 }
 
-
-- (void)didReceiveMemoryWarning
-{
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
-}
-
 - (void)viewDidUnload {
     [self setStatusLabel:nil];
     [self setActivityIndicator:nil];
@@ -66,9 +58,15 @@
     [self setUploadView:nil];
     [super viewDidUnload];
 }
+
+#pragma mark IBActions
+
 - (IBAction)cancelButton:(id)sender {
     [self dismissViewControllerAnimated:YES completion:nil];
 }
+
+
+#pragma mark UploadCompleteHandler
 
 - (void)uploadComplete
 {

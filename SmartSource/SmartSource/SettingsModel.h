@@ -7,8 +7,9 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "Model.h"
 
-@interface SettingsModel : NSObject
+@interface SettingsModel : Model
 
 //instance methods - managed object context needed
 - (void)addNewSuperCharacteristicWithName:(NSString *)superCharacteristicName;

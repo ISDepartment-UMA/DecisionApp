@@ -7,9 +7,7 @@
 //
 
 #import "CharacteristicCell.h"
-#import "Characteristic+Factory.h"
-#import "RatingTableViewViewController.h"
-#import "SmartSourceAppDelegate.h"
+#import "Characteristic.h"
 
 @interface CharacteristicCell()
 @property (nonatomic, strong) Characteristic *currentCharacteristic;
@@ -25,7 +23,7 @@
 @synthesize titleLabel = _titleLabel;
 
 
-//- (CharacteristicCell *)initWithCharacteristic:(Characteristic *)currentCharacteristic andDelegate:(RatingTableViewViewController *)delegate
+//main method to pass the characteristic to be displayed and set the delegate
 - (void)setCharacteristic:(Characteristic *)currentCharacteristic andDelegate:(id<CharacteristicCellDelegate>)delegate
 {
     //set characteristic of the cell
@@ -35,7 +33,6 @@
     //name characteristic accordingly
     self.titleLabel.text = currentCharacteristic.name;
     [self.titleLabel setBackgroundColor:[UIColor clearColor]];
-    
     //building buttons, textlabels and add them to cell
     //low has tag 1, medium tag 2, high tag 3
     //get the right value for the characteristic
@@ -44,7 +41,6 @@
     if (value == 0) {
         self.backgroundColor = [UIColor colorWithRed:1.0 green:0.0 blue:0.0 alpha:0.05];
     }
-    
     UIView *evaluationView = [self viewWithTag:89];
     if (!evaluationView) {
         NSArray *subviewArray = [[NSBundle mainBundle] loadNibNamed:@"EvaluationView" owner:self options:nil];
@@ -53,8 +49,6 @@
         [evaluationView setFrame:CGRectMake((self.mainSubView.frame.size.width - 400), 0, 400, 50)];
         [self addSubview:evaluationView];
     }
-    
-    
     for (int i=11; i<=13; i++) {
         UIView *subView = [evaluationView viewWithTag:i];
         UIButton *checkButton = (UIButton *)[subView viewWithTag:21];
@@ -68,8 +62,6 @@
     }
     //set interaction style
     self.selectionStyle =UITableViewCellSelectionStyleNone;
-    
-    
 }
 
 // building the radio button
@@ -82,7 +74,6 @@
     [button addTarget:self action:@selector(checkboxButton:) forControlEvents:UIControlEventTouchUpInside];
     return button;
 }
-
 
 //checks the button and saves the state into the core database
 //not clean
