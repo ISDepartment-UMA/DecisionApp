@@ -6,7 +6,7 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#import "SmartSourceAppDelegate.h"
+#import "SmartSourceAppDelegate.h" 
 #import "SmartSourceSplitViewController.h"
 #import "Component+Factory.h"
 #import "SmartSourceFunctions.h"
